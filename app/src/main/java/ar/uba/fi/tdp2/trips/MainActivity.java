@@ -48,7 +48,22 @@ public class MainActivity extends AppCompatActivity {
     private void initializeData() {
         attractions = new ArrayList<>();
         attractions.add(new Attraction("Obelisco", "Una descripcion corta", arnoldUrl));
-        attractions.add(new Attraction("Usina del Arte", "Una descripción muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy larga.", arnoldUrl));
+        attractions.add(new Attraction("Usina del Arte", "Una descripción muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy larga.", arnoldUrl));
+        attractions.add(new Attraction("TITULO algomuylargoperpronunciableaverdondelocortaycomo", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
+        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
         attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
     }
 
