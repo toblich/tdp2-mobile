@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Se obtiene el email con el que se inicio sesion/registro
+        //Se obtiene la ubicacion del usuario
         Bundle bundle = getIntent().getExtras();
         ubicacion = bundle.getString("ubicacion");
 
