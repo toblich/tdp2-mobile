@@ -1,49 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <android.support.v7.widget.CardView
+        android:id="@+id/attraction_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/attraction_card"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:elevation="4dp"
+        card_view:cardCornerRadius="0dp"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:paddingRight="@dimen/attraction_card_horizontal_padding"
+            android:paddingLeft="@dimen/attraction_card_horizontal_padding"
+            android:paddingTop="@dimen/attraction_card_top_padding"
+            android:paddingBottom="@dimen/attraction_card_bottom_padding"
             >
 
             <TextView
+                android:id="@+id/attraction_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/attraction_name"
                 android:layout_alignParentTop="true"
-                android:textSize="30sp"
+                android:layout_marginRight="@dimen/attraction_card_cover_photo_width"
+                android:layout_marginEnd="@dimen/attraction_card_cover_photo_width"
+                android:layout_marginTop="@dimen/attraction_card_title_top_margin"
+                android:maxLines="3"
+                android:textSize="@dimen/attraction_card_title_text_size"
                 />
 
             <ImageView
                 android:id="@+id/attraction_photo"
 
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/attraction_card_cover_photo_width"
+                android:layout_height="@dimen/attraction_card_cover_photo_height"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="false"
                 android:layout_alignParentTop="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="@dimen/attraction_card_cover_photo_margin"
+                android:layout_marginStart="@dimen/attraction_card_cover_photo_margin"
                 android:adjustViewBounds="false"
                 />
 
             <TextView
+                android:id="@+id/attraction_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/attraction_description"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/attraction_photo"
+                android:layout_marginTop="@dimen/attraction_card_description_top_margin"
+                android:layout_marginBottom="@dimen/attraction_card_description_bottom_margin"
+                android:maxLines="4"
+                />
+
+            <ImageView
+                android:id="@+id/attraction_card_fav_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_border_black_24dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/attraction_card_visited_icon"
+                android:layout_toStartOf="@+id/attraction_card_visited_icon"
+                android:layout_below="@+id/attraction_description"
+                />
+
+            <ImageView
+                android:id="@+id/attraction_card_visited_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/attraction_photo"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/attraction_photo"
+                android:layout_toLeftOf="@+id/attraction_card_directions_icon"
+                android:src="@drawable/ic_check_black_24dp"
+                android:layout_below="@+id/attraction_description"
+                />
+
+            <ImageView
+                android:id="@+id/attraction_card_directions_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_directions_black_24dp"
+                android:layout_below="@+id/attraction_description"
                 />
 
         </RelativeLayout>
