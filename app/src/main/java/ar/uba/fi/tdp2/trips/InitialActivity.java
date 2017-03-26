@@ -26,7 +26,7 @@ import com.google.android.gms.location.LocationServices;
 public class InitialActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
-    private static final int PETICION_PERMISO_LOCALIZACION = 101;
+    private static final int LOCATION_PERMISSION_PETITION = 101;
     private static final String LOGTAG = "Trips";
     private GoogleApiClient apiClient;
     private Context context;
@@ -51,20 +51,17 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        //Se ha producido un error que no se puede resolver automáticamente
-        //y la conexión con los Google Play Services no se ha establecido.
-        Toast.makeText(context, "Error: No se pudo conectar con Google Play Services", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Error: No se pudo conectar con Google Play Services", Toast.LENGTH_SHORT).show(); // TODO internationalize
         Log.e(LOGTAG,"Error: No se pudo conectar con Google Play Services");
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //Conectado correctamente a Google Play Services
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PETICION_PERMISO_LOCALIZACION);
+                    LOCATION_PERMISSION_PETITION);
         } else {
             updateLocation();
         }
@@ -73,19 +70,19 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void onConnectionSuspended(int i) {
         //Se ha interrumpido la conexión con Google Play Services
-        Toast.makeText(context, "Error: Se ha interrumpido la conexión con Google Play Services", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Error: Se ha interrumpido la conexión con Google Play Services", Toast.LENGTH_SHORT).show(); // TODO internationalize
         Log.e(LOGTAG,"Error: Se ha interrumpido la conexión con Google Play Services");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PETICION_PERMISO_LOCALIZACION) {
+        if (requestCode == LOCATION_PERMISSION_PETITION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Permiso concedido
+                // Permission granted
                 updateLocation();
             } else {
-                //Permiso denegado
-                Toast.makeText(context,"Error: Permiso de localizacion denegado", Toast.LENGTH_SHORT).show();
+                // Permission denied
+                Toast.makeText(context,"Error: Permiso de localizacion denegado", Toast.LENGTH_SHORT).show(); // TODO internationalize
                 Log.e(LOGTAG,"Error: Permiso de localizacion denegado");
             }
         }
@@ -97,41 +94,39 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
             setLocation(lastLocation);
         } else {
-            Toast.makeText(context, "Error: GPS deshabilitado, debe habilitarlo para que el programa funcione", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error: GPS deshabilitado, debe habilitarlo para que el programa funcione", Toast.LENGTH_SHORT).show(); // TODO internationalize
             Log.e(LOGTAG,"Error: GPS deshabilitado, debe habilitarlo para que el programa funcione");
         }
     }
 
     private void setLocation(Location loc) {
         if (loc != null) {
-            // Elemento list que contendra la direccion
-            List<Address> direcciones = null;
-            // Funcion para obtener el nombre desde el geocoder
+            List<Address> addresses = null;
+
+            // Get locality name from geocoder
             try {
-                direcciones = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
+                addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
             } catch (Exception e) {
                 Toast.makeText(context,"Error en geocoder: " + e.toString(), Toast.LENGTH_SHORT).show();
                 Log.e(LOGTAG,"Error en geocoder: " + e.toString());
             }
-            // Funcion que determina si se obtuvo resultado o no
-            if(direcciones != null && direcciones.size() > 0 ) {
-                // Creamos el objeto address
-                Address direccion = direcciones.get(0);
-                // Creamos el string a partir del elemento direccion
-                String direccionText = direccion.getLocality() + ", " + direccion.getCountryName();
+            // Determine whether it successfully got the address or not
+            if(addresses != null && addresses.size() > 0 ) {
+                Address address = addresses.get(0);
+                String addressText = address.getLocality() + ", " + address.getCountryName();
                 SystemClock.sleep(1000);
-                Toast.makeText(context, "Usted se encuentra en: " + direccionText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Usted se encuentra en: " + addressText, Toast.LENGTH_SHORT).show(); // TODO internationalize
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("ubicacion", direccion.getLocality()); // TODO cambiar a ingles
+                intent.putExtra("locality", address.getLocality());
                 intent.putExtra("latitude", loc.getLatitude());
                 intent.putExtra("longitude", loc.getLongitude());
                 startActivity(intent);
             } else {
-                Toast.makeText(context, "Error: El GPS no pudo establecer su dirección", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: El GPS no pudo establecer su dirección", Toast.LENGTH_SHORT).show(); // TODO internationalize
                 Log.e(LOGTAG,"Error: El GPS no pudo establecer su dirección");
             }
         } else {
-            Toast.makeText(context, "Error: El GPS no pudo establecer su ubicacion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error: El GPS no pudo establecer su ubicacion", Toast.LENGTH_SHORT).show(); // TODO internationalize
             Log.e(LOGTAG,"Error: El GPS no pudo establecer su ubicacion");
         }
     }
