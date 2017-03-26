@@ -136,11 +136,4 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         intent.putExtra("longitude", loc.getLongitude());
         startActivity(intent);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        updateLocation();
-    }
 }
