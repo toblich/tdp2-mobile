@@ -23,11 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    // arnold's thumbs up TODO remove this :P
-    final String arnoldUrl = "http://3.bp.blogspot.com/-qUH2sD4GWB0/UUn5xBphLjI/AAAAAAAAA2o/MMYWv7n8sNw/s1600/thumb-up-terminator+pablo+M+R.jpg";
     private List<Attraction> attractions;
 
-    private String ubicacion; // TODO pasar a ingles
+    private String locality;
     private Double latitude;
     private Double longitude;
 
@@ -39,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Se obtiene la ubicacion del usuario
+        //Se obtiene la locality del usuario
         Bundle bundle = getIntent().getExtras();
-        ubicacion = bundle.getString("ubicacion");
+        locality  = bundle.getString("locality");
         latitude  = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
 
-        this.setTitle(ubicacion);
+        this.setTitle(locality);
 
         recyclerView = (RecyclerView) findViewById(R.id.rv);
 
@@ -61,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeData() { // TODO change Volley for retorfit2 or equivalent
-
         attractions = new ArrayList<>();
         RequestQueue reqQueue = Volley.newRequestQueue(this);
 
+        // TODO put here right URI to API
         String apiari = "https://private-0e956b-trips5.apiary-mock.com/attractions?radius=1.0&longitude=" + longitude.toString() + "&latitude=" + latitude.toString();
         String uri = "http://192.168.0.138" + "/attractions?latitude=" + latitude.toString() + "&longitude=" + longitude.toString() + "&radius=1.0";
         System.out.println(uri);
@@ -100,25 +98,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         reqQueue.add(jsonArrayRequest);
-
-//        attractions.add(new Attraction("Obelisco", "Una descripcion corta", arnoldUrl));
-//        attractions.add(new Attraction("Usina del Arte", "Una descripción muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy muy larga.", arnoldUrl));
-//        attractions.add(new Attraction("TITULO algomuylargoperpronunciableaverdondelocortaycomo", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
-//        attractions.add(new Attraction("Casa Rosada", "Alguna descripción más...", arnoldUrl));
     }
 
     @Override
