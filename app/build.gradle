@@ -42,7 +42,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.0'
 
     // For http requests
-    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
     // For google APIs
     compile 'com.google.android.gms:play-services-maps:10.0.0'

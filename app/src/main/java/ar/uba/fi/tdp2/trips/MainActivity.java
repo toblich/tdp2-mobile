@@ -8,19 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private List<Attraction> attractions;
@@ -37,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Se obtiene la locality del usuario
         Bundle bundle = getIntent().getExtras();
         locality  = bundle.getString("locality");
         latitude  = bundle.getDouble("latitude");
@@ -58,46 +50,28 @@ public class MainActivity extends AppCompatActivity {
         initializeData();
     }
 
-    private void initializeData() { // TODO change Volley for retorfit2 or equivalent
+    private void initializeData() {
         attractions = new ArrayList<>();
-        RequestQueue reqQueue = Volley.newRequestQueue(this);
 
-        // TODO put here right URI to API
-        String apiari = "https://private-0e956b-trips5.apiary-mock.com/attractions?radius=1.0&longitude=" + longitude.toString() + "&latitude=" + latitude.toString();
-        String uri = "http://192.168.0.138" + "/attractions?latitude=" + latitude.toString() + "&longitude=" + longitude.toString() + "&radius=1.0";
-        System.out.println(uri);
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 1.0);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, apiari, null, new Response.Listener<JSONArray>() {
+        call.enqueue(new Callback<List<Attraction>>() {
             @Override
-            public void onResponse(JSONArray response) {
-                for (int i = 0, size = response.length(); i < size; i++) {
-                    System.out.println("Processing a response object");
-                    try {
-                        JSONObject json = response.getJSONObject(i);
-                        String name        = json.getString("name");
-                        String description = json.getString("description");
-                        String photoUrl    = json.has("portrait_image") ? json.getString("portrait_image") : "";
-
-                        attractions.add(new Attraction(name, description, photoUrl));
-                    } catch (JSONException exception) {
-                        exception.printStackTrace();
-                        Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
-                        Log.d("TRIPS", exception.toString());
-                    }
-                }
+            public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
+                Log.d("TRIPS", "got attractions: " + response.body().toString());
+                attractions = response.body();
                 RV_AttractionAdapter adapter = new RV_AttractionAdapter(attractions, localContext);
                 recyclerView.setAdapter(adapter);
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
-                Log.e("TRIPS", error.toString());
+            public void onFailure(Call<List<Attraction>> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                Log.d("TRIPS", t.toString());
             }
         });
-
-        reqQueue.add(jsonArrayRequest);
     }
 
     @Override
