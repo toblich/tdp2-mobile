@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName;
 public class Attraction {
     String name;
     String description;
-    @SerializedName("portrait_image") String photoUrl;
+    @SerializedName("portrait_image") String photoUri;
 
-    public Attraction(String name, String description, String photoUrl) {
+    public Attraction(String name, String description, String photoUri) {
         this.name        = name;
         this.description = description;
-        this.photoUrl    = photoUrl;
+        this.photoUri    = photoUri;
     }
 
     @Override
     public String toString() {
-        return "Attraction(" + name + ", " + description + ", " + photoUrl + ")";
+        return "Attraction(" + name + ", " + description + ", " + photoUri + ")";
     }
 }
