@@ -20,27 +20,27 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
     public RV_AttractionAdapter(List<Attraction> attractions, Context context) {
         this.attractions = attractions;
-        this.context = context; // TODO validate it's correct context
+        this.context     = context; // TODO validate it's correct context
     }
 
     public static class AttractionViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
+        CardView cardView;
         TextView attractionName;
         TextView attractionDescription;
         ImageView attractionPhoto;
 
         AttractionViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.attraction_card);
-            attractionName = (TextView) itemView.findViewById(R.id.attraction_name);
+            cardView              = (CardView)itemView.findViewById(R.id.attraction_card);
+            attractionName        = (TextView) itemView.findViewById(R.id.attraction_name);
             attractionDescription = (TextView) itemView.findViewById(R.id.attraction_description);
-            attractionPhoto = (ImageView) itemView.findViewById(R.id.attraction_photo);
+            attractionPhoto       = (ImageView) itemView.findViewById(R.id.attraction_photo);
         }
     }
 
     @Override
     public AttractionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.attraction_card, parent, false); // TODO resolve "item"
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.attraction_card, parent, false);
         return new AttractionViewHolder(v);
     }
 
@@ -52,7 +52,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
         int placeholderId = R.mipmap.photo_placeholder;
 
-        if (attraction.photoUri != null && attraction.photoUri != "") {
+        if (attraction.photoUri != null && !attraction.photoUri.equals("")) {
             Glide.with(context)
                 .load(attraction.photoUri)
                 .placeholder(placeholderId)
