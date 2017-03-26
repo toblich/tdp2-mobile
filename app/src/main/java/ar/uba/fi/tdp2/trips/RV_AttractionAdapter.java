@@ -46,11 +46,24 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
     @Override
     public void onBindViewHolder(AttractionViewHolder holder, int position) {
-        holder.attractionName.setText(attractions.get(position).name);
-        holder.attractionDescription.setText(attractions.get(position).description);
-        Glide.with(context)
-                .load(attractions.get(position).photoUri)
+        Attraction attraction = attractions.get(position);
+        holder.attractionName.setText(attraction.name);
+        holder.attractionDescription.setText(attraction.description);
+
+        int placeholderId = R.mipmap.photo_placeholder;
+
+        if (attraction.photoUri != null && attraction.photoUri != "") {
+            Glide.with(context)
+                .load(attraction.photoUri)
+                .placeholder(placeholderId)
+                .error(placeholderId) // TODO see if it possible to log the error
                 .into(holder.attractionPhoto);
+        } else { // No picture, load only placeholder
+            Glide.with(context)
+                .load(placeholderId)
+                .error(placeholderId) // TODO this is kind of redundant...
+                .into(holder.attractionPhoto);
+        }
     }
 
     @Override

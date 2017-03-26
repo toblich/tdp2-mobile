@@ -122,7 +122,9 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 SystemClock.sleep(1000);
                 Toast.makeText(context, "Usted se encuentra en: " + direccionText, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("ubicacion", direccion.getLocality());
+                intent.putExtra("ubicacion", direccion.getLocality()); // TODO cambiar a ingles
+                intent.putExtra("latitude", loc.getLatitude());
+                intent.putExtra("longitude", loc.getLongitude());
                 startActivity(intent);
             } else {
                 Toast.makeText(context, "Error: El GPS no pudo establecer su dirección", Toast.LENGTH_SHORT).show();
