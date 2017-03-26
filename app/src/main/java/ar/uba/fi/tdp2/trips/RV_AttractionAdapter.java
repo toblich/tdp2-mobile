@@ -52,9 +52,9 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
         int placeholderId = R.mipmap.photo_placeholder;
 
-        if (attraction.portrait_image != null && !attraction.portrait_image.equals("")) {
+        if (attraction.photoUrl != null && !attraction.photoUrl.equals("")) {
             Glide.with(context)
-                .load(attraction.portrait_image)
+                .load(attraction.photoUrl)
                 .placeholder(placeholderId)
                 .error(placeholderId) // TODO see if it possible to log the error
                 .into(holder.attractionPhoto);

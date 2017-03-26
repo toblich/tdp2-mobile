@@ -1,18 +1,20 @@
 package ar.uba.fi.tdp2.trips;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Attraction {
     String name;
     String description;
-    String portrait_image; // TODO see if it's possible to make this camelCase (using snake_case for response mapping)
+    @SerializedName("portrait_image") String photoUrl;
 
-    public Attraction(String name, String description, String portrait_image) {
+    public Attraction(String name, String description, String photoUrl) {
         this.name        = name;
         this.description = description;
-        this.portrait_image = portrait_image;
+        this.photoUrl    = photoUrl;
     }
 
     @Override
     public String toString() {
-        return "Attraction(" + name + ", " + description + ", " + portrait_image + ")";
+        return "Attraction(" + name + ", " + description + ", " + photoUrl + ")";
     }
 }
