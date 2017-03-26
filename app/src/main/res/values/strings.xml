@@ -3,4 +3,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="mensaje_bienvenida">Bienvenidos a Trips</string>
     <string name="geolocalizacion">Estamos calculando su ubicación...</string>
+    <string name="no_attractions">No se encontraron atracciones cerca</string>
 </resources>

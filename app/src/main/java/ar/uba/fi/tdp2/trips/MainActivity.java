@@ -21,9 +21,12 @@ public class MainActivity extends AppCompatActivity {
     private String locality;
     private Double latitude;
     private Double longitude;
-
+    private boolean inMainWithoutAttractions = false;
     private Context localContext = this;
     private RecyclerView recyclerView;
+
+    //TODO: Debug para probar cambio de pantallas varias veces
+    //private boolean changeLayout = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
                 Log.d("TRIPS", "got attractions: " + response.body().toString());
                 attractions = response.body();
+
+                checkChangeLayout();
                 RV_AttractionAdapter adapter = new RV_AttractionAdapter(attractions, localContext);
                 recyclerView.setAdapter(adapter);
             }
@@ -72,6 +77,32 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TRIPS", t.toString());
             }
         });
+    }
+
+    private void checkChangeLayout() {
+        //TODO: para probar que funciona lo del cambio cuando no hay atracciones y despues se agrega alguna.
+        //if (!changeLayout) {
+        //    attractions = new ArrayList<>();
+        //    changeLayout = true;
+        //}
+        //-------------------------------------------------------------------------------------------------
+
+        if (attractions.size() == 0) {
+            setContentView(R.layout.activity_main_without_attractions);
+            this.setTitle(locality);
+            inMainWithoutAttractions = true;
+        } else {
+            if (inMainWithoutAttractions) {
+                setContentView(R.layout.activity_main);
+                this.setTitle(locality);
+                recyclerView = (RecyclerView) findViewById(R.id.rv);
+                LinearLayoutManager llm = new LinearLayoutManager(localContext);
+                recyclerView.setLayoutManager(llm);
+                inMainWithoutAttractions = false;
+                //TODO: Debug para probar cambio de pantallas cuando no hay atracciones
+                //changeLayout = false;
+            }
+        }
     }
 
     @Override
