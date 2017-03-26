@@ -8,8 +8,8 @@ public class Attraction {
     String photoUri;
 
     public Attraction(String name, String description, String photoUri) {
-        this.name = name;
+        this.name        = name;
         this.description = description;
-        this.photoUri = photoUri;
+        this.photoUri    = photoUri;
     }
 }

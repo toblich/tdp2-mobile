@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Se obtiene la locality del usuario
         Bundle bundle = getIntent().getExtras();
-        locality = bundle.getString("locality");
+        locality  = bundle.getString("locality");
         latitude  = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
 

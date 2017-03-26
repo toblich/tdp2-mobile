@@ -38,9 +38,9 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
 
+        context    = getApplicationContext();
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        context = getApplicationContext();
-        geocoder = new Geocoder(context);
+        geocoder   = new Geocoder(context);
 
         apiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -57,9 +57,9 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        int locationPermissionStatus = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
+        if (locationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_PETITION);
         } else {
@@ -76,15 +76,17 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSION_PETITION) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-                updateLocation();
-            } else {
-                // Permission denied
-                Toast.makeText(context,"Error: Permiso de localizacion denegado", Toast.LENGTH_SHORT).show(); // TODO internationalize
-                Log.e(LOGTAG,"Error: Permiso de localizacion denegado");
-            }
+        if (requestCode != LOCATION_PERMISSION_PETITION) {
+            return;
+        }
+
+        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission granted
+            updateLocation();
+        } else {
+            // Permission denied
+            Toast.makeText(context,"Error: Permiso de localizacion denegado", Toast.LENGTH_SHORT).show(); // TODO internationalize
+            Log.e(LOGTAG,"Error: Permiso de localizacion denegado");
         }
     }
 
@@ -100,34 +102,38 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     private void setLocation(Location loc) {
-        if (loc != null) {
-            List<Address> addresses = null;
-
-            // Get locality name from geocoder
-            try {
-                addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
-            } catch (Exception e) {
-                Toast.makeText(context,"Error en geocoder: " + e.toString(), Toast.LENGTH_SHORT).show();
-                Log.e(LOGTAG,"Error en geocoder: " + e.toString());
-            }
-            // Determine whether it successfully got the address or not
-            if(addresses != null && addresses.size() > 0 ) {
-                Address address = addresses.get(0);
-                String addressText = address.getLocality() + ", " + address.getCountryName();
-                SystemClock.sleep(1000);
-                Toast.makeText(context, "Usted se encuentra en: " + addressText, Toast.LENGTH_SHORT).show(); // TODO internationalize
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("locality", address.getLocality());
-                intent.putExtra("latitude", loc.getLatitude());
-                intent.putExtra("longitude", loc.getLongitude());
-                startActivity(intent);
-            } else {
-                Toast.makeText(context, "Error: El GPS no pudo establecer su dirección", Toast.LENGTH_SHORT).show(); // TODO internationalize
-                Log.e(LOGTAG,"Error: El GPS no pudo establecer su dirección");
-            }
-        } else {
+        if (loc == null) {
             Toast.makeText(context, "Error: El GPS no pudo establecer su ubicacion", Toast.LENGTH_SHORT).show(); // TODO internationalize
             Log.e(LOGTAG,"Error: El GPS no pudo establecer su ubicacion");
+            return;
         }
+
+        List<Address> addresses = null;
+
+        // Get locality name from geocoder
+        try {
+            addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
+        } catch (Exception e) {
+            Toast.makeText(context,"Error en geocoder: " + e.toString(), Toast.LENGTH_SHORT).show();
+            Log.e(LOGTAG,"Error en geocoder: " + e.toString());
+        }
+
+        // Check if successfully got the address
+        if(addresses == null || addresses.size() == 0 ) {
+            Toast.makeText(context, "Error: El GPS no pudo establecer su dirección", Toast.LENGTH_SHORT).show(); // TODO internationalize
+            Log.e(LOGTAG,"Error: El GPS no pudo establecer su dirección");
+            return;
+        }
+
+        Address address = addresses.get(0);
+        String addressText = address.getLocality() + ", " + address.getCountryName();
+        SystemClock.sleep(1000); // TODO remove before release
+        Toast.makeText(context, "Usted se encuentra en: " + addressText, Toast.LENGTH_SHORT).show(); // TODO internationalize
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("locality", address.getLocality());
+        intent.putExtra("latitude", loc.getLatitude());
+        intent.putExtra("longitude", loc.getLongitude());
+        startActivity(intent);
     }
 }
