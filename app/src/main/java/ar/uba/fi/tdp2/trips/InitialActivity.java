@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.Manifest;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
@@ -91,14 +93,21 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     private void updateLocation() {
-        if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            @SuppressWarnings("MissingPermission")
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-            setLocation(lastLocation);
-        } else {
+        if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(context, "Error: GPS deshabilitado, debe habilitarlo para que el programa funcione", Toast.LENGTH_SHORT).show(); // TODO internationalize
             Log.e(LOGTAG,"Error: GPS deshabilitado, debe habilitarlo para que el programa funcione");
+            return;
         }
+
+        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            Toast.makeText(context, "Error: No hay conexión a internet.", Toast.LENGTH_SHORT).show(); // TODO internationalize
+            Log.e(LOGTAG,"Error: No hay conexión a internet");
+            return;
+        }
+
+        @SuppressWarnings("MissingPermission")
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        setLocation(lastLocation);
     }
 
     private void setLocation(Location loc) {

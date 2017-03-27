@@ -53,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private void initializeData() {
         attractions = new ArrayList<>();
 
+        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            Toast.makeText(localContext, "Error: No hay conexión a internet.", Toast.LENGTH_SHORT).show(); // TODO internationalize
+            Log.e("TRIPS","Error: No hay conexión a internet");
+            return;
+        }
+
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 1.0);
 
