@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
 
-    //TODO: Debug para probar cambio de pantallas varias veces
-    //private boolean changeLayout = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkChangeLayout() {
-        //TODO: para probar que funciona lo del cambio cuando no hay atracciones y despues se agrega alguna.
-        //if (!changeLayout) {
-        //    attractions = new ArrayList<>();
-        //    changeLayout = true;
-        //}
-        //-------------------------------------------------------------------------------------------------
         boolean isAttractionsEmpty = (attractions.size() == 0);
 
         if (isAttractionsEmpty && !inMainWithoutAttractions) {
@@ -107,12 +98,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isAttractionsEmpty && inMainWithoutAttractions) {
             initializeActivity();
             inMainWithoutAttractions = false;
-            //TODO: Debug para probar cambio de pantallas cuando no hay atracciones
-            //changeLayout = false;
             return;
         }
     }
-
-    @Override
-    public void onBackPressed() {}
 }

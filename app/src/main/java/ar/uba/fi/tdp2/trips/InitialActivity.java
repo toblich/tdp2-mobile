@@ -5,13 +5,16 @@ import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.Manifest;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -25,6 +28,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class InitialActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
@@ -35,6 +42,10 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private LocationManager locManager;
     private Geocoder geocoder;
     private CardView geolocalizationCard;
+    private Context localContext = this;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager llm;
+    private List<City> cities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +63,52 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 updateLocation();
             }
         });
+        recyclerView = (RecyclerView) findViewById(R.id.rvCities);
+        llm = new LinearLayoutManager(localContext);
+        recyclerView.setLayoutManager(llm);
 
         apiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeData();
+    }
+
+    private void initializeData() {
+        cities = new ArrayList<>();
+
+        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            Toast.makeText(localContext, "Error: No hay conexión a internet.", Toast.LENGTH_SHORT).show(); // TODO internationalize
+            Log.e("TRIPS","Error: No hay conexión a internet");
+            return;
+        }
+
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        Call<List<City>> call  = backendService.getCities();
+
+        call.enqueue(new Callback<List<City>>() {
+            @Override
+            public void onResponse(Call<List<City>> call, Response<List<City>> response) {
+                Log.d("TRIPS", "got cities: " + response.body().toString());
+                cities = response.body();
+
+                RV_CitiesAdapter adapter = new RV_CitiesAdapter(cities, localContext);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<City>> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Log.d("TRIPS", t.toString());
+            }
+        });
     }
 
     @Override
