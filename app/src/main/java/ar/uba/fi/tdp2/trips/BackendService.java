@@ -28,6 +28,11 @@ public interface BackendService {
     @GET("/cities")
     Call<List<City>> getCities();
 
+    @GET("/attractions/2")
+    Call<Attraction> getAttraction(
+//            @Path("attractionId") int attractionId // TODO
+    );
+
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
             .addInterceptor(new Interceptor() {
                 @Override
