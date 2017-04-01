@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Trips</string>
     <string name="title_activity_maps">Map</string>
-    <string name="mensaje_bienvenida">Bienvenidos a Trips</string>
-    <string name="geolocalizacion">Estamos calculando su ubicación...</string>
+    <string name="chose_location">Elija su ubicación</string>
     <string name="no_attractions">No se encontraron atracciones cerca</string>
+    <string name="geolocalization_card">Mi ubicación actual</string>
 </resources>

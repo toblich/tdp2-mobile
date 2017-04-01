@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 import java.util.List;
 
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import android.location.Location;
@@ -32,15 +34,24 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private Context context;
     private LocationManager locManager;
     private Geocoder geocoder;
+    private CardView geolocalizationCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
+        this.setTitle(R.string.chose_location);
 
         context    = getApplicationContext();
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         geocoder   = new Geocoder(context);
+        geolocalizationCard = (CardView) findViewById(R.id.geolocalization_card);
+        geolocalizationCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateLocation();
+            }
+        });
 
         apiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -62,8 +73,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         if (locationPermissionStatus != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_PETITION);
-        } else {
-            updateLocation();
         }
     }
 
@@ -82,7 +91,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission granted
-            updateLocation();
+            return;
         } else {
             // Permission denied
             Toast.makeText(context,"Error: Permiso de localizacion denegado", Toast.LENGTH_SHORT).show(); // TODO internationalize
@@ -134,7 +143,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
         Address address = addresses.get(0);
         String addressText = address.getLocality() + ", " + address.getCountryName();
-        SystemClock.sleep(1000); // TODO remove before release
         Toast.makeText(context, "Usted se encuentra en: " + addressText, Toast.LENGTH_SHORT).show(); // TODO internationalize
 
         Intent intent = new Intent(this, MainActivity.class);
