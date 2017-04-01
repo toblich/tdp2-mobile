@@ -25,6 +25,9 @@ public interface BackendService {
             @Query("radius")    double radius
     );
 
+    @GET("/cities")
+    Call<List<City>> getCities();
+
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
             .addInterceptor(new Interceptor() {
                 @Override
