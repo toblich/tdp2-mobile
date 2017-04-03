@@ -25,21 +25,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-//    compile 'com.android.support:design:25.0.1'
-//    compile 'com.android.support:support-v4:25.0.1'
-    
 
-    // Glide (for images)
-    
-    // For compatibility with previous androids
-    
-    // For using cards
-    
-    // For using recycler view (for long lists)
-    
-    // For http requests
-    
-    // For google APIs
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:appcompat-v7:25.3.0'

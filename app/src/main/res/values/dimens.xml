@@ -7,7 +7,9 @@
     <dimen name="attraction_card_top_padding">8dp</dimen>
     <dimen name="attraction_card_horizontal_padding">16dp</dimen>
     <dimen name="attraction_card_bottom_padding">16dp</dimen>
-    <dimen name="attraction_card_title_right_margin">72dp</dimen> <!-- Photo width + photo margin -->
+    <dimen name="attraction_card_elevation">4dp</dimen>
+    <!-- Photo width + photo margin -->
+    <dimen name="attraction_card_title_right_margin">72dp</dimen>
     <dimen name="attraction_card_title_top_margin">24dp</dimen>
     <dimen name="attraction_card_title_text_size">24sp</dimen>
     <dimen name="attraction_card_cover_photo_width">128dp</dimen>
@@ -15,4 +17,13 @@
     <dimen name="attraction_card_cover_photo_margin">4dp</dimen>
     <dimen name="attraction_card_description_top_margin">0dp</dimen>
     <dimen name="attraction_card_description_bottom_margin">8dp</dimen>
+
+    <!-- Attraction details -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="attraction_details_layout_margin">16dp</dimen>
+    <dimen name="attraction_details_info_list_vertical_margin">16dp</dimen>
+    <!-- Info item -->
+    <dimen name="info_item_vertical_margin">8dp</dimen>
+    <dimen name="info_item_icon_text_spacing">16dp</dimen>
 </resources>
