@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Trips</string>
     <string name="title_activity_maps">Map</string>
-    <string name="chose_location">Elegir ubicación</string>
+    <string name="choose_location">Elegir ubicación</string>
     <string name="no_attractions">No se encontraron atracciones cerca</string>
     <string name="geolocalization_card">Mi ubicación actual</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_attraction_tabs">AttractionTabsActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

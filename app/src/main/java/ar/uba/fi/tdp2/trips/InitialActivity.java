@@ -51,7 +51,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
-        this.setTitle(R.string.chose_location);
+        this.setTitle(R.string.choose_location);
 
         context    = getApplicationContext();
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

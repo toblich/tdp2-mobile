@@ -19,7 +19,7 @@ public class Pager extends FragmentStatePagerAdapter {
         switch (position) {
             case 0: return AttractionDetailsFragment.newInstance(attractionId);
             case 1: return new EmptyTabFragment();
-            case 2: return new EmptyTabFragment();
+            case 2: return PointOfInterestFragment.newInstance(attractionId);
         };
         return null;
     }
