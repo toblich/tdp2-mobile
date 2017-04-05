@@ -37,7 +37,8 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
 
         Bundle bundle = getIntent().getExtras();
         String poiName = bundle.getString("poiName");
-        this.setTitle(poiName);
+        String poiOrder = bundle.getString("poiOrder");
+        this.setTitle(poiOrder + "  " + poiName);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

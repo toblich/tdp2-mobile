@@ -59,6 +59,7 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
                 Intent intent = new Intent(actualContext, PointOfInterestTabsActivity.class);
                 intent.putExtra("attractionId", pointOfInterest.id);
                 intent.putExtra("poiName", pointOfInterest.name);
+                intent.putExtra("poiOrder", pointOfInterest.getOrder());
                 intent.putExtra("poiId", pointOfInterest.id);
                 actualContext.startActivity(intent);
             }
