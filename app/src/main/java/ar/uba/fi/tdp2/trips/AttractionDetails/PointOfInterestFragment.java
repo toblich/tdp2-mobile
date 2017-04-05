@@ -4,14 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.RV_PointOfInterestAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +35,10 @@ public class PointOfInterestFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
-    private PointOfInterest pointOfInterest;
+    private List<PointOfInterest> pointsOfInterest;
+    private Context localContext;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager llm;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,15 +72,43 @@ public class PointOfInterestFragment extends Fragment {
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
+        localContext = getContext();
+        llm = new LinearLayoutManager(localContext);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_point_of_interest, container, false);
-        //RelativeLayout rl = (RelativeLayout) fragment.findViewById(R.id.attraction_details_relative_layout);
-        //getAttractionDetails(rl);
+        recyclerView = (RecyclerView) fragment.findViewById(R.id.rvPointsOfInterest);
+        recyclerView.setLayoutManager(llm);
+        getPointsOfInterest();
         return fragment;
+    }
+
+    public void getPointsOfInterest() {
+        pointsOfInterest = new ArrayList<>();
+
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        Call<List<PointOfInterest>> call  = backendService.getPointsOfInterest();
+
+        call.enqueue(new Callback<List<PointOfInterest>>() {
+            @Override
+            public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
+                Log.d("TRIPS", "got points of interest: " + response.body().toString());
+                pointsOfInterest = response.body();
+
+                RV_PointOfInterestAdapter adapter = new RV_PointOfInterestAdapter(pointsOfInterest, localContext);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<PointOfInterest>> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(localContext, "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Log.d("TRIPS", t.toString());
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
