@@ -30,7 +30,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
         <!--
             ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -43,10 +43,10 @@
         <activity android:name=".InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".AttractionDetails.AttractionTabsActivity"
             android:label="@string/title_activity_attraction_tabs"
@@ -56,6 +56,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.MainActivity" />
         </activity>
+        <activity
+            android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"
+            android:label="@string/title_activity_point_of_interest_tabs"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

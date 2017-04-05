@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ar.uba.fi.tdp2.trips.PointOfInterestDetails.PointOfInterestTabsActivity;
+
 public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfInterestAdapter.PointOfInterestViewHolder> {
 
     List<PointOfInterest> pointsOfInterests;
@@ -48,6 +50,16 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
         holder.poiOrder.setText(pointOfInterest.getOrder());
         holder.poiName.setText(pointOfInterest.name);
         holder.poiDescription.setText(pointOfInterest.description);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(actualContext, PointOfInterestTabsActivity.class);
+                intent.putExtra("attractionId", pointOfInterest.id);
+                intent.putExtra("poiName", pointOfInterest.name);
+                intent.putExtra("poiId", pointOfInterest.id);
+                actualContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
