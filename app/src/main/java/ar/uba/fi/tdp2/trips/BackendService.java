@@ -18,6 +18,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface BackendService {
+    //Get the list of all the cities
+    @GET("/cities")
+    Call<List<City>> getCities();
+
+    //Get the list of the nearest attractions
     @GET("/attractions")
     Call<List<Attraction>> getAttractions(
             @Query("latitude")  double latitude,
@@ -25,17 +30,23 @@ public interface BackendService {
             @Query("radius")    double radius
     );
 
-    @GET("/cities")
-    Call<List<City>> getCities();
-
+    //Get the details of a specific attraction
     @GET("/attractions/2")
     Call<Attraction> getAttraction(
 //          @Path("attractionId") int attractionId // TODO
     );
 
+    //Get the points of interest's list of a specific attraction
     @GET("/attractions/50/point_of_interests")
     Call<List<PointOfInterest>> getPointsOfInterest(
 //          @Path("attractionId") int attractionId // TODO
+    );
+
+    //Get the details of a specific point of interest
+    @GET("/attractions/50/point_of_interests/1")
+    Call<PointOfInterest> getPointOfInterest(
+//            @Path("attractionId") int attractionId // TODO
+//            @Path("poiId") int poiId //TODO
     );
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())

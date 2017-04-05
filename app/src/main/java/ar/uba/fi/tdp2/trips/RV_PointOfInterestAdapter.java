@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,13 +30,15 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
         TextView poiOrder;
         TextView poiName;
         TextView poiDescription;
+        ImageView poiAudioguide;
 
         PointOfInterestViewHolder(View itemView) {
             super(itemView);
-            cardView        = (CardView) itemView.findViewById(R.id.point_of_interest_card);
-            poiOrder        = (TextView) itemView.findViewById(R.id.poi_order);
-            poiName         = (TextView) itemView.findViewById(R.id.poi_name);
-            poiDescription  = (TextView) itemView.findViewById(R.id.poi_description);
+            cardView        = (CardView)  itemView.findViewById(R.id.point_of_interest_card);
+            poiOrder        = (TextView)  itemView.findViewById(R.id.poi_order);
+            poiName         = (TextView)  itemView.findViewById(R.id.poi_name);
+            poiDescription  = (TextView)  itemView.findViewById(R.id.poi_description);
+            poiAudioguide   = (ImageView) itemView.findViewById(R.id.point_of_interest_card_audioguide_icon);
         }
     }
     @Override
@@ -58,6 +61,12 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
                 intent.putExtra("poiName", pointOfInterest.name);
                 intent.putExtra("poiId", pointOfInterest.id);
                 actualContext.startActivity(intent);
+            }
+        });
+        holder.poiAudioguide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(actualContext, "Audioguide", Toast.LENGTH_SHORT).show();
             }
         });
     }
