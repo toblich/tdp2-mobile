@@ -11,8 +11,7 @@ import android.os.Bundle;
 
 import ar.uba.fi.tdp2.trips.R;
 
-public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener,
-        AttractionDetailsFragment.OnFragmentInteractionListener, PointOfInterestFragment.OnFragmentInteractionListener {
+public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, AttractionTabsInterface {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
