@@ -30,7 +30,12 @@ public interface BackendService {
 
     @GET("/attractions/2")
     Call<Attraction> getAttraction(
-//            @Path("attractionId") int attractionId // TODO
+//          @Path("attractionId") int attractionId // TODO
+    );
+
+    @GET("/attractions/50/point_of_interests")
+    Call<List<PointOfInterest>> getPointsOfInterest(
+//          @Path("attractionId") int attractionId // TODO
     );
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
