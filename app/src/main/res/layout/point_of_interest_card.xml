@@ -27,7 +27,7 @@
                 android:layout_marginStart="13dp"
                 android:layout_marginTop="14dp"
                 android:text="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/poi_name"
@@ -40,7 +40,7 @@
                 android:layout_toEndOf="@+id/poi_order"
                 android:layout_toRightOf="@+id/poi_order"
                 android:text="Sala Medieval"
-                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/poi_description"
@@ -55,8 +55,8 @@
 
             <ImageView
                 android:id="@+id/point_of_interest_card_audioguide_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/poi_name"

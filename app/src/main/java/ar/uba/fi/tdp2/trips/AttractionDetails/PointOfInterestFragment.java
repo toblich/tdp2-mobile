@@ -90,7 +90,7 @@ public class PointOfInterestFragment extends Fragment {
         pointsOfInterest = new ArrayList<>();
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<List<PointOfInterest>> call  = backendService.getPointsOfInterest();
+        Call<List<PointOfInterest>> call  = backendService.getPointsOfInterest(/*attractionId*/);
 
         call.enqueue(new Callback<List<PointOfInterest>>() {
             @Override
