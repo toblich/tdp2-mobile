@@ -123,8 +123,6 @@ public class AttractionDetailsFragment extends Fragment {
         informationList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
         });
