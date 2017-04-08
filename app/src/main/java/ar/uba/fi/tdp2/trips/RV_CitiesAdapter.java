@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.CityViewHolder> {
 
@@ -17,8 +18,8 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
     Context actualContext;
 
     public RV_CitiesAdapter(List<City> cities, Context context) {
-        this.cities     = cities;
-        this.actualContext    = context; // TODO validate it's correct context
+        this.cities         = cities;
+        this.actualContext  = context; // TODO validate it's correct context
     }
 
     public static class CityViewHolder extends RecyclerView.ViewHolder {
@@ -59,6 +60,12 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
     @Override
     public int getItemCount() {
         return cities.size();
+    }
+
+    public void setFilter(List<City> citiesList){
+        cities = new ArrayList<>();
+        cities.addAll(citiesList);
+        notifyDataSetChanged();
     }
 
 }
