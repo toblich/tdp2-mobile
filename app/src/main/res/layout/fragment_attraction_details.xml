@@ -15,6 +15,8 @@
         android:id="@+id/attraction_details_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:layout_margin="@dimen/attraction_details_layout_margin">
 
         <ImageView
@@ -36,8 +38,57 @@
         <TextView
             android:id="@id/attraction_description"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimaryLight" />
+
+        <TextView
+            android:id="@+id/write_review_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="32dp"/>
+            android:text="Valorar" />
+
+        <RelativeLayout
+            android:id="@+id/own_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/user_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:stepSize="1"
+                android:layout_centerHorizontal="true"
+                android:progressTint="@color/colorRatingStar"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_margin="8dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/user_rating_bar"
+                android:inputType="textAutoCorrect"
+                android:hint="@string/review_input_hint"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/other_reviews_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Otras opiniones" />
+
+        <include layout="@layout/review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
 
     </LinearLayout>
 

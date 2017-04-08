@@ -5,4 +5,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="toolbarContent">#FFFFFF</color>
+    <color name="colorRatingStar">#fbc02d</color>
 </resources>
