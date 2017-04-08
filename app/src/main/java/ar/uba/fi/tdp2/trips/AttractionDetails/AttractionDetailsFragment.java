@@ -4,20 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 
@@ -113,6 +117,11 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     public void setViewContent(LinearLayout ll) {
+        final Context context = getContext();
+        if (getContext() == null) {
+            return;
+        }
+
         ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
         TextView description = (TextView) ll.findViewById(R.id.attraction_description);
 
@@ -128,10 +137,31 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        Context context = getContext();
-        if (getContext() == null) {
-            return;
-        }
+        final EditText reviewText = (EditText) ll.findViewById(R.id.own_review_text);
+        reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // TODO send review to backend
+                    reviewText.clearFocus();
+                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
+                }
+                return false;
+            }
+        });
+
+        AppCompatRatingBar ratingBar = (AppCompatRatingBar) ll.findViewById(R.id.own_review_rating);
+        ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                reviewText.setVisibility(View.VISIBLE);
+
+                // TODO send rating to backend
+            }
+        });
 
         int placeholderId = R.mipmap.photo_placeholder;
         Glide.with(context)
