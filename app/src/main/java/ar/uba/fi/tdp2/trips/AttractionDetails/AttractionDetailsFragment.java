@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,12 +83,12 @@ public class AttractionDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_attraction_details, container, false);
-        RelativeLayout rl = (RelativeLayout) fragment.findViewById(R.id.attraction_details_relative_layout);
-        getAttractionDetails(rl);
+        LinearLayout ll = (LinearLayout) fragment.findViewById(R.id.attraction_details_linear_layout);
+        getAttractionDetails(ll);
         return fragment;
     }
 
-    public void getAttractionDetails(final RelativeLayout rl) {
+    public void getAttractionDetails(final LinearLayout ll) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         // TODO fetch from real server with real attractionId
         Call<Attraction> call  = backendService.getAttraction(/*attractionId*/);
@@ -97,7 +99,7 @@ public class AttractionDetailsFragment extends Fragment {
                 Log.d("TRIPS", "got attraction: " + response.body().toString());
                 attraction = response.body();
 
-                setViewContent(rl);
+                setViewContent(ll);
             }
 
             @Override
@@ -109,14 +111,21 @@ public class AttractionDetailsFragment extends Fragment {
         });
     }
 
-    public void setViewContent(RelativeLayout rl) {
-        ImageView coverPhoto = (ImageView) rl.findViewById(R.id.attraction_cover_photo);
-        TextView description = (TextView) rl.findViewById(R.id.attraction_description);
+    public void setViewContent(LinearLayout ll) {
+        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
+        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
 
-        ListView informationList = (ListView) rl.findViewById(R.id.attraction_information_list);
+        ListView informationList = (ListView) ll.findViewById(R.id.attraction_information_list);
 
         InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
         informationList.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(informationList);
+        informationList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
 
         Context context = getContext();
         if (getContext() == null) {
@@ -133,6 +142,29 @@ public class AttractionDetailsFragment extends Fragment {
         description.setText(attraction.description);
     }
 
+    /**** Method for Setting the Height of the ListView dynamically.
+     **** Hack to fix the issue of not showing all the items of the ListView
+     **** when placed inside a ScrollView  ****/
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
 
     // TODO: I _think_ all the following code is for having a floating button that sends something to the activity
     public void onButtonPressed(Uri uri) {
