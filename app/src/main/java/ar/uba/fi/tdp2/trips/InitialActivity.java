@@ -1,11 +1,13 @@
 package ar.uba.fi.tdp2.trips;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.Nullable;
 
@@ -15,7 +17,10 @@ import java.util.List;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,6 +51,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
     private List<City> cities;
+    RV_CitiesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +104,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 Log.d("TRIPS", "got cities: " + response.body().toString());
                 cities = response.body();
 
-                RV_CitiesAdapter adapter = new RV_CitiesAdapter(cities, localContext);
+                adapter = new RV_CitiesAdapter(cities, localContext);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -201,5 +207,57 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         intent.putExtra("latitude", loc.getLatitude());
         intent.putExtra("longitude", loc.getLongitude());
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_initial_activity, menu);
+
+        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.cities_search);
+        SearchView search = (SearchView) searchItem.getActionView();
+        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                final List<City> filteredModelList = filter(cities, query);
+                adapter.setFilter(filteredModelList);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        adapter.setFilter(cities);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+                });
+
+        return true;
+    }
+
+    private List<City> filter(List<City> citiesList, String query) {
+        query = query.toLowerCase();
+
+        final List<City> filteredModelList = new ArrayList<>();
+        for (City city : citiesList) {
+            final String cityName = city.getName().toLowerCase();
+            final String cityCountry = city.getCountry().toLowerCase();
+            if (cityName.contains(query) || cityCountry.contains(query)) {
+                filteredModelList.add(city);
+            }
+        }
+        return filteredModelList;
     }
 }
