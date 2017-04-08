@@ -1,16 +1,18 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionDetailsFragment">
+    tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionDetailsFragment"
+    android:fillViewport="true">
 
     <!--<Spinner-->
         <!--android:id="@+id/attraction_details_spinner"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content" />-->
 
-    <RelativeLayout
-        android:id="@+id/attraction_details_relative_layout"
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/attraction_details_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/attraction_details_layout_margin">
@@ -22,7 +24,6 @@
 
         <ListView
             android:id="@+id/attraction_information_list"
-            android:layout_below="@id/attraction_cover_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/attraction_details_info_list_vertical_margin"
@@ -36,8 +37,8 @@
             android:id="@id/attraction_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attraction_information_list" />
+            android:paddingBottom="32dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</FrameLayout>
+</ScrollView>
