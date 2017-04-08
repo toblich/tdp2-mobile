@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -122,9 +123,7 @@ public class AttractionDetailsFragment extends Fragment {
             return;
         }
 
-        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
-        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
-
+        /* Set useful information details */
         ListView informationList = (ListView) ll.findViewById(R.id.attraction_information_list);
 
         InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
@@ -137,6 +136,20 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
+        /* Set cover photo */
+        int placeholderId = R.mipmap.photo_placeholder;
+        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
+        Glide.with(context)
+                .load(attraction.photoUri)
+                .placeholder(placeholderId)
+                .error(placeholderId) // TODO see if it possible to log the error
+                .into(coverPhoto);
+
+        /* Set description */
+        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
+        description.setText(attraction.description);
+
+        /* Set own review content and behaviour */
         final EditText reviewText = (EditText) ll.findViewById(R.id.own_review_text);
         reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -144,15 +157,31 @@ public class AttractionDetailsFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // TODO send review to backend
                     reviewText.clearFocus();
-                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
                 }
                 return false;
             }
         });
+        reviewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
+                if (hasFocus) {
+                    System.out.println("has focus");
+                    reviewText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                    reviewText.setCursorVisible(true);
+                    imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+                } else {
+                    System.out.println("no focus");
+                    reviewText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS); // Hide correction underline
+                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
+                    reviewText.setCursorVisible(false);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
+                }
+            }
+        });
+
+        /* Set own rating value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) ll.findViewById(R.id.own_review_rating);
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
@@ -163,14 +192,8 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        int placeholderId = R.mipmap.photo_placeholder;
-        Glide.with(context)
-                .load(attraction.photoUri)
-                .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
-                .into(coverPhoto);
-
-        description.setText(attraction.description);
+        /* Set other people's reviews */
+        // TODO
     }
 
     /**** Method for Setting the Height of the ListView dynamically.
