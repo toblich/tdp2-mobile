@@ -64,6 +64,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         //Creating our pager adapter
         int attractionId = bundle.getInt("attractionId");
@@ -74,7 +75,6 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
-
     }
 
     @Override
