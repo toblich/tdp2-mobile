@@ -49,7 +49,7 @@ public class AllReviewsActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                Log.d("TRIPS", "got attractions: " + response.body().toString());
+                Log.d("TRIPS", "got reviews: " + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);
