@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -217,6 +218,26 @@ public class AttractionDetailsFragment extends Fragment {
                 otherReviewText.setText(rev.text);
                 otherReviewText.setVisibility(View.VISIBLE);
             }
+        }
+
+        /* Add "see more reviews" button */
+        TextView seeMoreReviewsLink = (TextView) ll.findViewById(R.id.see_more_reviews_link);
+        if (attraction.reviews.size() <= 1) {
+            seeMoreReviewsLink.setVisibility(View.GONE);
+        } else {
+            seeMoreReviewsLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = getContext();
+                    if (context == null) {
+                        return;
+                    }
+                    Intent intent = new Intent(context, AllReviewsActivity.class);
+                    intent.putExtra("attractionName", attraction.name);
+                    intent.putExtra("attractionId", attraction.id);
+                    context.startActivity(intent);
+                }
+            });
         }
         // TODO
     }

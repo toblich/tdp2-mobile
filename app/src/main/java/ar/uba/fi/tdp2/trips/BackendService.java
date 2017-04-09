@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,6 +48,12 @@ public interface BackendService {
     Call<PointOfInterest> getPointOfInterest(
 //            @Path("attractionId") int attractionId // TODO
 //            @Path("poiId") int poiId //TODO
+    );
+
+    // Get list of reviews for an attraction
+    @GET("/attractions/50/reviews")
+    Call<List<Review>> getReviews(
+//      @Path("attractionId") int attractionId // TODO
     );
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
