@@ -114,6 +114,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
+                android:textColor="@color/colorAccent"
                 android:text="VER MÁS ›"/>
 
         </RelativeLayout>

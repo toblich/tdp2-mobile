@@ -83,7 +83,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
     private void getPointOfInterestDetails(final LinearLayout ll, final RelativeLayout rl) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         // TODO fetch from real server with real attractionId and poiId
-        Call<PointOfInterest> call  = backendService.getPointOfInterest(/*attractionId, poiId*/);
+        Call<PointOfInterest> call  = backendService.getPointOfInterest(attractionId, poiId);
 
         call.enqueue(new Callback<PointOfInterest>() {
             @Override

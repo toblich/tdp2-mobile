@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Attraction;
+import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import retrofit2.Call;
@@ -101,7 +102,7 @@ public class AttractionDetailsFragment extends Fragment {
     public void getAttractionDetails(final LinearLayout ll) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         // TODO fetch from real server with real attractionId
-        Call<Attraction> call  = backendService.getAttraction(/*attractionId*/);
+        Call<Attraction> call  = backendService.getAttraction(attractionId);
 
         call.enqueue(new Callback<Attraction>() {
             @Override
@@ -251,11 +252,11 @@ public class AttractionDetailsFragment extends Fragment {
                     Intent intent = new Intent(context, AllReviewsActivity.class);
                     intent.putExtra("attractionName", attraction.name);
                     intent.putExtra("attractionId", attraction.id);
+                    System.out.println("Request reviews for attraction: " + attraction.toString());
                     context.startActivity(intent);
                 }
             });
         }
-        // TODO
     }
 
     /**** Method for Setting the Height of the ListView dynamically.
@@ -321,16 +322,23 @@ public class AttractionDetailsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public interface OnClickCallback {
+        void call(View view, TextView days, TextView hours, ImageView icon);
+    }
 
     public class InformationListAdapter extends BaseAdapter {
         public class InfoItem {
             String value;
             int iconId;
-            public InfoItem(String value, int iconId) {
+            OnClickCallback callback;
+
+            public InfoItem(String value, int iconId, OnClickCallback callback) {
                 this.value = value;
                 this.iconId = iconId;
+                this.callback = callback;
             }
         }
+
         private Context context;
         private Attraction attraction;
         private List<InfoItem> items;
@@ -346,20 +354,51 @@ public class AttractionDetailsFragment extends Fragment {
             add(R.drawable.ic_place_black_24dp, attraction.address);
             add(R.drawable.ic_public_black_24dp, attraction.url);
             add(R.drawable.ic_phone_black_24dp, attraction.phone);
+            add(R.drawable.ic_access_time_black_24dp, attraction.openingHours);
             add(R.drawable.ic_attach_money_black_24dp, attraction.price, "dólares"); // TODO intenationalize
             add(R.drawable.ic_timer_black_24dp, attraction.duration, "minutos"); // TODO internationalize
         }
 
         private void add(int iconId, String string) {
             if (string != null && !string.equals("")) {
-                items.add(new InfoItem(string, iconId));
+                items.add(new InfoItem(string, iconId, null));
             }
         }
 
         private void add(int iconId, Number num, String string) {
             if (num != null) { // TODO make string pretty
-                items.add(new InfoItem(num.toString() + " " + string, iconId));
+                items.add(new InfoItem(num.toString() + " " + string, iconId, null));
             }
+        }
+
+        private void add(int iconId, final List<OpeningHour> openingHours) {
+            if (openingHours == null || openingHours.isEmpty()) {
+                return;
+            }
+
+            OnClickCallback callback = openingHours.size() == 1 ? null : new OnClickCallback() {
+                @Override
+                public void call(View view, TextView days, TextView hours, ImageView icon) {
+                    // TODO
+                    System.out.println("ON CLICK CALLBACK");
+                    StringBuilder daysBuilder = new StringBuilder();
+                    StringBuilder hoursBuilder = new StringBuilder();
+                    for (OpeningHour op: openingHours) {
+                        daysBuilder.append(op.day + '\n');
+                        hoursBuilder.append("    " + (op.start == null ? "Abierto las 24 horas\n" : op.start + " - " + op.end));
+                    }
+                    days.setText(daysBuilder.toString());
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.addRule(RelativeLayout.RIGHT_OF, icon.getId());
+                    days.setLayoutParams(layoutParams);
+                    hours.setVisibility(View.VISIBLE);
+                    hours.setText(hoursBuilder.toString());
+                }
+            };
+
+            OpeningHour first = openingHours.get(0);
+            String initial = first.day + "    " + (first.start == null ? "Abierto las 24 horas" : (first.start + " - " + first.end));
+            items.add(new InfoItem(initial, iconId, callback));
         }
 
         @Override
@@ -381,14 +420,24 @@ public class AttractionDetailsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-            View infoItem = inflater.inflate(R.layout.attraction_info_item, parent, false);
-            TextView value = (TextView) infoItem.findViewById(R.id.value);
-            ImageView icon = (ImageView) infoItem.findViewById(R.id.icon);
+            final View infoItem = inflater.inflate(R.layout.attraction_info_item, parent, false);
+            final TextView value = (TextView) infoItem.findViewById(R.id.value);
+            final ImageView icon = (ImageView) infoItem.findViewById(R.id.icon);
 
-            InfoItem item = items.get(position);
+            final InfoItem item = items.get(position);
 
             value.setText(item.value);
             icon.setImageResource(item.iconId);
+
+            if (item.callback != null) {
+                value.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView hours = (TextView) infoItem.findViewById(R.id.hours);
+                        item.callback.call(infoItem, value, hours, icon);
+                    }
+                });
+            }
 
             return infoItem;
         }

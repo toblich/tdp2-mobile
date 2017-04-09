@@ -22,6 +22,17 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/icon"
         android:layout_toRightOf="@id/icon"
+        android:maxLines="7"
         />
+
+    <TextView
+        android:id="@+id/hours"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/value"
+        android:layout_toRightOf="@id/value"
+        android:maxLines="7"
+        android:visibility="gone"/>
 
 </RelativeLayout>
