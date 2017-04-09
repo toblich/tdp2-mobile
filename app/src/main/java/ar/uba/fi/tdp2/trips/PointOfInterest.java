@@ -8,13 +8,15 @@ public class PointOfInterest {
     public String name;
     public String description;
     public @SerializedName("portrait_image") String photoUri;
+    public @SerializedName("audio_guide") String audioguide;
 
-    public PointOfInterest(int id, int order, String name, String description, String photoUri) {
+    public PointOfInterest(int id, int order, String name, String description, String photoUri, String audioguide) {
         this.id             = id;
         this.order          = order;
         this.name           = name;
         this.description    = description;
         this.photoUri       = photoUri;
+        this.audioguide     = audioguide;
     }
 
     @Override

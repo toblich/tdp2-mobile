@@ -101,12 +101,18 @@ public class PointOfInterestDetailsFragment extends Fragment {
         ImageView poi_cover_photo = (ImageView) rl.findViewById(R.id.poi_details_image);
         TextView poi_description = (TextView) rl.findViewById(R.id.poi_details_description);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.poi_details_audioguide_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
-            }
-        });
+
+        poi_description.setText(pointOfInterest.description);
+
+        if (pointOfInterest.audioguide != null) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
+                }
+            });
+        }
 
         int placeholderId = R.mipmap.photo_placeholder;
         Glide.with(localContext)
@@ -114,8 +120,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
                 .placeholder(placeholderId)
                 .error(placeholderId)
                 .into(poi_cover_photo);
-
-        poi_description.setText(pointOfInterest.description);
 
     }
 

@@ -31,12 +31,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="@dimen/attraction_card_cover_photo_width"
                 android:layout_marginEnd="@dimen/attraction_card_cover_photo_width"
+                android:layout_marginRight="@dimen/attraction_card_cover_photo_width"
                 android:layout_marginTop="@dimen/attraction_card_title_top_margin"
                 android:maxLines="3"
-                android:textSize="@dimen/attraction_card_title_text_size"
-                />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/attraction_card_title_text_size" />
 
             <ImageView
                 android:id="@+id/attraction_photo"

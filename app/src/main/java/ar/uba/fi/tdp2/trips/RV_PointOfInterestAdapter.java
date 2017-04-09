@@ -22,7 +22,7 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
 
     public RV_PointOfInterestAdapter(List<PointOfInterest> pointsOfInterests, Context context) {
         this.pointsOfInterests     = pointsOfInterests;
-        this.actualContext         = context; // TODO validate it's correct context
+        this.actualContext         = context;
     }
 
     public static class PointOfInterestViewHolder extends RecyclerView.ViewHolder {
@@ -64,12 +64,15 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
                 actualContext.startActivity(intent);
             }
         });
-        holder.poiAudioguide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(actualContext, "Audioguide", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (pointOfInterest.audioguide != null) {
+            holder.poiAudioguide.setVisibility(View.VISIBLE);
+            holder.poiAudioguide.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(actualContext, "Audioguide", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
