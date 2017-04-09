@@ -168,12 +168,12 @@ public class AttractionDetailsFragment extends Fragment {
 
                 if (hasFocus) {
                     System.out.println("has focus");
-                    reviewText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    reviewText.setCursorVisible(true);
                     imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                    reviewText.setCursorVisible(true);
                 } else {
                     System.out.println("no focus");
-                    reviewText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS); // Hide correction underline
+                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE); // Hide correction underline
                     reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
                     reviewText.setCursorVisible(false);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
