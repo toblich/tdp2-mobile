@@ -4,9 +4,24 @@
     android:layout_height="match_parent"
     tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.PointOfInterestFragment">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvPointsOfInterest"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/fragment_empty_poi_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/no_points_of_interest"
+            android:textAppearance="@android:style/TextAppearance.Medium" />
+    </RelativeLayout>
 </FrameLayout>
