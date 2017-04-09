@@ -1,22 +1,29 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatRatingBar;
+import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 
@@ -112,9 +119,12 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     public void setViewContent(LinearLayout ll) {
-        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
-        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
+        final Context context = getContext();
+        if (getContext() == null) {
+            return;
+        }
 
+        /* Set useful information details */
         ListView informationList = (ListView) ll.findViewById(R.id.attraction_information_list);
 
         InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
@@ -127,19 +137,109 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        Context context = getContext();
-        if (getContext() == null) {
-            return;
-        }
-
+        /* Set cover photo */
         int placeholderId = R.mipmap.photo_placeholder;
+        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
         Glide.with(context)
                 .load(attraction.photoUri)
                 .placeholder(placeholderId)
                 .error(placeholderId) // TODO see if it possible to log the error
                 .into(coverPhoto);
 
+        /* Set description */
+        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
+
+        /* Set own review content and behaviour */
+        final EditText reviewText = (EditText) ll.findViewById(R.id.own_review_text);
+        reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // TODO send review to backend
+                    reviewText.clearFocus();
+                }
+                return false;
+            }
+        });
+        reviewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                if (hasFocus) {
+                    System.out.println("has focus");
+                    imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                    reviewText.setCursorVisible(true);
+                } else {
+                    System.out.println("no focus");
+                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE); // Hide correction underline
+                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
+                    reviewText.setCursorVisible(false);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
+                }
+            }
+        });
+
+        /* Set own rating value and behaviour */
+        AppCompatRatingBar ratingBar = (AppCompatRatingBar) ll.findViewById(R.id.own_review_rating);
+        ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                reviewText.setVisibility(View.VISIBLE);
+
+                // TODO send rating to backend
+            }
+        });
+
+        /* Set other people's reviews */
+        if (attraction.reviews.isEmpty()) {
+            TextView otherReviewsTitle = (TextView) ll.findViewById(R.id.other_reviews_title);
+            otherReviewsTitle.setVisibility(View.GONE);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            otherRatingBar.setVisibility(View.GONE);
+        } else {
+            System.out.println("Renderizando primera review ajena");
+            Review rev = attraction.reviews.get(0);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            otherRatingBar.setRating(rev.qualification);
+            otherRatingBar.setVisibility(View.VISIBLE);
+
+            TextView otherUser = (TextView) ll.findViewById(R.id.review_author_name);
+            otherUser.setText(rev.user);
+
+            TextView date = (TextView) ll.findViewById(R.id.review_date);
+            date.setText(rev.date);
+
+            if (rev.text != null && !rev.text.equals("")) {
+                System.out.println("Renderizando texto de review: " + rev.text);
+                TextView otherReviewText = (TextView) ll.findViewById(R.id.review_text);
+                otherReviewText.setText(rev.text);
+                otherReviewText.setVisibility(View.VISIBLE);
+            }
+        }
+
+        /* Add "see more reviews" button */
+        TextView seeMoreReviewsLink = (TextView) ll.findViewById(R.id.see_more_reviews_link);
+        if (attraction.reviews.size() <= 1) {
+            seeMoreReviewsLink.setVisibility(View.GONE);
+        } else {
+            seeMoreReviewsLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = getContext();
+                    if (context == null) {
+                        return;
+                    }
+                    Intent intent = new Intent(context, AllReviewsActivity.class);
+                    intent.putExtra("attractionName", attraction.name);
+                    intent.putExtra("attractionId", attraction.id);
+                    context.startActivity(intent);
+                }
+            });
+        }
+        // TODO
     }
 
     /**** Method for Setting the Height of the ListView dynamically.

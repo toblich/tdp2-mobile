@@ -30,7 +30,16 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+
         <activity android:name=".MainActivity" />
+
+        <activity
+            android:name=".AttractionDetails.AllReviewsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity" />
+        </activity>
 
         <!--
             ATTENTION: This was auto-generated to add Google Play services to your project for
