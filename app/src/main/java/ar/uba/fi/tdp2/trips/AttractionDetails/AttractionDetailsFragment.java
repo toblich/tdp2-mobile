@@ -193,7 +193,12 @@ public class AttractionDetailsFragment extends Fragment {
         });
 
         /* Set other people's reviews */
-        if (!attraction.reviews.isEmpty()) {
+        if (attraction.reviews.isEmpty()) {
+            TextView otherReviewsTitle = (TextView) ll.findViewById(R.id.other_reviews_title);
+            otherReviewsTitle.setVisibility(View.GONE);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            otherRatingBar.setVisibility(View.GONE);
+        } else {
             System.out.println("Renderizando primera review ajena");
             Review rev = attraction.reviews.get(0);
             AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
