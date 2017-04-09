@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.Manifest;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -211,17 +212,20 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_initial_activity, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.cities_search);
+        searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
         SearchView search = (SearchView) searchItem.getActionView();
         search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
                 final List<City> filteredModelList = filter(cities, query);
-                adapter.setFilter(filteredModelList);
+                if (adapter != null) {
+                    adapter.setFilter(filteredModelList);
+                }
                 return true;
             }
 

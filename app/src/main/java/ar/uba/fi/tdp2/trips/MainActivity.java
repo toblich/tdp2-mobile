@@ -1,11 +1,17 @@
 package ar.uba.fi.tdp2.trips;
 
+import android.app.SearchManager;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.content.Context;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Context localContext = this;
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
+    private RV_AttractionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 attractions = response.body();
 
                 checkChangeLayout();
-                RV_AttractionAdapter adapter = new RV_AttractionAdapter(attractions, localContext);
+                adapter = new RV_AttractionAdapter(attractions, localContext);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -75,6 +82,58 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TRIPS", t.toString());
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchItem = menu.findItem(R.id.cities_search);
+        searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
+        SearchView search = (SearchView) searchItem.getActionView();
+        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                final List<Attraction> filteredModelList = filter(attractions, query);
+                if (adapter != null) {
+                    adapter.setFilter(filteredModelList);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                adapter.setFilter(attractions);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    private List<Attraction> filter(List<Attraction> attractions, String query) {
+        query = query.toLowerCase();
+        final List<Attraction> filteredModelList = new ArrayList<>();
+        for (Attraction attraction : attractions) {
+            if (attraction.name.toLowerCase().contains(query)) {
+                filteredModelList.add(attraction);
+            }
+        }
+        return filteredModelList;
     }
 
     private void initializeActivity() {
