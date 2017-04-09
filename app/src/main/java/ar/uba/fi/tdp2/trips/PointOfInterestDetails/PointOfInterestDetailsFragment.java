@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,11 +74,13 @@ public class PointOfInterestDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_point_of_interest_details, container, false);
         RelativeLayout rl = (RelativeLayout) fragment.findViewById(R.id.poi_details_relative_layout);
-        getPointOfInterestDetails(rl);
+        ScrollView scrollView = (ScrollView) fragment.findViewById(R.id.poi_details_scroll_view);
+        LinearLayout ll = (LinearLayout) scrollView.findViewById(R.id.poi_details_linear_layout);
+        getPointOfInterestDetails(ll, rl);
         return fragment;
     }
 
-    private void getPointOfInterestDetails(final RelativeLayout rl) {
+    private void getPointOfInterestDetails(final LinearLayout ll, final RelativeLayout rl) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         // TODO fetch from real server with real attractionId and poiId
         Call<PointOfInterest> call  = backendService.getPointOfInterest(/*attractionId, poiId*/);
@@ -86,7 +90,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
                 Log.d("TRIPS", "got point of interest: " + response.body().toString());
                 pointOfInterest = response.body();
-                setContentView(rl);
+                setContentView(ll, rl);
             }
             @Override
             public void onFailure(Call<PointOfInterest> call, Throwable t) {
@@ -97,16 +101,22 @@ public class PointOfInterestDetailsFragment extends Fragment {
         });
     }
 
-    private void setContentView(RelativeLayout rl) {
-        ImageView poi_cover_photo = (ImageView) rl.findViewById(R.id.poi_details_image);
-        TextView poi_description = (TextView) rl.findViewById(R.id.poi_details_description);
+    private void setContentView(LinearLayout ll, RelativeLayout rl) {
+        ImageView poi_cover_photo = (ImageView) ll.findViewById(R.id.poi_details_image);
+        TextView poi_description = (TextView) ll.findViewById(R.id.poi_details_description);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.poi_details_audioguide_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
-            }
-        });
+
+        poi_description.setText(pointOfInterest.description);
+
+        if (pointOfInterest.audioguide != null) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
+                }
+            });
+        }
 
         int placeholderId = R.mipmap.photo_placeholder;
         Glide.with(localContext)
@@ -114,8 +124,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
                 .placeholder(placeholderId)
                 .error(placeholderId)
                 .into(poi_cover_photo);
-
-        poi_description.setText(pointOfInterest.description);
 
     }
 

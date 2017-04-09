@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import ar.uba.fi.tdp2.trips.BackendService;
@@ -38,6 +39,7 @@ public class PointOfInterestFragment extends Fragment {
     private List<PointOfInterest> pointsOfInterest;
     private Context localContext;
     private RecyclerView recyclerView;
+    private RelativeLayout rl;
     private LinearLayoutManager llm;
 
     private OnFragmentInteractionListener mListener;
@@ -62,6 +64,12 @@ public class PointOfInterestFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getPointsOfInterest();
+    }
+
+    @Override
     public void setMenuVisibility(boolean b) {
 
     }
@@ -80,6 +88,7 @@ public class PointOfInterestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_point_of_interest, container, false);
+        rl = (RelativeLayout) fragment.findViewById(R.id.fragment_empty_poi_list);
         recyclerView = (RecyclerView) fragment.findViewById(R.id.rvPointsOfInterest);
         recyclerView.setLayoutManager(llm);
         getPointsOfInterest();
@@ -97,6 +106,14 @@ public class PointOfInterestFragment extends Fragment {
             public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
                 Log.d("TRIPS", "got points of interest: " + response.body().toString());
                 pointsOfInterest = response.body();
+
+                if (pointsOfInterest.size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    rl.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    rl.setVisibility(View.GONE);
+                }
 
                 RV_PointOfInterestAdapter adapter = new RV_PointOfInterestAdapter(pointsOfInterest, localContext);
                 recyclerView.setAdapter(adapter);

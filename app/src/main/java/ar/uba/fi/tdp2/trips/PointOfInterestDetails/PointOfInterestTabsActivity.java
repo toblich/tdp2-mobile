@@ -21,13 +21,7 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-//    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager viewPager;
-
     private TabLayout tabLayout;
 
     @Override
@@ -38,11 +32,11 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
         Bundle bundle = getIntent().getExtras();
         String poiName = bundle.getString("poiName");
         String poiOrder = bundle.getString("poiOrder");
-        this.setTitle(poiOrder + "  " + poiName);
+        this.setTitle(poiOrder + " - " + poiName);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//      getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -54,7 +48,7 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
 
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         //Creating our pager adapter
         int attractionId = bundle.getInt("attractionId");
