@@ -193,6 +193,26 @@ public class AttractionDetailsFragment extends Fragment {
         });
 
         /* Set other people's reviews */
+        if (!attraction.reviews.isEmpty()) {
+            System.out.println("Renderizando primera review ajena");
+            Review rev = attraction.reviews.get(0);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            otherRatingBar.setRating(rev.qualification);
+            otherRatingBar.setVisibility(View.VISIBLE);
+
+            TextView otherUser = (TextView) ll.findViewById(R.id.review_author_name);
+            otherUser.setText(rev.user);
+
+            TextView date = (TextView) ll.findViewById(R.id.review_date);
+            date.setText(rev.date);
+
+            if (rev.text != null && !rev.text.equals("")) {
+                System.out.println("Renderizando texto de review: " + rev.text);
+                TextView otherReviewText = (TextView) ll.findViewById(R.id.review_text);
+                otherReviewText.setText(rev.text);
+                otherReviewText.setVisibility(View.VISIBLE);
+            }
+        }
         // TODO
     }
 
