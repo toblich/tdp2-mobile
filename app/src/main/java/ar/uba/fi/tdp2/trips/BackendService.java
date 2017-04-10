@@ -32,28 +32,28 @@ public interface BackendService {
     );
 
     //Get the details of a specific attraction
-    @GET("/attractions/2")
+    @GET("/attractions/{attractionId}")
     Call<Attraction> getAttraction(
-//          @Path("attractionId") int attractionId // TODO
+          @Path("attractionId") int attractionId // TODO
     );
 
     //Get the points of interest's list of a specific attraction
-    @GET("/attractions/1/point_of_interests")
+    @GET("/attractions/{attractionId}/point_of_interests")
     Call<List<PointOfInterest>> getPointsOfInterest(
-//          @Path("attractionId") int attractionId // TODO
+          @Path("attractionId") int attractionId // TODO
     );
 
     //Get the details of a specific point of interest
-    @GET("/attractions/1/point_of_interests/1")
+    @GET("/attractions/{attractionId}/point_of_interests/{poiId}")
     Call<PointOfInterest> getPointOfInterest(
-//            @Path("attractionId") int attractionId // TODO
-//            @Path("poiId") int poiId //TODO
+            @Path("attractionId") int attractionId, // TODO
+            @Path("poiId") int poiId //TODO
     );
 
     // Get list of reviews for an attraction
-    @GET("/attractions/50/reviews")
+    @GET("/attractions/{attractionId}/reviews")
     Call<List<Review>> getReviews(
-//      @Path("attractionId") int attractionId // TODO
+      @Path("attractionId") int attractionId // TODO
     );
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
@@ -75,7 +75,7 @@ public interface BackendService {
             }).build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.1.117")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();

@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 1.0);
+        Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 2.0);
 
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
