@@ -1,13 +1,19 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import ar.uba.fi.tdp2.trips.R;
 
@@ -87,12 +93,60 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_attraction_tabs, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+
+        final Context activityContext = this;
+
+        MenuItem item = menu.findItem(R.id.attraction_share);
+        item.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(activityContext, "Share attraction!", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+//        ShareActionProvider shareActionProvider = (ShareActionProvider) menu
+//        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        MenuItem searchItem = menu.findItem(R.id.cities_search);
+//        searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
+//        SearchView search = (SearchView) searchItem.getActionView();
+//        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+//        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextChange(String query) {
+//                final List<City> filteredModelList = filter(cities, query);
+//                if (adapter != null) {
+//                    adapter.setFilter(filteredModelList);
+//                }
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//        });
+//
+//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem item) {
+//                adapter.setFilter(cities);
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem item) {
+//                return true;
+//            }
+//        });
+
+        return true;
+    }
+
 //
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
