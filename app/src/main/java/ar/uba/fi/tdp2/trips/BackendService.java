@@ -38,13 +38,13 @@ public interface BackendService {
     );
 
     //Get the points of interest's list of a specific attraction
-    @GET("/attractions/50/point_of_interests")
+    @GET("/attractions/1/point_of_interests")
     Call<List<PointOfInterest>> getPointsOfInterest(
 //          @Path("attractionId") int attractionId // TODO
     );
 
     //Get the details of a specific point of interest
-    @GET("/attractions/50/point_of_interests/1")
+    @GET("/attractions/1/point_of_interests/1")
     Call<PointOfInterest> getPointOfInterest(
 //            @Path("attractionId") int attractionId // TODO
 //            @Path("poiId") int poiId //TODO

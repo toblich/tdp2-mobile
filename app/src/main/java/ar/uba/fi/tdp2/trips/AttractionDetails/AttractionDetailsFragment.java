@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.InputType;
@@ -22,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,6 +152,19 @@ public class AttractionDetailsFragment extends Fragment {
         /* Set description */
         TextView description = (TextView) ll.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
+
+        /* Enable audioguide floating button if the attraction has one */
+        RelativeLayout rl = (RelativeLayout) ll.findViewById(R.id.floating_action_button_relative_layout);
+        FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+        if (attraction.audioguide != null) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
+                }
+            });
+        }
 
         /* Set own review content and behaviour */
         final EditText reviewText = (EditText) ll.findViewById(R.id.own_review_text);
