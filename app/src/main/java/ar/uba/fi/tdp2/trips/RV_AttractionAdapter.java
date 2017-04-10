@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
@@ -102,8 +103,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                 final MainActivity mainActivity = (MainActivity) activityContext;
                 user = User.getPersistedUser(mainActivity.getSharedPreferences("user", 0));
                 if (user != null) {
-                    System.out.println(user);
-                    System.out.println("sending fav");
+                    Toast.makeText(activityContext, "Marking as favorite", Toast.LENGTH_SHORT).show();
                 } else {
                     User.loginWithSocialNetwork(mainActivity,
                             mainActivity.callbackManager,
@@ -111,8 +111,6 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                             new User.Callback() {
                                 @Override
                                 public void onSuccess(User user) {
-                                    System.out.println(user);
-                                    System.out.println("send fav");
                                     holder.attractionCardFavIcon.performClick();
                                 }
                             });
