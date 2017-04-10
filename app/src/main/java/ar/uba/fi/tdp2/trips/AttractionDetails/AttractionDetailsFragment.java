@@ -108,7 +108,10 @@ public class AttractionDetailsFragment extends Fragment {
         call.enqueue(new Callback<Attraction>() {
             @Override
             public void onResponse(Call<Attraction> call, Response<Attraction> response) {
-                Log.d(Utils.LOGTAG, "Got Attraction: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
+                Log.d("TRIPS", "got attraction: " + response.body().toString());
                 attraction = response.body();
 
                 setViewContent(ll);
