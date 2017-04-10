@@ -21,16 +21,17 @@ import retrofit2.Response;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class User {
+    private static User user;
     public int id;
     public String token;
     public String fb_token;
 
-    public User(int id, String token) {
+    private User(int id, String token) {
         this.id     = id;
         this.token  = token;
     }
 
-    public User(String fb_token) {
+    private User(String fb_token) {
         this.fb_token = fb_token;
     }
 
@@ -43,18 +44,18 @@ public class User {
         void onSuccess(User user);
     }
 
-    public static void createFromFbToken(String fb_token,
+    private static void createFromFbToken(String fb_token,
                                          final SharedPreferences settings,
                                          final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        User user = new User(fb_token);
+        user = new User(fb_token);
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d("TRIPS", "got user: " + response.body().toString());
-                User user = response.body();
+                user = response.body();
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putInt("user_id", user.id);
                 editor.putString("user_token", user.token);
@@ -64,6 +65,7 @@ public class User {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                user = null;
                 t.printStackTrace();
                 Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
                 Log.d("TRIPS", t.toString());
@@ -71,7 +73,14 @@ public class User {
         });
     }
 
-    public static User getPersistedUser(SharedPreferences settings) {
+    public static User getInstance(SharedPreferences settings) {
+        if (user == null) {
+            return getPersistedUser(settings);
+        }
+        return user;
+    }
+
+    private static User getPersistedUser(SharedPreferences settings) {
         int user_id = settings.getInt("user_id", 0);
         String user_token = settings.getString("user_token", null);
         if (user_id != 0 && user_token != null) {
@@ -107,6 +116,6 @@ public class User {
             }
         });
         LoginManager.getInstance().logInWithReadPermissions(
-                activity, Arrays.asList("email"));
+                activity, Arrays.asList("email", "public_profile"));
     }
 }

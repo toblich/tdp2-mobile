@@ -101,7 +101,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             @Override
             public void onClick(View v) {
                 final MainActivity mainActivity = (MainActivity) activityContext;
-                user = User.getPersistedUser(mainActivity.getSharedPreferences("user", 0));
+                user = User.getInstance(mainActivity.getSharedPreferences("user", 0));
                 if (user != null) {
                     Toast.makeText(activityContext, "Marking as favorite", Toast.LENGTH_SHORT).show();
                 } else {
