@@ -33,7 +33,6 @@ import android.location.Geocoder;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,8 +56,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private LinearLayoutManager llm;
     private List<City> cities;
     RV_CitiesAdapter adapter;
-    private CallbackManager callbackManager;
-    private LoginButton loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,32 +81,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                System.out.println(loginResult.toString());
-                System.out.println(loginResult.getAccessToken().getToken());
-            }
-
-            @Override
-            public void onCancel() {
-                // TODO
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                // TODO
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -242,7 +213,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         intent.putExtra("locality", address.getLocality());
         intent.putExtra("latitude", loc.getLatitude());
         intent.putExtra("longitude", loc.getLongitude());
-//        startActivity(intent); TODO this moves on to next activity when location is set
+        startActivity(intent);
     }
 
     @Override

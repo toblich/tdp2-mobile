@@ -1,5 +1,6 @@
 package ar.uba.fi.tdp2.trips;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -11,8 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
@@ -21,6 +28,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
     List<Attraction> attractions;
     Context activityContext;
+    private User user;
 
     public RV_AttractionAdapter(List<Attraction> attractions, Context activityContext) {
         this.attractions = attractions;
@@ -32,6 +40,9 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         TextView attractionName;
         TextView attractionDescription;
         ImageView attractionPhoto;
+        ImageView attractionCardFavIcon;
+        ImageView attractionCardVisitedIcon;
+        ImageView attractionCardDirectionsIcon;
 
         AttractionViewHolder(View itemView) {
             super(itemView);
@@ -39,6 +50,12 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             attractionName        = (TextView) itemView.findViewById(R.id.attraction_name);
             attractionDescription = (TextView) itemView.findViewById(R.id.attraction_description);
             attractionPhoto       = (ImageView) itemView.findViewById(R.id.attraction_photo);
+            attractionCardFavIcon =
+                    (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon);
+            attractionCardVisitedIcon =
+                    (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon);
+            attractionCardDirectionsIcon =
+                    (ImageView) itemView.findViewById(R.id.attraction_card_directions_icon);
         }
     }
 
@@ -49,7 +66,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
     }
 
     @Override
-    public void onBindViewHolder(AttractionViewHolder holder, int position) {
+    public void onBindViewHolder(final AttractionViewHolder holder, int position) {
         final Attraction attraction = attractions.get(position);
         holder.attractionName.setText(attraction.name);
         holder.attractionDescription.setText(attraction.description);
@@ -76,6 +93,30 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                 intent.putExtra("attractionId", attraction.id);
                 intent.putExtra("attractionName", attraction.name);
                 activityContext.startActivity(intent);
+            }
+        });
+
+        holder.attractionCardFavIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final MainActivity mainActivity = (MainActivity) activityContext;
+                user = User.getPersistedUser(mainActivity.getSharedPreferences("user", 0));
+                if (user != null) {
+                    System.out.println(user);
+                    System.out.println("sending fav");
+                } else {
+                    User.loginWithSocialNetwork(mainActivity,
+                            mainActivity.callbackManager,
+                            mainActivity.getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    System.out.println(user);
+                                    System.out.println("send fav");
+                                    holder.attractionCardFavIcon.performClick();
+                                }
+                            });
+                }
             }
         });
     }
