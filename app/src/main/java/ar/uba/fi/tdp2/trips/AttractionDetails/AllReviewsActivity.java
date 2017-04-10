@@ -35,9 +35,6 @@ public class AllReviewsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         attractionName = bundle.getString("attractionName");
         attractionId = bundle.getInt("attractionId");
-        System.out.println("attractionName: " + attractionName);
-        System.out.println("attractionId: " + String.valueOf(attractionId));
-
 
         llm = new LinearLayoutManager(this);
         recyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
@@ -51,13 +48,14 @@ public class AllReviewsActivity extends AppCompatActivity {
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         Call<List<Review>> call = backendService.getReviews(attractionId);
-        System.out.println("attractionId: " + String.valueOf(attractionId));
 
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                Log.d(Utils.LOGTAG, "statusCode: " + response.code());
-                Log.d(Utils.LOGTAG, "Got Reviews: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
+                Log.d("TRIPS", "got reviews: " + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);
