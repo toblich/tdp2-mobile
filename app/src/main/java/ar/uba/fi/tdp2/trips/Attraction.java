@@ -11,6 +11,7 @@ public class Attraction {
     public String name;
     public String description;
     public @SerializedName("portrait_image") String photoUri;
+    public @SerializedName("audio_guide") String audioguide;
 
     public String address;
     public String url;
@@ -21,12 +22,13 @@ public class Attraction {
     public List<Review> reviews;
     public @SerializedName("own_review") Review myReview;
 
-    public Attraction(int id, String name, String description, String photoUri, String address,
+    public Attraction(int id, String name, String description, String photoUri, String audioguide, String address,
                       String url, String phone, double price, int duration, List<Review> reviews, Review myReview) {
         this.id          = id;
         this.name        = name;
         this.description = description;
         this.photoUri    = photoUri;
+        this.audioguide  = audioguide;
 
         this.address = address;
         this.url = url;
