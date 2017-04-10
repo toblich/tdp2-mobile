@@ -1,6 +1,8 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -15,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.User;
 
 public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, AttractionTabsInterface {
 
@@ -34,10 +39,14 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
     private ViewPager viewPager;
 
     private TabLayout tabLayout;
+    public CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_attraction_tabs);
 
         Bundle bundle = getIntent().getExtras();
@@ -93,6 +102,14 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
     }
 
+    private void openAttractionShareDialog() {
+        AttractionShareFragment shareFragment = new AttractionShareFragment();
+        Bundle bundle = new Bundle();
+        bundle.putCharSequence("attractionName", getTitle());
+        shareFragment.setArguments(bundle);
+        shareFragment.show(getFragmentManager(), "tag");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_share, menu);
@@ -104,62 +121,53 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(activityContext, "Share attraction!", Toast.LENGTH_LONG).show();
+                User user = User.getInstance(getSharedPreferences("user", 0));
+                if (user != null && user.fb_post && user.fb_public_profile) {
+                    openAttractionShareDialog();
+                    return false;
+                }
+                if (user != null && !user.fb_post) {
+                    user.getFbPostPermissions((Activity) activityContext, callbackManager,
+                            getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    openAttractionShareDialog();
+                                }
+                            });
+                } else {
+                    User.loginWithSocialNetwork((Activity) activityContext,
+                            callbackManager,
+                            getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    Toast.makeText(activityContext, "Espere un momento", Toast.LENGTH_LONG).show();
+                                    user.getFbPostPermissions((Activity) activityContext, callbackManager,
+                                            getSharedPreferences("user", 0),
+                                            new User.Callback() {
+                                                @Override
+                                                public void onSuccess(User user) {
+                                                    openAttractionShareDialog();
+                                                }
+                                            });
+                                }
+                            });
+                }
+
+
+
                 return false;
             }
         });
 
-//        ShareActionProvider shareActionProvider = (ShareActionProvider) menu
-//        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        MenuItem searchItem = menu.findItem(R.id.cities_search);
-//        searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
-//        SearchView search = (SearchView) searchItem.getActionView();
-//        search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
-//        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextChange(String query) {
-//                final List<City> filteredModelList = filter(cities, query);
-//                if (adapter != null) {
-//                    adapter.setFilter(filteredModelList);
-//                }
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//        });
-//
-//        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem item) {
-//                adapter.setFilter(cities);
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem item) {
-//                return true;
-//            }
-//        });
-
         return true;
     }
 
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

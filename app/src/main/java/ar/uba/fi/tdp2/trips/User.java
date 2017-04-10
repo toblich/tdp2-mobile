@@ -1,10 +1,13 @@
 package ar.uba.fi.tdp2.trips;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -12,8 +15,13 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,10 +33,14 @@ public class User {
     public int id;
     public String token;
     public String fb_token;
+    public boolean fb_public_profile;
+    public boolean fb_post;
 
-    private User(int id, String token) {
+    private User(int id, String token, boolean fb_public_profile, boolean fb_post) {
         this.id     = id;
         this.token  = token;
+        this.fb_public_profile = fb_public_profile;
+        this.fb_post = fb_post;
     }
 
     private User(String fb_token) {
@@ -37,10 +49,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User {\n  id: " + id + "\n  token: " + token + "\n}";
+        return "User {\n  id: " + id + "\n  token: " + token + "\n fb_public_profile: " + fb_public_profile + "\n fb_post: " + fb_post + "\n}";
     }
 
-    interface Callback {
+    public interface Callback {
         void onSuccess(User user);
     }
 
@@ -56,10 +68,8 @@ public class User {
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d("TRIPS", "got user: " + response.body().toString());
                 user = response.body();
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putInt("user_id", user.id);
-                editor.putString("user_token", user.token);
-                editor.commit();
+                user.fb_public_profile = true;
+                user.persistUser(settings);
                 callback.onSuccess(user);
             }
 
@@ -75,24 +85,36 @@ public class User {
 
     public static User getInstance(SharedPreferences settings) {
         if (user == null) {
-            return getPersistedUser(settings);
+            user = getPersistedUser(settings);
         }
         return user;
     }
 
+    @Nullable
     private static User getPersistedUser(SharedPreferences settings) {
         int user_id = settings.getInt("user_id", 0);
         String user_token = settings.getString("user_token", null);
+        boolean fb_public_profile = settings.getBoolean("user_fb_public_profile", false);
+        boolean fb_post = settings.getBoolean("user_fb_post", false);
         if (user_id != 0 && user_token != null) {
-            return new User(user_id, user_token);
+            return new User(user_id, user_token, fb_public_profile, fb_post);
         }
         return null;
     }
 
-    public static void loginWithSocialNetwork(Activity activity,
-                                              CallbackManager callbackManager,
-                                              final SharedPreferences sharedPreferences,
-                                              final Callback callback) {
+    private void persistUser(final SharedPreferences settings) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("user_id", id);
+        editor.putString("user_token", token);
+        editor.putBoolean("user_fb_public_profile", fb_public_profile);
+        editor.putBoolean("user_fb_post", fb_post);
+        editor.commit();
+        System.out.println(this);
+    }
+
+    private static void _loginWithSocialNetwork(CallbackManager callbackManager,
+                                                final SharedPreferences sharedPreferences,
+                                                final Callback callback) {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -100,8 +122,6 @@ public class User {
                 System.out.println(loginResult.toString());
                 String token = loginResult.getAccessToken().getToken();
                 System.out.println(token);
-                // Send fb_token to backend
-
                 User.createFromFbToken(token, sharedPreferences, callback);
             }
 
@@ -115,7 +135,81 @@ public class User {
                 // TODO
             }
         });
-        LoginManager.getInstance().logInWithReadPermissions(
+    }
+
+    public static void loginWithSocialNetwork(Activity activity,
+                                              CallbackManager callbackManager,
+                                              final SharedPreferences sharedPreferences,
+                                              final Callback callback) {
+        LoginManager loginManager = LoginManager.getInstance();
+        _loginWithSocialNetwork(callbackManager, sharedPreferences, callback);
+        loginManager.logInWithReadPermissions(
                 activity, Arrays.asList("email", "public_profile"));
+    }
+
+    private void _getFbPostPermissions(CallbackManager callbackManager,
+                                       final SharedPreferences sharedPreferences,
+                                       final Callback callback) {
+        LoginManager loginManager = LoginManager.getInstance();
+        final User user = this;
+        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                user.fb_post = true;
+                user.persistUser(sharedPreferences);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onCancel() {
+                // TODO
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                // TODO
+            }
+        });
+    }
+
+    public void getFbPostPermissions(Activity activity,
+                                     CallbackManager callbackManager,
+                                     SharedPreferences sharedPreferences,
+                                     final Callback callback) {
+        LoginManager loginManager = LoginManager.getInstance();
+        _getFbPostPermissions(callbackManager, sharedPreferences, callback);
+        loginManager.logInWithPublishPermissions(activity,
+                Arrays.asList("publish_actions"));
+    }
+
+    public void postInSocialNetwork(final Fragment fragment,
+                                    CallbackManager callbackManager,
+                                    final String message) {
+        OkHttpClient okHttpClient = BackendService.okHttpClient;
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                "{\"text\":\"" + message + "\"}");
+        Request request = new Request.Builder()
+                .url("https://api.splex.rocks/posts")
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .post(body)
+                .build();
+        okhttp3.Callback callback = new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) {
+                try {
+                    System.out.println(response.body().string());
+                } catch (IOException e) {}
+            }
+
+        };
+        okhttp3.Call call = okHttpClient.newCall(request);
+        call.enqueue(callback);
     }
 }
