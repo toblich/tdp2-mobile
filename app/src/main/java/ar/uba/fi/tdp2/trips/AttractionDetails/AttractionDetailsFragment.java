@@ -388,7 +388,7 @@ public class AttractionDetailsFragment extends Fragment {
                     StringBuilder hoursBuilder = new StringBuilder();
                     for (OpeningHour op: openingHours) {
                         daysBuilder.append(op.day + '\n');
-                        hoursBuilder.append("    " + (op.start == null ? (getString(R.string.all_day_open) + "\n") : op.start + " - " + op.end));
+                        hoursBuilder.append("    " + (op.start == null ? (getString(R.string.all_day_open) + "\n") : op.start + " - " + op.end) + '\n');
                     }
                     days.setText(daysBuilder.toString());
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
