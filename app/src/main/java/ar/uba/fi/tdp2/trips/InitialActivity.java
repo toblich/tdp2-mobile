@@ -215,7 +215,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.cities_search);
+        MenuItem searchItem = menu.findItem(R.id.search);
         searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
         SearchView search = (SearchView) searchItem.getActionView();
         search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));

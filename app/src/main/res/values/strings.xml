@@ -1,16 +1,23 @@
 <resources>
     <string name="app_name">Trips</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Maps</string>
     <string name="choose_location">Elegir ubicación</string>
     <string name="no_attractions">No se encontraron atracciones cerca</string>
     <string name="no_points_of_interest">La atracción no tiene puntos de interés</string>
     <string name="geolocalization_card">Mi ubicación actual</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_attraction_tabs">AttractionTabsActivity</string>
+    <string name="action_settings">Ajustes</string>
     <string name="review_input_hint">Escribir una reseña</string>
+    <string name="search">Buscar</string>
+    <string name="my_opinion">Mi opinión</string>
+    <string name="other_opinions">Otras opiniones</string>
+    <string name="see_more">VER MÁS ›</string>
+    <string name="poi_separator"> - </string>
+
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_point_of_interest_tabs">PointOfInterestTabsActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_attraction_tabs">AttractionTabsActivity</string>
 </resources>

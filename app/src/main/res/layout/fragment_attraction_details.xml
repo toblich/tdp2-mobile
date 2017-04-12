@@ -53,7 +53,7 @@
             android:id="@+id/write_review_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mi opinión" />
+            android:text="@string/my_opinion" />
 
         <RelativeLayout
             android:id="@+id/own_review"
@@ -104,7 +104,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="Otras opiniones" />
+                android:text="@string/other_opinions" />
 
 
             <TextView
@@ -115,7 +115,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:textColor="@color/colorAccent"
-                android:text="VER MÁS ›"/>
+                android:text="@string/see_more"/>
 
         </RelativeLayout>
 
