@@ -1,13 +1,12 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
-
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -15,14 +14,19 @@ import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.Utils;
 
 public class InformationListAdapter extends BaseAdapter {
+    public interface OnClickCallback {
+        void call(TextView days, TextView hours);
+    }
+
     public class InfoItem {
         String value;
         int iconId;
-        AttractionDetailsFragment.OnClickCallback callback;
+        OnClickCallback callback;
 
-        public InfoItem(String value, int iconId, AttractionDetailsFragment.OnClickCallback callback) {
+        public InfoItem(String value, int iconId, OnClickCallback callback) {
             this.value = value;
             this.iconId = iconId;
             this.callback = callback;
@@ -65,12 +69,30 @@ public class InformationListAdapter extends BaseAdapter {
         if (openingHours == null || openingHours.isEmpty()) {
             return;
         }
+        Attraction.OpeningHour first = openingHours.get(0);
+        final String initial = first.day + "    " + (first.start == null ? context.getString(R.string.all_day_open) : (first.start + " - " + first.end));
 
-        AttractionDetailsFragment.OnClickCallback callback = openingHours.size() == 1 ? null : new AttractionDetailsFragment.OnClickCallback() {
+        OnClickCallback callback = openingHours.size() == 1 ? null : new OnClickCallback() {
+            private boolean collapsed = true;
+
             @Override
-            public void call(View view, TextView days, TextView hours, ImageView icon) {
-                // TODO
-                System.out.println("ON CLICK CALLBACK");
+            public void call(TextView days, TextView hours) {
+                if (collapsed) {
+                    expand(days, hours);
+                } else {
+                    collapse(days, hours);
+                }
+            }
+
+            private void collapse(TextView days, TextView hours) {
+                Log.d(Utils.LOGTAG, "collapse opening hours");
+                days.setText(initial);
+                hours.setVisibility(View.GONE);
+                collapsed = true;
+            }
+
+            private void expand(TextView days, TextView hours) {
+                Log.d(Utils.LOGTAG, "expand opening hours");
                 StringBuilder daysBuilder = new StringBuilder();
                 StringBuilder hoursBuilder = new StringBuilder();
                 for (Attraction.OpeningHour op: openingHours) {
@@ -78,16 +100,11 @@ public class InformationListAdapter extends BaseAdapter {
                     hoursBuilder.append("    " + (op.start == null ? context.getString(R.string.all_day_open) : op.start + " - " + op.end) + '\n');
                 }
                 days.setText(daysBuilder.toString());
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.addRule(RelativeLayout.RIGHT_OF, icon.getId());
-                days.setLayoutParams(layoutParams);
                 hours.setVisibility(View.VISIBLE);
                 hours.setText(hoursBuilder.toString());
+                collapsed = false;
             }
         };
-
-        Attraction.OpeningHour first = openingHours.get(0);
-        String initial = first.day + "    " + (first.start == null ? context.getString(R.string.all_day_open) : (first.start + " - " + first.end));
         items.add(new InfoItem(initial, iconId, callback));
     }
 
@@ -120,11 +137,11 @@ public class InformationListAdapter extends BaseAdapter {
         icon.setImageResource(item.iconId);
 
         if (item.callback != null) {
-            value.setOnClickListener(new View.OnClickListener() {
+            infoItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TextView hours = (TextView) infoItem.findViewById(R.id.hours);
-                    item.callback.call(infoItem, value, hours, icon);
+                    item.callback.call(value, hours);
                 }
             });
         }
