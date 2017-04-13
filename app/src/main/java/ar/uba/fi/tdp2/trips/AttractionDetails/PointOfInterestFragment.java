@@ -41,6 +41,7 @@ public class PointOfInterestFragment extends Fragment {
     private RecyclerView recyclerView;
     private RelativeLayout rl;
     private LinearLayoutManager llm;
+    private String LOGTAG;
 
     private OnFragmentInteractionListener mListener;
 
@@ -82,6 +83,7 @@ public class PointOfInterestFragment extends Fragment {
         }
         localContext = getContext();
         llm = new LinearLayoutManager(localContext);
+        LOGTAG = getString(R.string.app_name);
     }
 
     @Override
@@ -104,7 +106,7 @@ public class PointOfInterestFragment extends Fragment {
         call.enqueue(new Callback<List<PointOfInterest>>() {
             @Override
             public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
-                Log.d("TRIPS", "got points of interest: " + response.body().toString());
+                Log.d(LOGTAG, getString(R.string.got_poi) + response.body().toString());
                 pointsOfInterest = response.body();
 
                 if (pointsOfInterest.size() == 0) {
@@ -122,8 +124,8 @@ public class PointOfInterestFragment extends Fragment {
             @Override
             public void onFailure(Call<List<PointOfInterest>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(localContext, "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(LOGTAG, t.toString());
             }
         });
     }

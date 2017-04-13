@@ -42,6 +42,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
     private int poiId;
     private Context localContext;
     private PointOfInterest pointOfInterest;
+    private String LOGTAG;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +67,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
             poiId = getArguments().getInt(ARG_POI_ID);
         }
         localContext = getContext();
+        LOGTAG = getString(R.string.app_name);
     }
 
     @Override
@@ -82,21 +84,20 @@ public class PointOfInterestDetailsFragment extends Fragment {
 
     private void getPointOfInterestDetails(final LinearLayout ll, final RelativeLayout rl) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        // TODO fetch from real server with real attractionId and poiId
         Call<PointOfInterest> call  = backendService.getPointOfInterest(attractionId, poiId);
 
         call.enqueue(new Callback<PointOfInterest>() {
             @Override
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
-                Log.d("TRIPS", "got point of interest: " + response.body().toString());
+                Log.d(LOGTAG, getString(R.string.got_poi) + response.body().toString());
                 pointOfInterest = response.body();
                 setContentView(ll, rl);
             }
             @Override
             public void onFailure(Call<PointOfInterest> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(getContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(LOGTAG, t.toString());
             }
         });
     }

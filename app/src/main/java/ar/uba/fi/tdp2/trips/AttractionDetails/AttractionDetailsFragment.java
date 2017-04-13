@@ -55,6 +55,7 @@ public class AttractionDetailsFragment extends Fragment {
 
     private int attractionId;
     private Attraction attraction;
+    private String LOGTAG;
 
     private OnFragmentInteractionListener mListener;
 
@@ -88,6 +89,7 @@ public class AttractionDetailsFragment extends Fragment {
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
+        LOGTAG = getString(R.string.app_name);
     }
 
     @Override
@@ -101,13 +103,12 @@ public class AttractionDetailsFragment extends Fragment {
 
     public void getAttractionDetails(final LinearLayout ll) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        // TODO fetch from real server with real attractionId
         Call<Attraction> call  = backendService.getAttraction(attractionId);
 
         call.enqueue(new Callback<Attraction>() {
             @Override
             public void onResponse(Call<Attraction> call, Response<Attraction> response) {
-                Log.d("TRIPS", "got attraction: " + response.body().toString());
+                Log.d(LOGTAG, getString(R.string.got_attractions) + response.body().toString());
                 attraction = response.body();
 
                 setViewContent(ll);
@@ -116,8 +117,8 @@ public class AttractionDetailsFragment extends Fragment {
             @Override
             public void onFailure(Call<Attraction> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(getContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(LOGTAG, t.toString());
             }
         });
     }
@@ -283,7 +284,6 @@ public class AttractionDetailsFragment extends Fragment {
         listView.setLayoutParams(params);
     }
 
-    // TODO: I _think_ all the following code is for having a floating button that sends something to the activity
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -355,8 +355,8 @@ public class AttractionDetailsFragment extends Fragment {
             add(R.drawable.ic_public_black_24dp, attraction.url);
             add(R.drawable.ic_phone_black_24dp, attraction.phone);
             add(R.drawable.ic_access_time_black_24dp, attraction.openingHours);
-            add(R.drawable.ic_attach_money_black_24dp, attraction.price, "dólares"); // TODO intenationalize
-            add(R.drawable.ic_timer_black_24dp, attraction.duration, "minutos"); // TODO internationalize
+            add(R.drawable.ic_attach_money_black_24dp, attraction.price, getString(R.string.dollars));
+            add(R.drawable.ic_timer_black_24dp, attraction.duration, getString(R.string.minutes));
         }
 
         private void add(int iconId, String string) {
@@ -385,7 +385,7 @@ public class AttractionDetailsFragment extends Fragment {
                     StringBuilder hoursBuilder = new StringBuilder();
                     for (OpeningHour op: openingHours) {
                         daysBuilder.append(op.day + '\n');
-                        hoursBuilder.append("    " + (op.start == null ? "Abierto las 24 horas\n" : op.start + " - " + op.end));
+                        hoursBuilder.append("    " + (op.start == null ? (getString(R.string.all_day_open) + "\n") : op.start + " - " + op.end));
                     }
                     days.setText(daysBuilder.toString());
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -397,7 +397,7 @@ public class AttractionDetailsFragment extends Fragment {
             };
 
             OpeningHour first = openingHours.get(0);
-            String initial = first.day + "    " + (first.start == null ? "Abierto las 24 horas" : (first.start + " - " + first.end));
+            String initial = first.day + "    " + (first.start == null ? getString(R.string.all_day_open) : (first.start + " - " + first.end));
             items.add(new InfoItem(initial, iconId, callback));
         }
 

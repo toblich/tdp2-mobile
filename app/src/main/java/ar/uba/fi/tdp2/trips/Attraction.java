@@ -17,7 +17,7 @@ public class Attraction {
     public String url;
     public String phone;
     public double price;
-    // TODO add opening hours and reviews
+
     public @SerializedName("average_visit_duration") int duration;
     public List<Review> reviews;
     public @SerializedName("own_review") Review myReview;

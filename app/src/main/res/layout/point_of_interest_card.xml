@@ -39,7 +39,7 @@
                 android:layout_alignBottom="@+id/poi_order"
                 android:layout_toEndOf="@+id/poi_order"
                 android:layout_toRightOf="@+id/poi_order"
-                android:text="@string/poi_separator"
+                android:text=" - "
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView

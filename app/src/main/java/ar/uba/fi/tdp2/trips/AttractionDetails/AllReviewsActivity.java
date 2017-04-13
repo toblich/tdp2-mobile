@@ -29,6 +29,8 @@ public class AllReviewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_reviews_activity);
 
+        final String LOGTAG = getString(R.string.app_name);
+
         Bundle bundle = getIntent().getExtras();
         attractionName = bundle.getString("attractionName");
         attractionId = bundle.getInt("attractionId");
@@ -53,8 +55,8 @@ public class AllReviewsActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                Log.d("TRIPS", "statusCode: " + response.code());
-                Log.d("TRIPS", "got reviews: " + response.body().toString());
+                Log.d(LOGTAG, "statusCode: " + response.code());
+                Log.d(LOGTAG, getString(R.string.got_reviews) + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);
@@ -64,8 +66,8 @@ public class AllReviewsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Review>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(getApplicationContext(),getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(LOGTAG, t.toString());
             }
         });
     }

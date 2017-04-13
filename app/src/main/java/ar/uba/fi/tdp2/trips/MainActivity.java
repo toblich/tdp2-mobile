@@ -32,10 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
     private RV_AttractionAdapter adapter;
+    private String LOGTAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        LOGTAG = getString(R.string.app_name);
 
         Bundle bundle = getIntent().getExtras();
         locality  = bundle.getString("locality");
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         initializeData();
     }
 
@@ -56,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         attractions = new ArrayList<>();
 
         if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
-            Toast.makeText(localContext, "Error: No hay conexión a internet.", Toast.LENGTH_SHORT).show(); // TODO internationalize
-            Log.e("TRIPS","Error: No hay conexión a internet");
+            Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
+            Log.e(LOGTAG, getString(R.string.no_internet_error));
             return;
         }
 
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
-                Log.d("TRIPS", "got attractions: " + response.body().toString());
+                Log.d(LOGTAG, getString(R.string.got_attractions) + response.body().toString());
                 attractions = response.body();
 
                 checkChangeLayout();
@@ -78,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Attraction>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(getApplicationContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(LOGTAG, t.toString());
             }
         });
     }

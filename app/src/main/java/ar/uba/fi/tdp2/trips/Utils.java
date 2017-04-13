@@ -1,6 +1,5 @@
 package ar.uba.fi.tdp2.trips;
 
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
