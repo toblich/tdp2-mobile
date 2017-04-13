@@ -12,10 +12,6 @@
     <string name="other_opinions">Otras opiniones</string>
     <string name="see_more">VER MÁS ›</string>
     <string name="location_found">Usted se encuentra en:</string>
-    <string name="got_cities">Ciudades:</string>
-    <string name="got_attractions">Atracciones:</string>
-    <string name="got_poi">Puntos de Interés:</string>
-    <string name="got_reviews">Revwies:</string>
     <string name="dollars">dólares</string>
     <string name="minutes">minutos</string>
     <string name="all_day_open">Abierto las 24 horas</string>
@@ -35,7 +31,6 @@
     <string name="geocoder_error">Error en geocoder:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_point_of_interest_tabs" translatable="false">PointOfInterestTabsActivity</string>
     <string name="title_activity_attraction_tabs" translatable="false">AttractionTabsActivity</string>
 </resources>

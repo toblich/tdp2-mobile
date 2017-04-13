@@ -1,5 +1,6 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,13 +25,12 @@ public class AllReviewsActivity extends AppCompatActivity {
     RV_ReviewsAdapter adapter;
     LinearLayoutManager llm;
     RecyclerView recyclerView;
+    private Context localContext = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_reviews_activity);
-
-        final String LOGTAG = getString(R.string.app_name);
 
         Bundle bundle = getIntent().getExtras();
         attractionName = bundle.getString("attractionName");
@@ -55,8 +56,8 @@ public class AllReviewsActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                Log.d(LOGTAG, "statusCode: " + response.code());
-                Log.d(LOGTAG, getString(R.string.got_reviews) + response.body().toString());
+                Log.d(Utils.getLOGTAG(localContext), "statusCode: " + response.code());
+                Log.d(Utils.getLOGTAG(localContext), "Got Reviews: " + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);
@@ -67,7 +68,7 @@ public class AllReviewsActivity extends AppCompatActivity {
             public void onFailure(Call<List<Review>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(getApplicationContext(),getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(LOGTAG, t.toString());
+                Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
     }

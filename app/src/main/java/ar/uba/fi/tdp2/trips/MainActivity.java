@@ -32,13 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
     private RV_AttractionAdapter adapter;
-    private String LOGTAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        LOGTAG = getString(R.string.app_name);
 
         Bundle bundle = getIntent().getExtras();
         locality  = bundle.getString("locality");
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
-            Log.e(LOGTAG, getString(R.string.no_internet_error));
+            Log.e(Utils.getLOGTAG(localContext), getString(R.string.no_internet_error));
             return;
         }
 
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
-                Log.d(LOGTAG, getString(R.string.got_attractions) + response.body().toString());
+                Log.d(Utils.getLOGTAG(localContext), "Got Attractions: " + response.body().toString());
                 attractions = response.body();
 
                 checkChangeLayout();
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<List<Attraction>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(LOGTAG, t.toString());
+                Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
     }

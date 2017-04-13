@@ -12,10 +12,6 @@
     <string name="gallery">GALLERY</string>
     <string name="geocoder_error">Error on geocoder:</string>
     <string name="geolocalization_card">My current location</string>
-    <string name="got_attractions">Attractions:</string>
-    <string name="got_cities">Cities:</string>
-    <string name="got_poi">Points of Interest:</string>
-    <string name="got_reviews">Revwies:</string>
     <string name="information">INFORMATION</string>
     <string name="interrupted_google_play_services_error">Error: Connection to Google Play Services has been interrupted</string>
     <string name="location_found">You are at:</string>

@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +43,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
     private int poiId;
     private Context localContext;
     private PointOfInterest pointOfInterest;
-    private String LOGTAG;
 
     private OnFragmentInteractionListener mListener;
 
@@ -67,7 +67,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
             poiId = getArguments().getInt(ARG_POI_ID);
         }
         localContext = getContext();
-        LOGTAG = getString(R.string.app_name);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
         call.enqueue(new Callback<PointOfInterest>() {
             @Override
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
-                Log.d(LOGTAG, getString(R.string.got_poi) + response.body().toString());
+                Log.d(Utils.getLOGTAG(localContext), "Got Point of Interest: " + response.body().toString());
                 pointOfInterest = response.body();
                 setContentView(ll, rl);
             }
@@ -97,7 +96,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
             public void onFailure(Call<PointOfInterest> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(getContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(LOGTAG, t.toString());
+                Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
     }

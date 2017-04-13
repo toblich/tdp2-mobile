@@ -37,6 +37,7 @@ import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,9 +56,8 @@ public class AttractionDetailsFragment extends Fragment {
 
     private int attractionId;
     private Attraction attraction;
-    private String LOGTAG;
-
     private OnFragmentInteractionListener mListener;
+    private Context localContext;
 
     public AttractionDetailsFragment() {
         // Required empty public constructor
@@ -89,7 +89,7 @@ public class AttractionDetailsFragment extends Fragment {
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
-        LOGTAG = getString(R.string.app_name);
+        localContext = getContext();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AttractionDetailsFragment extends Fragment {
         call.enqueue(new Callback<Attraction>() {
             @Override
             public void onResponse(Call<Attraction> call, Response<Attraction> response) {
-                Log.d(LOGTAG, getString(R.string.got_attractions) + response.body().toString());
+                Log.d(Utils.getLOGTAG(localContext), "Got Attraction: " + response.body().toString());
                 attraction = response.body();
 
                 setViewContent(ll);
@@ -118,7 +118,7 @@ public class AttractionDetailsFragment extends Fragment {
             public void onFailure(Call<Attraction> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(getContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(LOGTAG, t.toString());
+                Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
     }
