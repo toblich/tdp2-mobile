@@ -138,7 +138,7 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
-        View footer = inflater.inflate(R.layout.footer, informationList, false);
+        View footer = inflater.inflate(R.layout.attraction_details_footer, informationList, false);
 
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.attraction_description);
@@ -252,7 +252,7 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
-        View header = inflater.inflate(R.layout.attraction_cover_photo_header, informationList, false);
+        View header = inflater.inflate(R.layout.attraction_details_header, informationList, false);
 
         /* Set cover photo */
         DisplayMetrics displayMetrics = new DisplayMetrics();

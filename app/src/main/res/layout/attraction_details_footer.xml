@@ -41,7 +41,7 @@
             android:layout_centerHorizontal="true"
             android:progressTint="@color/colorAccent"/>
 
-        <ar.uba.fi.tdp2.trips.AttractionDetails.ComponentUtils.ActionEditText
+        <ar.uba.fi.tdp2.trips.AttractionDetails.ActionEditText
             android:id="@+id/own_review_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

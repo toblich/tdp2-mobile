@@ -127,7 +127,7 @@ public class InformationListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-        final View infoItem = inflater.inflate(R.layout.attraction_info_item, parent, false);
+        final View infoItem = inflater.inflate(R.layout.attraction_details_info_item, parent, false);
         final TextView value = (TextView) infoItem.findViewById(R.id.value);
         final ImageView icon = (ImageView) infoItem.findViewById(R.id.icon);
 
