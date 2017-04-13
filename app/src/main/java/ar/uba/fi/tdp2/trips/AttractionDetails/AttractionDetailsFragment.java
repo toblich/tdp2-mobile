@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -146,10 +147,15 @@ public class AttractionDetailsFragment extends Fragment {
         View header = inflater.inflate(R.layout.attraction_cover_photo_header, informationList, false);
 
         /* Set cover photo */
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
         int placeholderId = R.mipmap.photo_placeholder;
         ImageView coverPhoto = (ImageView) header.findViewById(R.id.attraction_cover_photo);
         Glide.with(context)
                 .load(attraction.photoUri)
+                .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
+                .fitCenter()
                 .placeholder(placeholderId)
                 .error(placeholderId) // TODO see if it possible to log the error
                 .into(coverPhoto);
