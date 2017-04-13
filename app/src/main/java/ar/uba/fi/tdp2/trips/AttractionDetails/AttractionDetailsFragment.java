@@ -117,7 +117,7 @@ public class AttractionDetailsFragment extends Fragment {
             @Override
             public void onFailure(Call<Attraction> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
                 Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });

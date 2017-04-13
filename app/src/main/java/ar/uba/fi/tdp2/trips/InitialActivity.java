@@ -43,7 +43,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     private static final int LOCATION_PERMISSION_PETITION = 101;
     private GoogleApiClient apiClient;
-    private Context context;
     private LocationManager locManager;
     private Geocoder geocoder;
     private CardView geolocalizationCard;
@@ -59,9 +58,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity_initial);
         this.setTitle(R.string.choose_location);
 
-        context    = getApplicationContext();
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        geocoder   = new Geocoder(context);
+        geocoder   = new Geocoder(localContext);
         geolocalizationCard = (CardView) findViewById(R.id.geolocalization_card);
         geolocalizationCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +109,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             @Override
             public void onFailure(Call<List<City>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
                 Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
@@ -119,7 +117,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Toast.makeText(context, getString(R.string.no_google_play_services_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(localContext, getString(R.string.no_google_play_services_error), Toast.LENGTH_SHORT).show();
         Log.e(Utils.getLOGTAG(localContext), getString(R.string.no_google_play_services_error));
     }
 
@@ -136,7 +134,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void onConnectionSuspended(int i) {
         //Se ha interrumpido la conexión con Google Play Services
-        Toast.makeText(context, getString(R.string.interrupted_google_play_services_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(localContext, getString(R.string.interrupted_google_play_services_error), Toast.LENGTH_SHORT).show();
         Log.e(Utils.getLOGTAG(localContext), getString(R.string.interrupted_google_play_services_error));
     }
 
@@ -151,20 +149,20 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             return;
         } else {
             // Permission denied
-            Toast.makeText(context, getString(R.string.location_permittion_denied), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.location_permittion_denied), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext), getString(R.string.location_permittion_denied));
         }
     }
 
     private void updateLocation() {
         if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(context, getString(R.string.no_gps_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.no_gps_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext),getString(R.string.no_gps_error));
             return;
         }
 
         if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
-            Toast.makeText(context, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext), getString(R.string.no_internet_error));
             return;
         }
@@ -176,7 +174,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
     private void setLocation(Location loc) {
         if (loc == null) {
-            Toast.makeText(context, getString(R.string.no_location_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.no_location_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext), getString(R.string.no_location_error));
             return;
         }
@@ -187,20 +185,20 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         try {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
         } catch (Exception e) {
-            Toast.makeText(context, getString(R.string.geocoder_error) + e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.geocoder_error) + e.toString(), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext), getString(R.string.geocoder_error) + e.toString());
         }
 
         // Check if successfully got the address
         if(addresses == null || addresses.size() == 0 ) {
-            Toast.makeText(context, getString(R.string.no_address_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(localContext, getString(R.string.no_address_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.getLOGTAG(localContext), getString(R.string.no_address_error));
             return;
         }
 
         Address address = addresses.get(0);
         String addressText = address.getLocality() + ", " + address.getCountryName();
-        Toast.makeText(context, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
+        Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("locality", address.getLocality());

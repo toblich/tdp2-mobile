@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Attraction>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
                 Log.d(Utils.getLOGTAG(localContext), t.toString());
             }
         });
