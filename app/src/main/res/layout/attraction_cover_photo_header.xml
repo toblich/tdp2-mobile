@@ -4,4 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/attraction_cover_photo"
+    android:paddingBottom="@dimen/attraction_details_layout_padding"
     />
