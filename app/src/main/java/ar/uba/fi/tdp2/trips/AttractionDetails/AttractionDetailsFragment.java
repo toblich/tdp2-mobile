@@ -2,7 +2,6 @@ package ar.uba.fi.tdp2.trips.AttractionDetails;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,8 +20,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -91,9 +88,7 @@ public class AttractionDetailsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_attraction_details, container, false);
-//        LinearLayout ll = (LinearLayout) fragment.findViewById(R.id.attraction_details_linear_layout);
         ListView lw = (ListView) fragment.findViewById(R.id.attraction_information_list);
         getAttractionDetails(lw);
         return fragment;
@@ -101,7 +96,7 @@ public class AttractionDetailsFragment extends Fragment {
 
     public void getAttractionDetails(final ListView lw) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Attraction> call  = backendService.getAttraction(attractionId);
+        Call<Attraction> call = backendService.getAttraction(attractionId);
 
         call.enqueue(new Callback<Attraction>() {
             @Override
@@ -126,16 +121,12 @@ public class AttractionDetailsFragment extends Fragment {
 
     public void setViewContent(ListView informationList) {
         final Context context = getContext();
-        if (getContext() == null) {
+        if (context == null) {
             return;
         }
 
-        /* Set useful information details */
-//        ListView informationList = (ListView) ll.findViewById(R.id.attraction_information_list);
-
-        InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
+        InformationListAdapter adapter = new InformationListAdapter(context, attraction);
         informationList.setAdapter(adapter);
-//        setListViewHeightBasedOnChildren(informationList);
         informationList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -143,29 +134,13 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-        View header = inflater.inflate(R.layout.attraction_cover_photo_header, informationList, false);
+        addHeader(context, inflater, informationList);
+        addFooter(context, inflater, informationList);
+    }
 
-        /* Set cover photo */
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int placeholderId = R.mipmap.photo_placeholder;
-        ImageView coverPhoto = (ImageView) header.findViewById(R.id.attraction_cover_photo);
-        Glide.with(context)
-                .load(attraction.photoUri)
-                .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
-                .fitCenter()
-                .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
-                .into(coverPhoto);
-
-        informationList.addHeaderView(header);
-
-        /* Set Footer */
+    private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
         View footer = inflater.inflate(R.layout.footer, informationList, false);
 
         /* Set description */
@@ -277,6 +252,26 @@ public class AttractionDetailsFragment extends Fragment {
         }
 
         informationList.addFooterView(footer);
+    }
+
+    private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
+        View header = inflater.inflate(R.layout.attraction_cover_photo_header, informationList, false);
+
+        /* Set cover photo */
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int placeholderId = R.mipmap.photo_placeholder;
+        ImageView coverPhoto = (ImageView) header.findViewById(R.id.attraction_cover_photo);
+        Glide.with(context)
+                .load(attraction.photoUri)
+                .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
+                .fitCenter()
+                .placeholder(placeholderId)
+                .error(placeholderId) // TODO see if it possible to log the error
+                .into(coverPhoto);
+
+        informationList.addHeaderView(header);
     }
 
     public void onButtonPressed(Uri uri) {
