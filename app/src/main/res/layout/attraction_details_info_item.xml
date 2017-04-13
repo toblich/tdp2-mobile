@@ -2,6 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/attraction_details_layout_padding"
+    android:paddingStart="@dimen/attraction_details_layout_padding"
+    android:paddingRight="@dimen/attraction_details_layout_padding"
+    android:paddingEnd="@dimen/attraction_details_layout_padding"
     >
 
     <ImageView
@@ -17,8 +21,8 @@
 
     <TextView
         android:id="@+id/value"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/icon"
         android:layout_toRightOf="@id/icon"
@@ -28,7 +32,7 @@
     <TextView
         android:id="@+id/hours"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/value"
         android:layout_toRightOf="@id/value"

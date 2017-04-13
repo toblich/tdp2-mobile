@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,11 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -30,11 +28,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ar.uba.fi.tdp2.trips.Attraction;
-import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -94,16 +88,15 @@ public class AttractionDetailsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_attraction_details, container, false);
-        LinearLayout ll = (LinearLayout) fragment.findViewById(R.id.attraction_details_linear_layout);
-        getAttractionDetails(ll);
+        ListView lw = (ListView) fragment.findViewById(R.id.attraction_information_list);
+        getAttractionDetails(lw);
         return fragment;
     }
 
-    public void getAttractionDetails(final LinearLayout ll) {
+    public void getAttractionDetails(final ListView lw) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Attraction> call  = backendService.getAttraction(attractionId);
+        Call<Attraction> call = backendService.getAttraction(attractionId);
 
         call.enqueue(new Callback<Attraction>() {
             @Override
@@ -111,7 +104,7 @@ public class AttractionDetailsFragment extends Fragment {
                 Log.d(Utils.LOGTAG, "Got Attraction: " + response.body().toString());
                 attraction = response.body();
 
-                setViewContent(ll);
+                setViewContent(lw);
             }
 
             @Override
@@ -123,18 +116,14 @@ public class AttractionDetailsFragment extends Fragment {
         });
     }
 
-    public void setViewContent(LinearLayout ll) {
+    public void setViewContent(ListView informationList) {
         final Context context = getContext();
-        if (getContext() == null) {
+        if (context == null) {
             return;
         }
 
-        /* Set useful information details */
-        ListView informationList = (ListView) ll.findViewById(R.id.attraction_information_list);
-
-        InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
+        InformationListAdapter adapter = new InformationListAdapter(context, attraction);
         informationList.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(informationList);
         informationList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -142,21 +131,21 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        /* Set cover photo */
-        int placeholderId = R.mipmap.photo_placeholder;
-        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
-        Glide.with(context)
-                .load(attraction.photoUri)
-                .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
-                .into(coverPhoto);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+
+        addHeader(context, inflater, informationList);
+        addFooter(context, inflater, informationList);
+    }
+
+    private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
+        View footer = inflater.inflate(R.layout.attraction_details_footer, informationList, false);
 
         /* Set description */
-        TextView description = (TextView) ll.findViewById(R.id.attraction_description);
+        TextView description = (TextView) footer.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
 
         /* Enable audioguide floating button if the attraction has one */
-        RelativeLayout rl = (RelativeLayout) ll.findViewById(R.id.floating_action_button_relative_layout);
+        RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
         if (attraction.audioguide != null) {
             fab.setVisibility(View.VISIBLE);
@@ -169,7 +158,7 @@ public class AttractionDetailsFragment extends Fragment {
         }
 
         /* Set own review content and behaviour */
-        final EditText reviewText = (EditText) ll.findViewById(R.id.own_review_text);
+        final EditText reviewText = (EditText) footer.findViewById(R.id.own_review_text);
         reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -201,7 +190,7 @@ public class AttractionDetailsFragment extends Fragment {
         });
 
         /* Set own rating value and behaviour */
-        AppCompatRatingBar ratingBar = (AppCompatRatingBar) ll.findViewById(R.id.own_review_rating);
+        AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -213,33 +202,33 @@ public class AttractionDetailsFragment extends Fragment {
 
         /* Set other people's reviews */
         if (attraction.reviews.isEmpty()) {
-            TextView otherReviewsTitle = (TextView) ll.findViewById(R.id.other_reviews_title);
+            TextView otherReviewsTitle = (TextView) footer.findViewById(R.id.other_reviews_title);
             otherReviewsTitle.setVisibility(View.GONE);
-            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) footer.findViewById(R.id.rating_stars);
             otherRatingBar.setVisibility(View.GONE);
         } else {
             System.out.println("Renderizando primera review ajena");
             Review rev = attraction.reviews.get(0);
-            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) ll.findViewById(R.id.rating_stars);
+            AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) footer.findViewById(R.id.rating_stars);
             otherRatingBar.setRating(rev.qualification);
             otherRatingBar.setVisibility(View.VISIBLE);
 
-            TextView otherUser = (TextView) ll.findViewById(R.id.review_author_name);
+            TextView otherUser = (TextView) footer.findViewById(R.id.review_author_name);
             otherUser.setText(rev.user);
 
-            TextView date = (TextView) ll.findViewById(R.id.review_date);
+            TextView date = (TextView) footer.findViewById(R.id.review_date);
             date.setText(rev.date);
 
             if (rev.text != null && !rev.text.equals("")) {
                 System.out.println("Renderizando texto de review: " + rev.text);
-                TextView otherReviewText = (TextView) ll.findViewById(R.id.review_text);
+                TextView otherReviewText = (TextView) footer.findViewById(R.id.review_text);
                 otherReviewText.setText(rev.text);
                 otherReviewText.setVisibility(View.VISIBLE);
             }
         }
 
         /* Add "see more reviews" button */
-        TextView seeMoreReviewsLink = (TextView) ll.findViewById(R.id.see_more_reviews_link);
+        TextView seeMoreReviewsLink = (TextView) footer.findViewById(R.id.see_more_reviews_link);
         if (attraction.reviews.size() <= 1) {
             seeMoreReviewsLink.setVisibility(View.GONE);
         } else {
@@ -258,30 +247,28 @@ public class AttractionDetailsFragment extends Fragment {
                 }
             });
         }
+
+        informationList.addFooterView(footer);
     }
 
-    /**** Method for Setting the Height of the ListView dynamically.
-     **** Hack to fix the issue of not showing all the items of the ListView
-     **** when placed inside a ScrollView  ****/
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
+    private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
+        View header = inflater.inflate(R.layout.attraction_details_header, informationList, false);
 
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+        /* Set cover photo */
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
+        int placeholderId = R.mipmap.photo_placeholder;
+        ImageView coverPhoto = (ImageView) header.findViewById(R.id.attraction_cover_photo);
+        Glide.with(context)
+                .load(attraction.photoUri)
+                .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
+                .fitCenter()
+                .placeholder(placeholderId)
+                .error(placeholderId) // TODO see if it possible to log the error
+                .into(coverPhoto);
+
+        informationList.addHeaderView(header);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -320,126 +307,5 @@ public class AttractionDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public interface OnClickCallback {
-        void call(View view, TextView days, TextView hours, ImageView icon);
-    }
-
-    public class InformationListAdapter extends BaseAdapter {
-        public class InfoItem {
-            String value;
-            int iconId;
-            OnClickCallback callback;
-
-            public InfoItem(String value, int iconId, OnClickCallback callback) {
-                this.value = value;
-                this.iconId = iconId;
-                this.callback = callback;
-            }
-        }
-
-        private Context context;
-        private Attraction attraction;
-        private List<InfoItem> items;
-
-        public InformationListAdapter(Context context, Attraction attraction) {
-            this.context = context;
-            this.attraction = attraction;
-            this.items = new ArrayList<>();
-            loadItems();
-        }
-
-        private void loadItems() {
-            add(R.drawable.ic_place_black_24dp, attraction.address);
-            add(R.drawable.ic_public_black_24dp, attraction.url);
-            add(R.drawable.ic_phone_black_24dp, attraction.phone);
-            add(R.drawable.ic_access_time_black_24dp, attraction.openingHours);
-            add(R.drawable.ic_attach_money_black_24dp, attraction.price, getString(R.string.dollars));
-            add(R.drawable.ic_timer_black_24dp, attraction.duration, getString(R.string.minutes));
-        }
-
-        private void add(int iconId, String string) {
-            if (string != null && !string.equals("")) {
-                items.add(new InfoItem(string, iconId, null));
-            }
-        }
-
-        private void add(int iconId, Number num, String string) {
-            if (num != null) { // TODO make string pretty
-                items.add(new InfoItem(num.toString() + " " + string, iconId, null));
-            }
-        }
-
-        private void add(int iconId, final List<OpeningHour> openingHours) {
-            if (openingHours == null || openingHours.isEmpty()) {
-                return;
-            }
-
-            OnClickCallback callback = openingHours.size() == 1 ? null : new OnClickCallback() {
-                @Override
-                public void call(View view, TextView days, TextView hours, ImageView icon) {
-                    // TODO
-                    System.out.println("ON CLICK CALLBACK");
-                    StringBuilder daysBuilder = new StringBuilder();
-                    StringBuilder hoursBuilder = new StringBuilder();
-                    for (OpeningHour op: openingHours) {
-                        daysBuilder.append(op.day + '\n');
-                        hoursBuilder.append("    " + (op.start == null ? (getString(R.string.all_day_open) + "\n") : op.start + " - " + op.end));
-                    }
-                    days.setText(daysBuilder.toString());
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParams.addRule(RelativeLayout.RIGHT_OF, icon.getId());
-                    days.setLayoutParams(layoutParams);
-                    hours.setVisibility(View.VISIBLE);
-                    hours.setText(hoursBuilder.toString());
-                }
-            };
-
-            OpeningHour first = openingHours.get(0);
-            String initial = first.day + "    " + (first.start == null ? getString(R.string.all_day_open) : (first.start + " - " + first.end));
-            items.add(new InfoItem(initial, iconId, callback));
-        }
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-
-            final View infoItem = inflater.inflate(R.layout.attraction_info_item, parent, false);
-            final TextView value = (TextView) infoItem.findViewById(R.id.value);
-            final ImageView icon = (ImageView) infoItem.findViewById(R.id.icon);
-
-            final InfoItem item = items.get(position);
-
-            value.setText(item.value);
-            icon.setImageResource(item.iconId);
-
-            if (item.callback != null) {
-                value.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TextView hours = (TextView) infoItem.findViewById(R.id.hours);
-                        item.callback.call(infoItem, value, hours, icon);
-                    }
-                });
-            }
-
-            return infoItem;
-        }
     }
 }
