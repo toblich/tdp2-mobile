@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Trips</string>
-    <string name="title_activity_maps">Maps</string>
+    <string name="app_name" translatable="false">Trips</string>
+    <string name="title_activity_maps">Mapa</string>
     <string name="choose_location">Elegir ubicación</string>
     <string name="no_attractions">No se encontraron atracciones cerca</string>
     <string name="no_points_of_interest">La atracción no tiene puntos de interés</string>
@@ -11,11 +11,11 @@
     <string name="my_opinion">Mi opinión</string>
     <string name="other_opinions">Otras opiniones</string>
     <string name="see_more">VER MÁS ›</string>
-    <string name="location_found">Usted se encuentra en: </string>
-    <string name="got_cities">Ciudades: </string>
-    <string name="got_attractions">Atracciones: </string>
-    <string name="got_poi">Puntos de Interés: </string>
-    <string name="got_reviews">Reviws: </string>
+    <string name="location_found">Usted se encuentra en:</string>
+    <string name="got_cities">Ciudades:</string>
+    <string name="got_attractions">Atracciones:</string>
+    <string name="got_poi">Puntos de Interés:</string>
+    <string name="got_reviews">Revwies:</string>
     <string name="dollars">dólares</string>
     <string name="minutes">minutos</string>
     <string name="all_day_open">Abierto las 24 horas</string>
@@ -26,16 +26,16 @@
     <!-- Errores -->
     <string name="no_internet_error">Error: No hay conexión a internet</string>
     <string name="no_gps_error">Error: GPS deshabilitado, debe habilitarlo para que el programa funcione</string>
-    <string name="no_google_play_services_error">Error: No se pudo conectar con Google Play Services></string>
+    <string name="no_google_play_services_error">Error: No se pudo conectar con Google Play Services</string>
     <string name="interrupted_google_play_services_error">Error: Se ha interrumpido la conexión con Google Play Services</string>
     <string name="no_server_error">Error: No se pudo conectar con el servidor</string>
     <string name="location_permittion_denied">Error: Permiso de localización denegado</string>
     <string name="no_location_error">Error: El GPS no pudo establecer su ubicacion</string>
     <string name="no_address_error">Error: El GPS no pudo establecer su dirección</string>
-    <string name="geocoder_error">Error en geocoder: </string>
+    <string name="geocoder_error">Error en geocoder:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_point_of_interest_tabs">PointOfInterestTabsActivity</string>
-    <string name="title_activity_attraction_tabs">AttractionTabsActivity</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="title_activity_point_of_interest_tabs" translatable="false">PointOfInterestTabsActivity</string>
+    <string name="title_activity_attraction_tabs" translatable="false">AttractionTabsActivity</string>
 </resources>
