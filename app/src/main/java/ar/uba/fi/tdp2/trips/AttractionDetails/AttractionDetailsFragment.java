@@ -2,6 +2,7 @@ package ar.uba.fi.tdp2.trips.AttractionDetails;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -133,7 +134,7 @@ public class AttractionDetailsFragment extends Fragment {
 
         InformationListAdapter adapter = new InformationListAdapter(getContext(), attraction);
         informationList.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(informationList);
+//        setListViewHeightBasedOnChildren(informationList);
         informationList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -141,17 +142,24 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        /* Set cover photo */
-//        int placeholderId = R.mipmap.photo_placeholder;
-//        ImageView coverPhoto = (ImageView) ll.findViewById(R.id.attraction_cover_photo);
-//        Glide.with(context)
-//                .load(attraction.photoUri)
-//                .placeholder(placeholderId)
-//                .error(placeholderId) // TODO see if it possible to log the error
-//                .into(coverPhoto);
+
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
+        View header = inflater.inflate(R.layout.attraction_cover_photo_header, informationList, false);
+
+        /* Set cover photo */
+        int placeholderId = R.mipmap.photo_placeholder;
+        ImageView coverPhoto = (ImageView) header.findViewById(R.id.attraction_cover_photo);
+        Glide.with(context)
+                .load(attraction.photoUri)
+                .placeholder(placeholderId)
+                .error(placeholderId) // TODO see if it possible to log the error
+                .into(coverPhoto);
+
+        informationList.addHeaderView(header);
+
+        /* Set Footer */
         View footer = inflater.inflate(R.layout.footer, informationList, false);
 
         /* Set description */
@@ -265,29 +273,29 @@ public class AttractionDetailsFragment extends Fragment {
         informationList.addFooterView(footer);
     }
 
-    /**** Method for Setting the Height of the ListView dynamically.
-     **** Hack to fix the issue of not showing all the items of the ListView
-     **** when placed inside a ScrollView  ****/
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
-
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
+//    /**** Method for Setting the Height of the ListView dynamically.
+//     **** Hack to fix the issue of not showing all the items of the ListView
+//     **** when placed inside a ScrollView  ****/
+//    public static void setListViewHeightBasedOnChildren(ListView listView) {
+//        ListAdapter listAdapter = listView.getAdapter();
+//        if (listAdapter == null)
+//            return;
+//
+//        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+//        int totalHeight = 0;
+//        View view = null;
+//        for (int i = 0; i < listAdapter.getCount(); i++) {
+//            view = listAdapter.getView(i, view, listView);
+//            if (i == 0)
+//                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+//
+//            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+//            totalHeight += view.getMeasuredHeight();
+//        }
+//        ViewGroup.LayoutParams params = listView.getLayoutParams();
+//        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+//        listView.setLayoutParams(params);
+//    }
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
