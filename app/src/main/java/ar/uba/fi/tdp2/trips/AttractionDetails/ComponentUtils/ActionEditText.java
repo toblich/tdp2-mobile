@@ -1,4 +1,4 @@
-package ar.uba.fi.tdp2.trips.AttractionDetails;
+package ar.uba.fi.tdp2.trips.AttractionDetails.ComponentUtils;
 
 
 import android.content.Context;

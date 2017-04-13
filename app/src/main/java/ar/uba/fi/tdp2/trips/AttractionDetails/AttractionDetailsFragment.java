@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,11 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ar.uba.fi.tdp2.trips.Attraction;
-import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -328,6 +323,7 @@ public class AttractionDetailsFragment extends Fragment {
     public interface OnClickCallback {
         void call(View view, TextView days, TextView hours, ImageView icon);
     }
+<<<<<<< HEAD
 
     public class InformationListAdapter extends BaseAdapter {
         public class InfoItem {
