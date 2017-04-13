@@ -88,7 +88,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
         call.enqueue(new Callback<PointOfInterest>() {
             @Override
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
-                Log.d(Utils.getLOGTAG(localContext), "Got Point of Interest: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Point of Interest: " + response.body().toString());
                 pointOfInterest = response.body();
                 setContentView(ll, rl);
             }
@@ -96,7 +96,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
             public void onFailure(Call<PointOfInterest> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(Utils.getLOGTAG(localContext), t.toString());
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }

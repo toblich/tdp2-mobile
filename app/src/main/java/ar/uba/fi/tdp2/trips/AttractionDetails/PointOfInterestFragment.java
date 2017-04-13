@@ -105,7 +105,7 @@ public class PointOfInterestFragment extends Fragment {
         call.enqueue(new Callback<List<PointOfInterest>>() {
             @Override
             public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
-                Log.d(Utils.getLOGTAG(localContext), "Got Points of Interest: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Points of Interest: " + response.body().toString());
                 pointsOfInterest = response.body();
 
                 if (pointsOfInterest.size() == 0) {
@@ -124,7 +124,7 @@ public class PointOfInterestFragment extends Fragment {
             public void onFailure(Call<List<PointOfInterest>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(Utils.getLOGTAG(localContext), t.toString());
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }

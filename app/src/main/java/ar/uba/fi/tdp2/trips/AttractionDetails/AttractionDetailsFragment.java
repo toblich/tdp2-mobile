@@ -108,7 +108,7 @@ public class AttractionDetailsFragment extends Fragment {
         call.enqueue(new Callback<Attraction>() {
             @Override
             public void onResponse(Call<Attraction> call, Response<Attraction> response) {
-                Log.d(Utils.getLOGTAG(localContext), "Got Attraction: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Attraction: " + response.body().toString());
                 attraction = response.body();
 
                 setViewContent(ll);
@@ -118,7 +118,7 @@ public class AttractionDetailsFragment extends Fragment {
             public void onFailure(Call<Attraction> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(Utils.getLOGTAG(localContext), t.toString());
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }

@@ -56,8 +56,8 @@ public class AllReviewsActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                Log.d(Utils.getLOGTAG(localContext), "statusCode: " + response.code());
-                Log.d(Utils.getLOGTAG(localContext), "Got Reviews: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "statusCode: " + response.code());
+                Log.d(Utils.LOGTAG, "Got Reviews: " + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);
@@ -68,7 +68,7 @@ public class AllReviewsActivity extends AppCompatActivity {
             public void onFailure(Call<List<Review>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(localContext,getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
-                Log.d(Utils.getLOGTAG(localContext), t.toString());
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }
