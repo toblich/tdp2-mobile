@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 
 public class Utils {
 
+    public static final String LOGTAG = "Trips";
+
     public static boolean isNetworkAvailable(ConnectivityManager manager) {
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();

@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         initializeData();
     }
 
@@ -56,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         attractions = new ArrayList<>();
 
         if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
-            Toast.makeText(localContext, "Error: No hay conexión a internet.", Toast.LENGTH_SHORT).show(); // TODO internationalize
-            Log.e("TRIPS","Error: No hay conexión a internet");
+            Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
+            Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;
         }
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
-                Log.d("TRIPS", "got attractions: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Attractions: " + response.body().toString());
                 attractions = response.body();
 
                 checkChangeLayout();
@@ -78,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Attraction>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
         SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.cities_search);
+        MenuItem searchItem = menu.findItem(R.id.search);
         searchItem.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
         SearchView search = (SearchView) searchItem.getActionView();
         search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));

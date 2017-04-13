@@ -21,7 +21,6 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-//    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -43,22 +42,13 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("INFORMACIÓN")); // TODO internationalize
-        tabLayout.addTab(tabLayout.newTab().setText("GALERÍA"));
-        tabLayout.addTab(tabLayout.newTab().setText("PUNTOS DE INTERÉS"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.information)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.points_of_interest)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager

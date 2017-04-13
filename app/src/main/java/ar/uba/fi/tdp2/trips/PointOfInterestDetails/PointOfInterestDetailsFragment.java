@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,21 +83,20 @@ public class PointOfInterestDetailsFragment extends Fragment {
 
     private void getPointOfInterestDetails(final LinearLayout ll, final RelativeLayout rl) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        // TODO fetch from real server with real attractionId and poiId
         Call<PointOfInterest> call  = backendService.getPointOfInterest(attractionId, poiId);
 
         call.enqueue(new Callback<PointOfInterest>() {
             @Override
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
-                Log.d("TRIPS", "got point of interest: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Point of Interest: " + response.body().toString());
                 pointOfInterest = response.body();
                 setContentView(ll, rl);
             }
             @Override
             public void onFailure(Call<PointOfInterest> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }

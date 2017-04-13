@@ -17,6 +17,7 @@ import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_PointOfInterestAdapter;
+import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,7 +105,7 @@ public class PointOfInterestFragment extends Fragment {
         call.enqueue(new Callback<List<PointOfInterest>>() {
             @Override
             public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
-                Log.d("TRIPS", "got points of interest: " + response.body().toString());
+                Log.d(Utils.LOGTAG, "Got Points of Interest: " + response.body().toString());
                 pointsOfInterest = response.body();
 
                 if (pointsOfInterest.size() == 0) {
@@ -122,8 +123,8 @@ public class PointOfInterestFragment extends Fragment {
             @Override
             public void onFailure(Call<List<PointOfInterest>> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(localContext, "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
+                Toast.makeText(localContext, getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
+                Log.d(Utils.LOGTAG, t.toString());
             }
         });
     }

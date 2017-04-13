@@ -42,8 +42,8 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("INFORMACIÓN")); // TODO internationalize
-        tabLayout.addTab(tabLayout.newTab().setText("GALERÍA"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.information)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager
