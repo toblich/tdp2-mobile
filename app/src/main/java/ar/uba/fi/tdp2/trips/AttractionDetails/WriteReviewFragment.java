@@ -26,16 +26,17 @@ import retrofit2.Call;
 public class WriteReviewFragment extends DialogFragment {
 
     private static final String ARG_TEXT = "text";
-    private static final String ARG_RATING = "initialRating";
+    private static final String ARG_RATING = "rating";
     private String text;
     private int rating;
     private Context context;
 
-    public static WriteReviewFragment newInstance(String text, int initialRating) {
+    public static WriteReviewFragment newInstance(String text, int rating) {
         WriteReviewFragment f = new WriteReviewFragment();
         // Supply index input as an argument.
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
+        args.putInt(ARG_RATING, rating);
         f.setArguments(args);
         return f;
     }
