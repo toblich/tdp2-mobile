@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
@@ -122,11 +121,11 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 User user = User.getInstance(getSharedPreferences("user", 0));
-                if (user != null && user.fb_post && user.fb_public_profile) {
+                if (user != null && user.fbPost && user.fbPublicProfile) {
                     openAttractionShareDialog();
                     return false;
                 }
-                if (user != null && !user.fb_post) {
+                if (user != null && !user.fbPost) {
                     user.getFbPostPermissions((Activity) activityContext, callbackManager,
                             getSharedPreferences("user", 0),
                             new User.Callback() {

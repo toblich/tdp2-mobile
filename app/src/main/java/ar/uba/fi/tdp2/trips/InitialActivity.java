@@ -108,7 +108,11 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         call.enqueue(new Callback<List<City>>() {
             @Override
             public void onResponse(Call<List<City>> call, Response<List<City>> response) {
-                Log.d(Utils.LOGTAG, "Got Cities: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
+
+                Log.d("TRIPS", "got cities: " + response.body().toString());
                 cities = response.body();
 
                 adapter = new RV_CitiesAdapter(cities, localContext);

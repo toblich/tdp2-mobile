@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -23,7 +22,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -32,43 +30,47 @@ public class User {
     private static User user;
     public int id;
     public String token;
-    public String fb_token;
-    public boolean fb_public_profile;
-    public boolean fb_post;
+    public @SerializedName("fb_token") String fbToken;
+    public @SerializedName("fb_public_profile") boolean fbPublicProfile;
+    public @SerializedName("fb_post") boolean fbPost;
 
-    private User(int id, String token, boolean fb_public_profile, boolean fb_post) {
+    private User(int id, String token, boolean fbPublicProfile, boolean fbPost) {
         this.id     = id;
         this.token  = token;
-        this.fb_public_profile = fb_public_profile;
-        this.fb_post = fb_post;
+        this.fbPublicProfile = fbPublicProfile;
+        this.fbPost = fbPost;
     }
 
-    private User(String fb_token) {
-        this.fb_token = fb_token;
+    private User(String fbToken) {
+        this.fbToken = fbToken;
     }
 
     @Override
     public String toString() {
-        return "User {\n  id: " + id + "\n  token: " + token + "\n fb_public_profile: " + fb_public_profile + "\n fb_post: " + fb_post + "\n}";
+        return "User {\n  id: " + id + "\n  token: " + token + "\n fbPublicProfile: " + fbPublicProfile + "\n fbPost: " + fbPost + "\n}";
     }
 
     public interface Callback {
         void onSuccess(User user);
     }
 
-    private static void createFromFbToken(String fb_token,
+    private static void createFromFbToken(String fbToken,
                                          final SharedPreferences settings,
                                          final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        user = new User(fb_token);
+        user = new User(fbToken);
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                if (response.body() == null) {
+                    Log.d("TRIPS", "came with response: " + response.toString());
+                    return;
+                }
                 Log.d("TRIPS", "got user: " + response.body().toString());
                 user = response.body();
-                user.fb_public_profile = true;
+                user.fbPublicProfile = true;
                 user.persistUser(settings);
                 callback.onSuccess(user);
             }
@@ -92,22 +94,22 @@ public class User {
 
     @Nullable
     private static User getPersistedUser(SharedPreferences settings) {
-        int user_id = settings.getInt("user_id", 0);
-        String user_token = settings.getString("user_token", null);
-        boolean fb_public_profile = settings.getBoolean("user_fb_public_profile", false);
-        boolean fb_post = settings.getBoolean("user_fb_post", false);
-        if (user_id != 0 && user_token != null) {
-            return new User(user_id, user_token, fb_public_profile, fb_post);
+        int userId = settings.getInt("userId", 0);
+        String userToken = settings.getString("userToken", null);
+        boolean fbPublicProfile = settings.getBoolean("userFbPublicProfile", false);
+        boolean fbPost = settings.getBoolean("userFbPost", false);
+        if (userId != 0 && userToken != null) {
+            return new User(userId, userToken, fbPublicProfile, fbPost);
         }
         return null;
     }
 
     private void persistUser(final SharedPreferences settings) {
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("user_id", id);
-        editor.putString("user_token", token);
-        editor.putBoolean("user_fb_public_profile", fb_public_profile);
-        editor.putBoolean("user_fb_post", fb_post);
+        editor.putInt("userId", id);
+        editor.putString("userToken", token);
+        editor.putBoolean("userFbPublicProfile", fbPublicProfile);
+        editor.putBoolean("userFbPost", fbPost);
         editor.commit();
         System.out.println(this);
     }
@@ -155,7 +157,7 @@ public class User {
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                user.fb_post = true;
+                user.fbPost = true;
                 user.persistUser(sharedPreferences);
                 callback.onSuccess(user);
             }

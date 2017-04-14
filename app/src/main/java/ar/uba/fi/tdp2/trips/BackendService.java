@@ -84,7 +84,8 @@ public interface BackendService {
             //.baseUrl("http://192.168.1.117")
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
             //.baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-            .baseUrl("http://192.168.43.8")
+//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.0.49")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
