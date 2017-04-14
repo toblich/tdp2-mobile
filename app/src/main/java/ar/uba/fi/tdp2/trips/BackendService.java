@@ -83,6 +83,7 @@ public interface BackendService {
                     // Request customization: add request headers
                     Request request = original.newBuilder()
                             .header("Accept-Language", Locale.getDefault().getLanguage())
+                            .header("Content-Language", Locale.getDefault().getLanguage())
                             .build();
 
                     return chain.proceed(request);

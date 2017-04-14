@@ -26,40 +26,16 @@
         android:layout_height="wrap_content"
         android:text="@string/my_opinion" />
 
-    <RelativeLayout
-        android:id="@+id/own_review"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatRatingBar
-            android:id="@+id/own_review_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            android:stepSize="1"
-            android:layout_centerHorizontal="true"
-            android:progressTint="@color/colorAccent"/>
-
-        <ar.uba.fi.tdp2.trips.AttractionDetails.ActionEditText
-            android:id="@+id/own_review_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="0dp"
-            android:layout_below="@id/own_review_rating"
-            android:inputType="textAutoCorrect|textMultiLine"
-            android:textSize="16sp"
-            android:scrollHorizontally="false"
-            android:visibility="gone"
-            android:imeOptions="actionDone"
-            android:hint="@string/review_input_hint"/>
-
-    </RelativeLayout>
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/own_review_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:stepSize="1"
+        android:layout_gravity="center_horizontal"
+        android:progressTint="@color/colorAccent"/>
 
     <RelativeLayout
         android:id="@+id/other_reviews_header"

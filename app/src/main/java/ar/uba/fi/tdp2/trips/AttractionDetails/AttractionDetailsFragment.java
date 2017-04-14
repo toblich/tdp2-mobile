@@ -160,46 +160,47 @@ public class AttractionDetailsFragment extends Fragment {
             });
         }
 
-        /* Set own review content and behaviour */
-        final EditText reviewText = (EditText) footer.findViewById(R.id.own_review_text);
-        reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // TODO send review to backend
-                    reviewText.clearFocus();
-                }
-                return false;
-            }
-        });
-        reviewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                if (hasFocus) {
-                    System.out.println("has focus");
-                    imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
-                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    reviewText.setCursorVisible(true);
-                } else {
-                    System.out.println("no focus");
-                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE); // Hide correction underline
-                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
-                    reviewText.setCursorVisible(false);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); // close keyboard
-                }
-            }
-        });
+//        /* Set own review content and behaviour */
+//        final EditText reviewText = (EditText) footer.findViewById(R.id.own_review_text);
+//        reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                    // TODO send review to backend
+//                    reviewText.clearFocus();
+//                }
+//                return false;
+//            }
+//        });
+//        reviewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//
+//                if (hasFocus) {
+//                    System.out.println("has focus");
+//                    imm.showSoftInput(v, InputMethodManager.RESULT_SHOWN);
+////                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+////                    reviewText.setCursorVisible(true);
+//                } else {
+//                    System.out.println("no focus");
+////                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE); // Hide correction underline
+////                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
+////                    reviewText.setCursorVisible(false);
+//                    if (imm.isActive()) {
+//                        imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0); // close keyboard
+//                    }
+//                }
+//            }
+//        });
 
         /* Set own rating value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                reviewText.setVisibility(View.VISIBLE);
-
-                // TODO send rating to backend
+                WriteReviewFragment writeReviewFragment = WriteReviewFragment.newInstance("texto inicial", 4);
+                writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
             }
         });
 

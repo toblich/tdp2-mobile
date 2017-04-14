@@ -41,4 +41,5 @@
     <string name="send">Enviar</string>
     <string name="cancel">Cancelar</string>
     <string name="wait_a_second">Espere un momento</string>
+    <string name="confirm">CONFIRMAR</string>
 </resources>
