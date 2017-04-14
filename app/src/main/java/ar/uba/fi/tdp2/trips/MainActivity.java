@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.content.Context;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.facebook.CallbackManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager llm;
     private RV_AttractionAdapter adapter;
+    public CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        callbackManager = CallbackManager.Factory.create();
 
         Bundle bundle = getIntent().getExtras();
         locality  = bundle.getString("locality");
@@ -49,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initializeData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initializeData() {

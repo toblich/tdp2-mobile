@@ -82,6 +82,10 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     protected void onResume() {
         super.onResume();
         initializeData();
+        // TODO Agus: la siguiente es la llamada que se usa para pedir permisos de posteo.
+        // TODO: Fijate que no necesita el botón (puede hacerse sin nada del layout).
+        // TODO: Para el botón de compartir entonces, no debería ser necesario hacer el tema del LoginButton.
+//        LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("publish_actions"));
     }
 
     private void initializeData() {
@@ -99,7 +103,11 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         call.enqueue(new Callback<List<City>>() {
             @Override
             public void onResponse(Call<List<City>> call, Response<List<City>> response) {
-                Log.d(Utils.LOGTAG, "Got Cities: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
+
+                Log.d("TRIPS", "got cities: " + response.body().toString());
                 cities = response.body();
 
                 adapter = new RV_CitiesAdapter(cities, localContext);

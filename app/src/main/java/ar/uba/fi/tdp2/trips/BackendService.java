@@ -14,7 +14,9 @@ import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -56,6 +58,10 @@ public interface BackendService {
       @Path("attractionId") int attractionId // TODO
     );
 
+    //Create a new user
+    @POST("/users")
+    Call<User> createUser(@Body User user);
+
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
             .addInterceptor(new Interceptor() {
                 @Override
@@ -77,7 +83,9 @@ public interface BackendService {
     public static final Retrofit retrofit = new Retrofit.Builder()
             //.baseUrl("http://192.168.1.117")
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
-            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            //.baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.0.49")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();

@@ -1,5 +1,9 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
 
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.User;
 
 public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, AttractionTabsInterface {
 
@@ -28,10 +38,14 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
     private ViewPager viewPager;
 
     private TabLayout tabLayout;
+    public CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_attraction_tabs);
 
         Bundle bundle = getIntent().getExtras();
@@ -87,25 +101,72 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_attraction_tabs, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    private void openAttractionShareDialog() {
+        AttractionShareFragment shareFragment = new AttractionShareFragment();
+        Bundle bundle = new Bundle();
+        bundle.putCharSequence("attractionName", getTitle());
+        shareFragment.setArguments(bundle);
+        shareFragment.show(getFragmentManager(), "tag");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+
+        final Context activityContext = this;
+
+        MenuItem item = menu.findItem(R.id.attraction_share);
+        item.getIcon().setColorFilter(getResources().getColor(R.color.toolbarContent), PorterDuff.Mode.SRC_IN);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                User user = User.getInstance(getSharedPreferences("user", 0));
+                if (user != null && user.fbPost && user.fbPublicProfile) {
+                    openAttractionShareDialog();
+                    return false;
+                }
+                if (user != null && !user.fbPost) {
+                    user.getFbPostPermissions((Activity) activityContext, callbackManager,
+                            getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    openAttractionShareDialog();
+                                }
+                            });
+                } else {
+                    User.loginWithSocialNetwork((Activity) activityContext,
+                            callbackManager,
+                            getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    Toast.makeText(activityContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
+                                    user.getFbPostPermissions((Activity) activityContext, callbackManager,
+                                            getSharedPreferences("user", 0),
+                                            new User.Callback() {
+                                                @Override
+                                                public void onSuccess(User user) {
+                                                    openAttractionShareDialog();
+                                                }
+                                            });
+                                }
+                            });
+                }
+
+
+
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
 }
