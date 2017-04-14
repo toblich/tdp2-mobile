@@ -205,9 +205,7 @@ public class User {
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) {
-                try {
-                    System.out.println(response.body().string());
-                } catch (IOException e) {}
+
             }
 
         };

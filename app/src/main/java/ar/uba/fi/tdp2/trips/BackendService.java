@@ -11,11 +11,13 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -58,9 +60,19 @@ public interface BackendService {
       @Path("attractionId") int attractionId // TODO
     );
 
+    // Post review for an attraction
+    @POST("/attraction/{attractionId}/reviews")
+    Call<Review> postReview(
+        @Path("attractionId") int attractionId,
+        @Header("Authorization") String bearer,
+        @Body Review review
+    );
+
     //Create a new user
     @POST("/users")
     Call<User> createUser(@Body User user);
+
+    HttpLoggingInterceptor loggingInterceptor = (new HttpLoggingInterceptor()).setLevel(HttpLoggingInterceptor.Level.BODY);
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
             .addInterceptor(new Interceptor() {
@@ -73,18 +85,15 @@ public interface BackendService {
                             .header("Accept-Language", Locale.getDefault().getLanguage())
                             .build();
 
-                    Log.d("TRIPS", "Outgoing httpRequest: " + request.toString()
-                            + " Headers: " + request.headers().toString());
-
                     return chain.proceed(request);
                 }
-            }).build();
+            })
+            .addInterceptor(loggingInterceptor)
+            .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            //.baseUrl("http://192.168.1.117")
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
             //.baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
             .baseUrl("http://192.168.0.49")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
