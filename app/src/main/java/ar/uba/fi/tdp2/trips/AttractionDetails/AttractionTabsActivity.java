@@ -141,7 +141,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
                             new User.Callback() {
                                 @Override
                                 public void onSuccess(User user) {
-                                    Toast.makeText(activityContext, "Espere un momento", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(activityContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
                                     user.getFbPostPermissions((Activity) activityContext, callbackManager,
                                             getSharedPreferences("user", 0),
                                             new User.Callback() {

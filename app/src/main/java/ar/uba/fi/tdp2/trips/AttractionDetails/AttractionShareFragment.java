@@ -34,10 +34,10 @@ public class AttractionShareFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = inflater.inflate(R.layout.fragment_attraction_share, null);
         final EditText message = (EditText) view.findViewById(R.id.message);
-        message.setText("Trips me ayudó a conocer más de " + getArguments().getCharSequence("attractionName") + "!");
+        message.setText(getString(R.string.attraction_post_message) + getArguments().getCharSequence("attractionName") + "!");
         final AttractionShareFragment fragment = this;
         builder.setView(view)
-                .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         User user = User.getInstance(getActivity().getSharedPreferences("user", 0));
                         System.out.println(user);
@@ -50,7 +50,7 @@ public class AttractionShareFragment extends DialogFragment {
                         }
                     }
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {}
                 });
         // Create the AlertDialog object and return it
