@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class City {
     private String name;
-
-    @SerializedName("country_name")
-    private String country;
+    @SerializedName("country_name") private String country;
     private Double latitude;
     private Double longitude;
 

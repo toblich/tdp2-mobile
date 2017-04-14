@@ -1,10 +1,10 @@
 package ar.uba.fi.tdp2.trips.PointOfInterestDetails;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import ar.uba.fi.tdp2.trips.BackendService;
+import ar.uba.fi.tdp2.trips.Multimedia.AudioGuideActivity;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -108,12 +109,15 @@ public class PointOfInterestDetailsFragment extends Fragment {
 
         poi_description.setText(pointOfInterest.description);
 
-        if (pointOfInterest.audioguide != null) {
+        if (pointOfInterest.audioguide != null && pointOfInterest.audioguide != "") {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
+                    Intent intent = new Intent(localContext, AudioGuideActivity.class);
+                    intent.putExtra("name", pointOfInterest.name);
+                    intent.putExtra("audioguidePath", pointOfInterest.audioguide);
+                    startActivity(intent);
                 }
             });
         }
