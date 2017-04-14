@@ -20,8 +20,11 @@ import java.util.List;
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.User;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WriteReviewFragment extends DialogFragment {
 
@@ -55,12 +58,12 @@ public class WriteReviewFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
-        Activity activity = getActivity();
+        final AttractionTabsActivity activity = (AttractionTabsActivity) getActivity();
         LayoutInflater inflater = activity.getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View view = inflater.inflate(R.layout.fragment_write_review, null);
 
-        AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
+        final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
         ratingBar.setRating(rating);
 
         final EditText message = (EditText) view.findViewById(R.id.message);
@@ -70,15 +73,34 @@ public class WriteReviewFragment extends DialogFragment {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(Utils.LOGTAG, "confirm review");
-                        Toast.makeText(context, "CONFIRM!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "CONFIRM!", Toast.LENGTH_LONG).show(); // TODO sacar
                         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                        Call<Review> call = backendService.postReview();
+                        User user = User.getInstance(context.getSharedPreferences("user", 0));
+                        if (user == null) {
+                            Toast.makeText(context, R.string.not_signed_in, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String bearer = "Bearer " + user.token;
+                        Review review = new Review((int) ratingBar.getRating(), message.getText().toString());
+                        Call<Review> call = backendService.postReview(activity.attractionId, bearer, review);
+                        call.enqueue(new Callback<Review>() {
+                            @Override
+                            public void onResponse(Call<Review> call, Response<Review> response) {
+                                Toast.makeText(context, R.string.review_posted, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Review> call, Throwable t) {
+                                Log.d(Utils.LOGTAG, t.getMessage());
+                                t.printStackTrace();
+                                Toast.makeText(context, R.string.review_posting_failure, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(Utils.LOGTAG, "cancel review");
-                        Toast.makeText(context, "CANCEL!", Toast.LENGTH_LONG).show();
                     }
                 });
         // Create the AlertDialog object and return it

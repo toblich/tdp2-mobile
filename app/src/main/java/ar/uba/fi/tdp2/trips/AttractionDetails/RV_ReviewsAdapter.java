@@ -42,7 +42,7 @@ public class RV_ReviewsAdapter extends RecyclerView.Adapter<RV_ReviewsAdapter.Re
     @Override
     public void onBindViewHolder(ReviewViewHolder holder, int position) {
         Review review = reviews.get(position);
-        holder.ratingBar.setRating(review.qualification);
+        holder.ratingBar.setRating(review.rating);
         holder.userName.setText(review.user);
         holder.date.setText(review.date);
         holder.reviewText.setText(review.text);

@@ -61,7 +61,7 @@ public interface BackendService {
     );
 
     // Post review for an attraction
-    @POST("/attraction/{attractionId}/reviews")
+    @POST("/attractions/{attractionId}/reviews")
     Call<Review> postReview(
         @Path("attractionId") int attractionId,
         @Header("Authorization") String bearer,

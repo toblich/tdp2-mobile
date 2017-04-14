@@ -41,4 +41,7 @@
     <string name="cancel">Cancelar</string>
     <string name="wait_a_second">Espere un momento</string>
     <string name="confirm">CONFIRMAR</string>
+    <string name="not_signed_in">Debe hacer login!</string>
+    <string name="review_posted">Review subida!</string>
+    <string name="review_posting_failure">Falló la review</string>
 </resources>

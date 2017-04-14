@@ -113,10 +113,18 @@ public class User {
         editor.commit();
         System.out.println(this);
     }
+//
+//    private static void _loginWithSocialNetwork(CallbackManager callbackManager,
+//                                                final SharedPreferences sharedPreferences,
+//                                                final Callback callback) {
+//        LoginManager loginManager = LoginManager.getInstance();
+//
+//    }
 
-    private static void _loginWithSocialNetwork(CallbackManager callbackManager,
-                                                final SharedPreferences sharedPreferences,
-                                                final Callback callback) {
+    public static void loginWithSocialNetwork(Activity activity,
+                                              CallbackManager callbackManager,
+                                              final SharedPreferences sharedPreferences,
+                                              final Callback callback) {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -129,24 +137,15 @@ public class User {
 
             @Override
             public void onCancel() {
-                // TODO
+                Log.d(Utils.LOGTAG, "Login canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                // TODO
+                Log.d(Utils.LOGTAG, "Login failed");
             }
         });
-    }
-
-    public static void loginWithSocialNetwork(Activity activity,
-                                              CallbackManager callbackManager,
-                                              final SharedPreferences sharedPreferences,
-                                              final Callback callback) {
-        LoginManager loginManager = LoginManager.getInstance();
-        _loginWithSocialNetwork(callbackManager, sharedPreferences, callback);
-        loginManager.logInWithReadPermissions(
-                activity, Arrays.asList("email", "public_profile"));
+        loginManager.logInWithReadPermissions(activity, Arrays.asList("email", "public_profile"));
     }
 
     private void _getFbPostPermissions(CallbackManager callbackManager,
