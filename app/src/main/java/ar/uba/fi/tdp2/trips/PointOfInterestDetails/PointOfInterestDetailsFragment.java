@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import ar.uba.fi.tdp2.trips.BackendService;
-import ar.uba.fi.tdp2.trips.Multimedia.AudioGuideActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -114,7 +114,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(localContext, AudioGuideActivity.class);
+                    Intent intent = new Intent(localContext, AudioguideActivity.class);
                     intent.putExtra("name", pointOfInterest.name);
                     intent.putExtra("audioguidePath", pointOfInterest.audioguide);
                     startActivity(intent);

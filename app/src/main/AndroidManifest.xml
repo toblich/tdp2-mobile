@@ -87,7 +87,7 @@
             android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"
             android:label="@string/title_activity_point_of_interest_tabs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Multimedia.AudioGuideActivity"></activity>
+        <activity android:name=".Multimedia.AudioguideActivity"></activity>
     </application>
 
 </manifest>

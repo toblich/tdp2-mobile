@@ -35,7 +35,7 @@ import java.util.List;
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
-import ar.uba.fi.tdp2.trips.Multimedia.AudioGuideActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
@@ -166,7 +166,7 @@ public class AttractionDetailsFragment extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(localContext, AudioGuideActivity.class);
+                    Intent intent = new Intent(localContext, AudioguideActivity.class);
                     intent.putExtra("name", attraction.name);
                     intent.putExtra("audioguidePath", attraction.audioguide);
                     startActivity(intent);

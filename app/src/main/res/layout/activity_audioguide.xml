@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.uba.fi.tdp2.trips.Multimedia.AudioGuideActivity">
+    tools:context="ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity">
 
     <com.devbrackets.android.exomedia.ui.widget.EMVideoView
         android:id="@+id/audioguide_view"

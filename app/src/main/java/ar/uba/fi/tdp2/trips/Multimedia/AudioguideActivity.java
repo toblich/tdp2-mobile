@@ -11,14 +11,14 @@ import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
 
 import ar.uba.fi.tdp2.trips.R;
 
-public class AudioGuideActivity extends AppCompatActivity implements OnPreparedListener, OnErrorListener {
+public class AudioguideActivity extends AppCompatActivity implements OnPreparedListener, OnErrorListener {
 
     private EMVideoView emVideoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio_guide);
+        setContentView(R.layout.activity_audioguide);
 
         Bundle bundle           = getIntent().getExtras();
         String name             = bundle.getString("name");
