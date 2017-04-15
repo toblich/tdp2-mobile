@@ -38,6 +38,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
     private ViewPager viewPager;
 
     private TabLayout tabLayout;
+    protected int attractionId; // Accessed by fragments
     public CallbackManager callbackManager;
 
     @Override
@@ -71,7 +72,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         //Creating our pager adapter
-        int attractionId = bundle.getInt("attractionId");
+        attractionId = bundle.getInt("attractionId");
         Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(), attractionId);
 
         //Adding adapter to pager

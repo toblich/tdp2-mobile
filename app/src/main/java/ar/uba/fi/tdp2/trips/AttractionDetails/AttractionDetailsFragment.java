@@ -1,5 +1,6 @@
 package ar.uba.fi.tdp2.trips.AttractionDetails;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,17 +8,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
-import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -26,11 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.CallbackManager;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.User;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +51,7 @@ public class AttractionDetailsFragment extends Fragment {
     private Attraction attraction;
     private OnFragmentInteractionListener mListener;
     private Context localContext;
+    public CallbackManager callbackManager;
 
     public AttractionDetailsFragment() {
         // Required empty public constructor
@@ -83,6 +83,7 @@ public class AttractionDetailsFragment extends Fragment {
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
+        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager;
         localContext = getContext();
     }
 
@@ -163,47 +164,30 @@ public class AttractionDetailsFragment extends Fragment {
             });
         }
 
-//        /* Set own review content and behaviour */
-//        final EditText reviewText = (EditText) footer.findViewById(R.id.own_review_text);
-//        reviewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    // TODO send review to backend
-//                    reviewText.clearFocus();
-//                }
-//                return false;
-//            }
-//        });
-//        reviewText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//
-//                if (hasFocus) {
-//                    System.out.println("has focus");
-//                    imm.showSoftInput(v, InputMethodManager.RESULT_SHOWN);
-////                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-////                    reviewText.setCursorVisible(true);
-//                } else {
-//                    System.out.println("no focus");
-////                    reviewText.setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE); // Hide correction underline
-////                    reviewText.setBackgroundColor(getResources().getColor(R.color.transparent)); // hide focus line
-////                    reviewText.setCursorVisible(false);
-//                    if (imm.isActive()) {
-//                        imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0); // close keyboard
-//                    }
-//                }
-//            }
-//        });
+        final Context activityContext = getActivity();
 
         /* Set own rating value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                WriteReviewFragment writeReviewFragment = WriteReviewFragment.newInstance("texto inicial", 4);
-                writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
+                User user = User.getInstance(context.getSharedPreferences("user", 0));
+                if (user != null) {
+                    openWriteReviewDialog();
+                } else {
+                    User.loginWithSocialNetwork((Activity) activityContext,
+                            callbackManager,
+                            localContext.getSharedPreferences("user", 0),
+                            new User.Callback() {
+                                @Override
+                                public void onSuccess(User user) {
+                                    Toast.makeText(localContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
+                                    openWriteReviewDialog();
+                                }
+                            });
+                }
+
+
             }
         });
 
@@ -217,7 +201,7 @@ public class AttractionDetailsFragment extends Fragment {
             System.out.println("Renderizando primera review ajena");
             Review rev = attraction.reviews.get(0);
             AppCompatRatingBar otherRatingBar = (AppCompatRatingBar) footer.findViewById(R.id.rating_stars);
-            otherRatingBar.setRating(rev.qualification);
+            otherRatingBar.setRating(rev.rating);
             otherRatingBar.setVisibility(View.VISIBLE);
 
             TextView otherUser = (TextView) footer.findViewById(R.id.review_author_name);
@@ -256,6 +240,11 @@ public class AttractionDetailsFragment extends Fragment {
         }
 
         informationList.addFooterView(footer);
+    }
+
+    private void openWriteReviewDialog() {
+        WriteReviewFragment writeReviewFragment = WriteReviewFragment.newInstance("texto inicial", 4);
+        writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
 
     private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
@@ -318,5 +307,11 @@ public class AttractionDetailsFragment extends Fragment {
 
     public interface OnClickCallback {
         void call(View view, TextView days, TextView hours, ImageView icon);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
