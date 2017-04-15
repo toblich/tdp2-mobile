@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.InputType;
@@ -36,6 +35,7 @@ import java.util.List;
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.Attraction.OpeningHour;
 import ar.uba.fi.tdp2.trips.BackendService;
+import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
@@ -161,12 +161,15 @@ public class AttractionDetailsFragment extends Fragment {
         /* Enable audioguide floating button if the attraction has one */
         RelativeLayout rl = (RelativeLayout) ll.findViewById(R.id.floating_action_button_relative_layout);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-        if (attraction.audioguide != null) {
+        if (attraction.audioguide != null && attraction.audioguide != "") {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Audioguide", Snackbar.LENGTH_LONG).setAction("Play", null).show();
+                    Intent intent = new Intent(localContext, AudioguideActivity.class);
+                    intent.putExtra("name", attraction.name);
+                    intent.putExtra("audioguidePath", attraction.audioguide);
+                    startActivity(intent);
                 }
             });
         }

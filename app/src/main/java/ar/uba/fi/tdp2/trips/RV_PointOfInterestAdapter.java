@@ -64,14 +64,8 @@ public class RV_PointOfInterestAdapter extends RecyclerView.Adapter<RV_PointOfIn
                 actualContext.startActivity(intent);
             }
         });
-        if (pointOfInterest.audioguide != null) {
+        if (pointOfInterest.audioguide != null && pointOfInterest.audioguide != "") {
             holder.poiAudioguide.setVisibility(View.VISIBLE);
-            holder.poiAudioguide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(actualContext, "Audioguide", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 

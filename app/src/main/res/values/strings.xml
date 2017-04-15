@@ -29,12 +29,11 @@
     <string name="no_location_error">Error: El GPS no pudo establecer su ubicacion</string>
     <string name="no_address_error">Error: El GPS no pudo establecer su dirección</string>
     <string name="geocoder_error">Error en geocoder:</string>
+    <string name="audioguide_error">Error: Hubo un problema al cargar la audioguía</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_point_of_interest_tabs" translatable="false">PointOfInterestTabsActivity</string>
     <string name="title_activity_attraction_tabs" translatable="false">AttractionTabsActivity</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
     <string name="facebook_app_id" translatable="false">1900304510188978</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1900304510188978</string>
     <string name="attraction_post_message">Trips me ayudó a conocer más de</string>

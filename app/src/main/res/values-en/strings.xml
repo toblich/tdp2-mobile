@@ -31,4 +31,5 @@
     <string name="send">Send</string>
     <string name="wait_a_second">Wait a second</string>
     <string name="cancel">Cancel</string>
+    <string name="audioguide_error">Error: There was a problem loading the audioguide</string>
 </resources>
