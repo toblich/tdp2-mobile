@@ -21,7 +21,7 @@
     <!-- Attraction details -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="attraction_details_layout_margin">16dp</dimen>
+    <dimen name="attraction_details_layout_padding">16dp</dimen>
     <dimen name="attraction_details_info_list_vertical_margin">16dp</dimen>
     <!-- Info item -->
     <dimen name="info_item_vertical_margin">8dp</dimen>

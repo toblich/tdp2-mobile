@@ -11,11 +11,13 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -58,9 +60,19 @@ public interface BackendService {
       @Path("attractionId") int attractionId
     );
 
+    // Post review for an attraction
+    @POST("/attraction/{attractionId}/reviews")
+    Call<Review> postReview(
+        @Path("attractionId") int attractionId,
+        @Header("Authorization") String bearer,
+        @Body Review review
+    );
+
     //Create a new user
     @POST("/users")
     Call<User> createUser(@Body User user);
+
+    HttpLoggingInterceptor loggingInterceptor = (new HttpLoggingInterceptor()).setLevel(HttpLoggingInterceptor.Level.BODY);
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())
             .addInterceptor(new Interceptor() {
@@ -71,14 +83,14 @@ public interface BackendService {
                     // Request customization: add request headers
                     Request request = original.newBuilder()
                             .header("Accept-Language", Locale.getDefault().getLanguage())
+                            .header("Content-Language", Locale.getDefault().getLanguage())
                             .build();
-
-                    Log.d("TRIPS", "Outgoing httpRequest: " + request.toString()
-                            + " Headers: " + request.headers().toString());
 
                     return chain.proceed(request);
                 }
-            }).build();
+            })
+            .addInterceptor(loggingInterceptor)
+            .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.

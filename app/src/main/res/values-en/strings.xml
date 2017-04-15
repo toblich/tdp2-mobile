@@ -6,7 +6,7 @@
     <string name="see_more">See More ›</string>
     <string name="title_activity_maps">Map</string>
     <string name="search">Search</string>
-    <string name="review_input_hint">Write a revwie</string>
+    <string name="review_input_hint">Write a review</string>
     <string name="points_of_interest">POINTS OF INTEREST</string>
     <string name="dollars">dollars</string>
     <string name="gallery">GALLERY</string>
@@ -31,5 +31,6 @@
     <string name="send">Send</string>
     <string name="wait_a_second">Wait a second</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">CONFIRM</string>
     <string name="audioguide_error">Error: There was a problem loading the audioguide</string>
 </resources>
