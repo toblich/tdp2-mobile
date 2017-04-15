@@ -151,7 +151,7 @@ public class AttractionDetailsFragment extends Fragment {
         /* Enable audioguide floating button if the attraction has one */
         RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-        if (attraction.audioguide != null && attraction.audioguide != "") {
+        if (Utils.isNotBlank(attraction.audioguide)) {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,16 +168,25 @@ public class AttractionDetailsFragment extends Fragment {
 
         /* Set own rating/review value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
+        TextView ownRatingText = (TextView) footer.findViewById(R.id.own_review_text);
 
         if (attraction.ownReview != null) {
             ratingBar.setRating(attraction.ownReview.rating);
 
             if (Utils.isNotBlank(attraction.ownReview.text)) {
-                TextView ownRatingText = (TextView) footer.findViewById(R.id.own_review_text);
                 ownRatingText.setText(attraction.ownReview.text);
                 ownRatingText.setVisibility(View.VISIBLE);
             }
         }
+
+        ownRatingText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // user must already be logged in, otherwise this TextView has visibility GONE
+                // (since there cannot be an "own" review for an unauthenticated user.
+                openWriteReviewDialog();
+            }
+        });
 
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override

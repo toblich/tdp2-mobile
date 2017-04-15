@@ -114,17 +114,19 @@ public class WriteReviewFragment extends DialogFragment {
         return builder.create();
     }
 
+    // this method could be changed into a callback on the details fragment
     private void updateDetailsFragmentReview(AttractionTabsActivity activity, float finalRating, String finalText) {
-        // TODO this could be a callback on the details fragment
-        TextView ownReviewText = (TextView) activity.findViewById(R.id.own_review_text);
-        AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
+        AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
 
-        ownReviewText.setText(finalText);
-        ownReviewText.setVisibility(View.VISIBLE);
+        attractionDetailsFragment.attraction.ownReview.rating = (int)finalRating;
+        AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
         ownReviewRatingBar.setRating(finalRating);
 
-        AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
-        attractionDetailsFragment.attraction.ownReview.rating = (int)finalRating;
         attractionDetailsFragment.attraction.ownReview.text = finalText;
+        if (Utils.isNotBlank(finalText)) {
+            TextView ownReviewText = (TextView) activity.findViewById(R.id.own_review_text);
+            ownReviewText.setText(finalText);
+            ownReviewText.setVisibility(View.VISIBLE);
+        }
     }
 }
