@@ -217,8 +217,6 @@ public class AttractionDetailsFragment extends Fragment {
             }
         });
 
-        // TODO also trigger same dialog when tapping the text (to edit it)
-
         /* Set other people's reviews */
         if (attraction.reviews.isEmpty()) {
             TextView otherReviewsTitle = (TextView) footer.findViewById(R.id.other_reviews_title);
