@@ -16,6 +16,4 @@
         android:id="@+id/rv"
         />
 
-    <include layout="@layout/attraction_card" />
-
 </LinearLayout>

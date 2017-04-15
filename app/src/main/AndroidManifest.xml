@@ -87,7 +87,18 @@
             android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"
             android:label="@string/title_activity_point_of_interest_tabs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Multimedia.AudioguideActivity"></activity>
+        <activity android:name=".Multimedia.AudioguideActivity">
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".AttractionsToursLists.AttractionsToursTabsActivity"
+            android:label="@string/title_activity_attraction_tabs"
+            android:parentActivityName=".InitialActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.uba.fi.tdp2.trips.InitialActivity" />
+        </activity>
     </application>
 
 </manifest>

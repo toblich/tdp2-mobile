@@ -27,6 +27,15 @@ public interface BackendService {
     @GET("/cities")
     Call<List<City>> getCities();
 
+    //Get the list of the attractions for the city and radius
+    @GET("/attractions")
+    Call<List<Attraction>> getAttractionsRadiusAndCityID(
+            @Query("latitude")  double latitude,
+            @Query("longitude") double longitude,
+            @Query("radius")    double radius,
+            @Query("city_id")   int city_id
+    );
+
     //Get the list of the nearest attractions
     @GET("/attractions")
     Call<List<Attraction>> getAttractions(
@@ -95,7 +104,8 @@ public interface BackendService {
     public static final Retrofit retrofit = new Retrofit.Builder()
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
             //.baseUrl("http://192.168.0.49")
-            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.0.117")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
