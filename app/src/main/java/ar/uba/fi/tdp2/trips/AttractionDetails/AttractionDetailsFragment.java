@@ -48,7 +48,7 @@ public class AttractionDetailsFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
-    private Attraction attraction;
+    Attraction attraction; // Accessed by review modal
     private OnFragmentInteractionListener mListener;
     private Context localContext;
     public CallbackManager callbackManager;
@@ -166,11 +166,28 @@ public class AttractionDetailsFragment extends Fragment {
 
         final Context activityContext = getActivity();
 
-        /* Set own rating value and behaviour */
+        /* Set own rating/review value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
+
+        if (attraction.ownReview != null) {
+            ratingBar.setRating(attraction.ownReview.rating);
+
+            if (Utils.isNotBlank(attraction.ownReview.text)) {
+                TextView ownRatingText = (TextView) footer.findViewById(R.id.own_review_text);
+                ownRatingText.setText(attraction.ownReview.text);
+                ownRatingText.setVisibility(View.VISIBLE);
+            }
+        }
+
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (attraction.ownReview == null) {
+                    attraction.ownReview = new Review((int)rating, "", "", "");
+                } else {
+                    attraction.ownReview.rating = (int)rating;
+                }
+
                 User user = User.getInstance(context.getSharedPreferences("user", 0));
                 if (user != null) {
                     openWriteReviewDialog();
@@ -190,6 +207,8 @@ public class AttractionDetailsFragment extends Fragment {
 
             }
         });
+
+        // TODO also trigger same dialog when tapping the text (to edit it)
 
         /* Set other people's reviews */
         if (attraction.reviews.isEmpty()) {
@@ -243,7 +262,10 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     private void openWriteReviewDialog() {
-        WriteReviewFragment writeReviewFragment = WriteReviewFragment.newInstance("texto inicial", 4);
+        WriteReviewFragment writeReviewFragment = (attraction.ownReview == null)
+                ? WriteReviewFragment.newInstance("", 0)
+                : WriteReviewFragment.newInstance(attraction.ownReview.text, attraction.ownReview.rating);
+        writeReviewFragment.setTargetFragment(this, -1);
         writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
 

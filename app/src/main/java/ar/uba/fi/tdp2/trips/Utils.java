@@ -17,4 +17,12 @@ public class Utils {
         ConnectivityManager manager = (ConnectivityManager) managerAsObject;
         return isNetworkAvailable(manager);
     }
+
+    public static boolean isNotBlank(final String string) {
+        return !isBlank(string);
+    }
+
+    public static boolean isBlank(final String string) {
+        return string == null || string.trim().equals("");
+    }
 }

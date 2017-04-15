@@ -37,6 +37,12 @@
         android:layout_gravity="center_horizontal"
         android:progressTint="@color/colorAccent"/>
 
+    <TextView
+        android:id="@+id/own_review_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/other_reviews_header"
         android:layout_width="match_parent"
