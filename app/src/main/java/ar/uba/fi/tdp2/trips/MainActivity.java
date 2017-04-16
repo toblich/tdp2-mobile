@@ -123,7 +123,9 @@ public class MainActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                adapter.setFilter(attractions);
+                if (adapter != null && attractions != null) {
+                    adapter.setFilter(attractions);
+                }
                 return true;
             }
 

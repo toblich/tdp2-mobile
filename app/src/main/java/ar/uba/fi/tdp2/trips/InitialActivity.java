@@ -243,7 +243,9 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        adapter.setFilter(cities);
+                        if (adapter != null && cities != null) {
+                            adapter.setFilter(cities);
+                        }
                         return true;
                     }
 
