@@ -36,4 +36,5 @@
     <string name="not_signed_in">You are not signed in!</string>
     <string name="review_posted">Review posted!</string>
     <string name="review_posting_failure">Posting review failed</string>
+    <string name="write_here">Write here</string>
 </resources>

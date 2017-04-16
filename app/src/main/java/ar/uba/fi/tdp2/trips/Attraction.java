@@ -20,11 +20,11 @@ public class Attraction {
 
     public @SerializedName("average_visit_duration") int duration;
     public List<Review> reviews;
-    public @SerializedName("own_review") Review myReview;
+    public @SerializedName("own_review") Review ownReview;
     public @SerializedName("opening_hours") List<OpeningHour> openingHours;
 
     public Attraction(int id, String name, String description, String photoUri, String audioguide, String address,
-                      String url, String phone, double price, int duration, List<Review> reviews, Review myReview) {
+                      String url, String phone, double price, int duration, List<Review> reviews, Review ownReview) {
         this.id          = id;
         this.name        = name;
         this.description = description;
@@ -38,12 +38,12 @@ public class Attraction {
         this.duration = duration;
 
         this.reviews = reviews;
-        this.myReview = myReview;
+        this.ownReview = ownReview;
     }
 
     @Override
     public String toString() {
-        String myRev = myReview != null ? "\n  myReview: " + myReview.toString() : "";
+        String myRev = ownReview != null ? "\n  ownReview: " + ownReview.toString() : "";
         String revs = reviews != null ? "\n  reviews: " + reviews.toString() : "";
         String opens = openingHours != null ? "\n  " + openingHours.toString() : "";
 

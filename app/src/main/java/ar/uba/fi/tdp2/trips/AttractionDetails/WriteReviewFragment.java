@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -73,6 +74,12 @@ public class WriteReviewFragment extends DialogFragment {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(Utils.LOGTAG, "confirm review");
+
+                        float finalRating = ratingBar.getRating();
+                        String finalText = message.getText().toString();
+
+                        updateDetailsFragmentReview(activity, finalRating, finalText);
+
                         Toast.makeText(context, "CONFIRM!", Toast.LENGTH_LONG).show(); // TODO sacar
                         BackendService backendService = BackendService.retrofit.create(BackendService.class);
                         User user = User.getInstance(context.getSharedPreferences("user", 0));
@@ -81,7 +88,7 @@ public class WriteReviewFragment extends DialogFragment {
                             return;
                         }
                         String bearer = "Bearer " + user.token;
-                        Review review = new Review((int) ratingBar.getRating(), message.getText().toString());
+                        Review review = new Review((int)finalRating, finalText);
                         Call<Review> call = backendService.postReview(activity.attractionId, bearer, review);
                         call.enqueue(new Callback<Review>() {
                             @Override
@@ -105,5 +112,21 @@ public class WriteReviewFragment extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    // this method could be changed into a callback on the details fragment
+    private void updateDetailsFragmentReview(AttractionTabsActivity activity, float finalRating, String finalText) {
+        AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
+
+        attractionDetailsFragment.attraction.ownReview.rating = (int)finalRating;
+        AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
+        ownReviewRatingBar.setRating(finalRating);
+
+        attractionDetailsFragment.attraction.ownReview.text = finalText;
+        if (Utils.isNotBlank(finalText)) {
+            TextView ownReviewText = (TextView) activity.findViewById(R.id.own_review_text);
+            ownReviewText.setText(finalText);
+            ownReviewText.setVisibility(View.VISIBLE);
+        }
     }
 }

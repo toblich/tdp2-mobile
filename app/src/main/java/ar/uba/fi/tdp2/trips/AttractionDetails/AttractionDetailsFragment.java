@@ -48,7 +48,7 @@ public class AttractionDetailsFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
-    private Attraction attraction;
+    Attraction attraction; // Accessed by review modal
     private OnFragmentInteractionListener mListener;
     private Context localContext;
     public CallbackManager callbackManager;
@@ -151,7 +151,7 @@ public class AttractionDetailsFragment extends Fragment {
         /* Enable audioguide floating button if the attraction has one */
         RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
         FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-        if (attraction.audioguide != null && attraction.audioguide != "") {
+        if (Utils.isNotBlank(attraction.audioguide)) {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,11 +166,37 @@ public class AttractionDetailsFragment extends Fragment {
 
         final Context activityContext = getActivity();
 
-        /* Set own rating value and behaviour */
+        /* Set own rating/review value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
+        TextView ownRatingText = (TextView) footer.findViewById(R.id.own_review_text);
+
+        if (attraction.ownReview != null) {
+            ratingBar.setRating(attraction.ownReview.rating);
+
+            if (Utils.isNotBlank(attraction.ownReview.text)) {
+                ownRatingText.setText(attraction.ownReview.text);
+                ownRatingText.setVisibility(View.VISIBLE);
+            }
+        }
+
+        ownRatingText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // user must already be logged in, otherwise this TextView has visibility GONE
+                // (since there cannot be an "own" review for an unauthenticated user.
+                openWriteReviewDialog();
+            }
+        });
+
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (attraction.ownReview == null) {
+                    attraction.ownReview = new Review((int)rating, "", "", "");
+                } else {
+                    attraction.ownReview.rating = (int)rating;
+                }
+
                 User user = User.getInstance(context.getSharedPreferences("user", 0));
                 if (user != null) {
                     openWriteReviewDialog();
@@ -243,7 +269,10 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     private void openWriteReviewDialog() {
-        WriteReviewFragment writeReviewFragment = WriteReviewFragment.newInstance("texto inicial", 4);
+        WriteReviewFragment writeReviewFragment = (attraction.ownReview == null)
+                ? WriteReviewFragment.newInstance("", 0)
+                : WriteReviewFragment.newInstance(attraction.ownReview.text, attraction.ownReview.rating);
+        writeReviewFragment.setTargetFragment(this, -1);
         writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
 
