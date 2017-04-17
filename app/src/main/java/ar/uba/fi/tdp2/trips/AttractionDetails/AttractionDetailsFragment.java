@@ -11,7 +11,6 @@ import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,7 +234,7 @@ public class AttractionDetailsFragment extends Fragment {
             TextView date = (TextView) footer.findViewById(R.id.review_date);
             date.setText(rev.date);
 
-            if (rev.text != null && !rev.text.equals("")) {
+            if (Utils.isNotBlank(rev.text)) {
                 System.out.println("Renderizando texto de review: " + rev.text);
                 TextView otherReviewText = (TextView) footer.findViewById(R.id.review_text);
                 otherReviewText.setText(rev.text);
@@ -331,10 +330,6 @@ public class AttractionDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public interface OnClickCallback {
-        void call(View view, TextView days, TextView hours, ImageView icon);
     }
 
     @Override
