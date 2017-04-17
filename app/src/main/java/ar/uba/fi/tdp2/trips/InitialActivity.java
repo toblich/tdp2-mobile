@@ -58,6 +58,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity_initial);
         this.setTitle(R.string.choose_location);
 
+        Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
+
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         geocoder   = new Geocoder(localContext);
         geolocalizationCard = (CardView) findViewById(R.id.geolocalization_card);
@@ -91,10 +93,10 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private void initializeData() {
         cities = new ArrayList<>();
 
-        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+        if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-            return;
+//            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
@@ -107,7 +109,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                     return;
                 }
 
-                Log.d("TRIPS", "got cities: " + response.body().toString());
                 cities = response.body();
 
                 adapter = new RV_CitiesAdapter(cities, localContext);
@@ -169,7 +170,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             return;
         }
 
-        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+        if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;

@@ -55,7 +55,6 @@ public class AllReviewsActivity extends AppCompatActivity {
                 if (response.body() == null) {
                     return;
                 }
-                Log.d("TRIPS", "got reviews: " + response.body().toString());
                 reviews = response.body();
 
                 adapter = new RV_ReviewsAdapter(reviews);

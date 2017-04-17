@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,6 +22,8 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
+import static com.facebook.FacebookSdk.getCacheDir;
 
 public interface BackendService {
     //Get the list of all the cities
@@ -84,6 +87,21 @@ public interface BackendService {
                     Request request = original.newBuilder()
                             .header("Accept-Language", Locale.getDefault().getLanguage())
                             .header("Content-Language", Locale.getDefault().getLanguage())
+                            .build();
+
+                    return chain.proceed(request);
+                }
+            })
+            .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+            .addInterceptor(new Interceptor() {
+                @Override public Response intercept(Chain chain) throws IOException {
+                    String cacheControl = Utils.isNetworkAvailable()
+                            ? "public, max-age=" + 60 // one minute
+                            : "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7; // one week
+
+                    Request request = chain.request()
+                            .newBuilder()
+                            .header("Cache-Control", cacheControl)
                             .build();
 
                     return chain.proceed(request);

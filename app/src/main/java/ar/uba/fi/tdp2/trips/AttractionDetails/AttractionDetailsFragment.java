@@ -105,7 +105,6 @@ public class AttractionDetailsFragment extends Fragment {
                 if (response.body() == null) {
                     return;
                 }
-                Log.d("TRIPS", "got attraction: " + response.body().toString());
                 attraction = response.body();
 
                 setViewContent(lw);

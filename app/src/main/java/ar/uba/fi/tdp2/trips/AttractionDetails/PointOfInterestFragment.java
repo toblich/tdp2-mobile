@@ -105,7 +105,10 @@ public class PointOfInterestFragment extends Fragment {
         call.enqueue(new Callback<List<PointOfInterest>>() {
             @Override
             public void onResponse(Call<List<PointOfInterest>> call, Response<List<PointOfInterest>> response) {
-                Log.d(Utils.LOGTAG, "Got Points of Interest: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
+
                 pointsOfInterest = response.body();
 
                 if (pointsOfInterest.size() == 0) {

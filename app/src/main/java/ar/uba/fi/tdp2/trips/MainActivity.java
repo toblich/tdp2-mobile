@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
     private void initializeData() {
         attractions = new ArrayList<>();
 
-        if (!Utils.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+        if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-            return;
+//            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
-                Log.d(Utils.LOGTAG, "Got Attractions: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
                 attractions = response.body();
 
                 checkChangeLayout();

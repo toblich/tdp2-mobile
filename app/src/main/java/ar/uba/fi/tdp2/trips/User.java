@@ -65,10 +65,8 @@ public class User {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() == null) {
-                    Log.d("TRIPS", "came with response: " + response.toString());
                     return;
                 }
-                Log.d("TRIPS", "got user: " + response.body().toString());
                 user = response.body();
                 user.fbPublicProfile = true;
                 user.persistUser(settings);
