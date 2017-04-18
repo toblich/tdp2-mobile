@@ -3,6 +3,8 @@ package ar.uba.fi.tdp2.trips;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class User {
 
     public interface Callback {
         void onSuccess(User user);
+        void onError(User user);
     }
 
     private static void createFromFbToken(String fbToken,
@@ -181,9 +184,7 @@ public class User {
                 Arrays.asList("publish_actions"));
     }
 
-    public void postInSocialNetwork(final Fragment fragment,
-                                    CallbackManager callbackManager,
-                                    final String message) {
+    public void postInSocialNetwork(final String message, final Callback callback) {
         OkHttpClient okHttpClient = BackendService.okHttpClient;
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
@@ -194,19 +195,31 @@ public class User {
                 .header("Content-Type", "application/json")
                 .post(body)
                 .build();
-        okhttp3.Callback callback = new okhttp3.Callback() {
+        final User me = this;
+        final Handler handler = new Handler(Looper.getMainLooper());
+        okhttp3.Callback httpCallback = new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onError(me);
+                    }
+                });
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(me);
+                    }
+                });
             }
 
         };
         okhttp3.Call call = okHttpClient.newCall(request);
-        call.enqueue(callback);
+        call.enqueue(httpCallback);
     }
 }

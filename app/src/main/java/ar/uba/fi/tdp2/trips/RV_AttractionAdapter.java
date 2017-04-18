@@ -115,6 +115,8 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                                 public void onSuccess(User user) {
                                     holder.attractionCardFavIcon.performClick();
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
                 }
             }

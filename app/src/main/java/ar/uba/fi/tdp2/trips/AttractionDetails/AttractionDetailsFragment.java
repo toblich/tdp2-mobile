@@ -216,6 +216,8 @@ public class AttractionDetailsFragment extends Fragment {
                                     Toast.makeText(localContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
                                     openWriteReviewDialog();
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
                 }
 
