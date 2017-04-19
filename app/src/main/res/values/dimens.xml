@@ -18,6 +18,19 @@
     <dimen name="attraction_card_description_top_margin">0dp</dimen>
     <dimen name="attraction_card_description_bottom_margin">8dp</dimen>
 
+    <!-- Tour card -->
+    <dimen name="tour_card_top_padding">8dp</dimen>
+    <dimen name="tour_card_horizontal_padding">16dp</dimen>
+    <dimen name="tour_card_bottom_padding">16dp</dimen>
+    <dimen name="tour_card_elevation">4dp</dimen>
+    <dimen name="tour_card_title_top_margin">12dp</dimen>
+    <dimen name="tour_card_cover_photo_width">128dp</dimen>
+    <dimen name="tour_card_description_top_margin">12dp</dimen>
+    <dimen name="tour_card_description_bottom_margin">8dp</dimen>
+    <dimen name="tour_card_title_text_size">24sp</dimen>
+    <dimen name="tour_card_time_text_size">24sp</dimen>
+    <dimen name="tour_card_cover_photo_margin">4dp</dimen>
+
     <!-- Attraction details -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>

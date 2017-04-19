@@ -90,7 +90,6 @@ public class AttractionsListFragment extends Fragment {
         View fragment = inflater.inflate(R.layout.fragment_attractions_list, container, false);
         recyclerView = (RecyclerView) fragment.findViewById(R.id.rv);
         noAttractionsTextView = (TextView) fragment.findViewById(R.id.noAttractionsTextView);
-        noAttractionsTextView.setVisibility(View.INVISIBLE);
         linearLayoutManager = new LinearLayoutManager(localContext);
         recyclerView.setLayoutManager(linearLayoutManager);
         getAttractionsList();
@@ -116,7 +115,7 @@ public class AttractionsListFragment extends Fragment {
                 Log.d(Utils.LOGTAG, "Got Attractions: " + response.body().toString());
                 attractions = response.body();
 
-                checkChangeLayout();  // ESTOS SON DE LA ACTIVITY
+                checkAttractionsPresence();
                 attractionsAdapter = new RV_AttractionAdapter(attractions, localContext);
                 recyclerView.setAdapter(attractionsAdapter);
             }
@@ -130,7 +129,7 @@ public class AttractionsListFragment extends Fragment {
         });
     }
 
-    private void checkChangeLayout() {
+    private void checkAttractionsPresence() {
         boolean isAttractionsEmpty = (attractions.size() == 0);
 
         if (isAttractionsEmpty) {

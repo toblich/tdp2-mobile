@@ -22,8 +22,7 @@ public class AttractionsToursPager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: return AttractionsListFragment.newInstance(latitude, longitude, cityId);
-            case 1: return new AnEmptyFragment();
-//            case 1: return ToursListFragment.newInstance(latitude, longitude, cityId);
+            case 1: return ToursListFragment.newInstance(cityId);
         };
         return null;
     }
