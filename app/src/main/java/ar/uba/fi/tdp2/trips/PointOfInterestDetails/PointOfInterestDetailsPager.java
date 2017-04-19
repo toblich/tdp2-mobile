@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import ar.uba.fi.tdp2.trips.AttractionDetails.EmptyTabFragment;
+import ar.uba.fi.tdp2.trips.Multimedia.GalleryFragment;
 
 public class PointOfInterestDetailsPager extends FragmentStatePagerAdapter {
     private int tabCount;
@@ -22,7 +22,7 @@ public class PointOfInterestDetailsPager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: return PointOfInterestDetailsFragment.newInstance(attractionId, poiId);
-            case 1: return new EmptyTabFragment();
+            case 1: return GalleryFragment.newInstance(attractionId, poiId);
         };
         return null;
     }

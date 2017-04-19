@@ -1,5 +1,8 @@
 package ar.uba.fi.tdp2.trips.PointOfInterestDetails;
 
-public interface PointOfInterestTabsInterface extends PointOfInterestDetailsFragment.OnFragmentInteractionListener{
+import ar.uba.fi.tdp2.trips.Multimedia.GalleryFragment;
+
+public interface PointOfInterestTabsInterface
+        extends PointOfInterestDetailsFragment.OnFragmentInteractionListener, GalleryFragment.OnFragmentInteractionListener {
 
 }

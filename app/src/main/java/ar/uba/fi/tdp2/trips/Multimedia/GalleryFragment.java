@@ -29,9 +29,11 @@ import retrofit2.Response;
  */
 public class GalleryFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
+    private static final String ARG_POI_ID = "poiId";
     private static final int IMAGES_PER_ROW = 2;
 
     private int attractionId;
+    private int poiId;
     private Gallery gallery;
     private Context localContext;
     private RecyclerView recyclerView;
@@ -50,10 +52,11 @@ public class GalleryFragment extends Fragment {
      * @param attractionId The id of the attraction whose details will be shown.
      * @return A new instance of fragment PointOfInterestFragment.
      */
-    public static GalleryFragment newInstance(int attractionId) {
+    public static GalleryFragment newInstance(int attractionId, int poiId) {
         GalleryFragment fragment = new GalleryFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_ATTRACTION_ID, attractionId);
+        args.putInt(ARG_POI_ID, poiId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,6 +69,7 @@ public class GalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
+            poiId = getArguments().getInt(ARG_POI_ID);
         }
         localContext = getContext();
         glm = new GridLayoutManager(localContext, IMAGES_PER_ROW);
@@ -84,7 +88,7 @@ public class GalleryFragment extends Fragment {
 
     public void getGallery() {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Gallery> call  = backendService.getAttractionGallery(attractionId);
+        Call<Gallery> call = (poiId != -1) ? backendService.getPointOfInterestGallery(attractionId, poiId) : backendService.getAttractionGallery(attractionId);
 
         call.enqueue(new Callback<Gallery>() {
             @Override
