@@ -1,12 +1,12 @@
 package ar.uba.fi.tdp2.trips.Multimedia;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -47,6 +47,8 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
         if (Utils.isNotBlank(image.imageURL)) {
             Glide.with(actualContext)
                     .load(image.imageURL)
+                    .thumbnail(0.5f)
+                    .crossFade()
                     .placeholder(placeholderId)
                     .error(placeholderId)
                     .into(holder.imageView);
@@ -55,7 +57,9 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(actualContext, "Tap on image", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(actualContext, FullscreenGalleryActivity.class);
+                intent.putExtra("imageURL", image.imageURL);
+                actualContext.startActivity(intent);
             }
         });
     }
