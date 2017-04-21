@@ -32,6 +32,7 @@ public class User {
     private static User user;
     public int id;
     public String token;
+    public @SerializedName("facebook_id") String fbUserId;
     public @SerializedName("fb_token") String fbToken;
     public @SerializedName("fb_public_profile") boolean fbPublicProfile;
     public @SerializedName("fb_post") boolean fbPost;
@@ -43,7 +44,8 @@ public class User {
         this.fbPost = fbPost;
     }
 
-    private User(String fbToken) {
+    private User(String fbUserId, String fbToken) {
+        this.fbUserId = fbUserId;
         this.fbToken = fbToken;
     }
 
@@ -57,11 +59,12 @@ public class User {
         void onError(User user);
     }
 
-    private static void createFromFbToken(String fbToken,
-                                         final SharedPreferences settings,
-                                         final Callback callback) {
+    private static void createFromFbToken(String fbUserId,
+                                          String fbToken,
+                                          final SharedPreferences settings,
+                                          final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        user = new User(fbToken);
+        user = new User(fbUserId, fbToken);
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
@@ -131,9 +134,10 @@ public class User {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 System.out.println(loginResult.toString());
+                String userId = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
                 System.out.println(token);
-                User.createFromFbToken(token, sharedPreferences, callback);
+                User.createFromFbToken(userId, token, sharedPreferences, callback);
             }
 
             @Override
