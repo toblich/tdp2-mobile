@@ -42,4 +42,5 @@
     <string name="write_here">Write here</string>
     <string name="short_hours">h</string>
     <string name="short_minutes">m</string>
+    <string name="tour_attractions_title">Included attractions</string>
 </resources>

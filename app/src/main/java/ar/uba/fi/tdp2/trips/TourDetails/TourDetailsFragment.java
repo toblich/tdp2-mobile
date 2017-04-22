@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -106,27 +105,20 @@ public class TourDetailsFragment extends Fragment {
     }
 
     public void setViewContent(ListView informationList) {
-        final Context context = getContext();
-        if (context == null) {
+        if (localContext == null) {
             return;
         }
 
-        TourInformationListAdapter adapter = new TourInformationListAdapter(context, tour);
+        TourInformationListAdapter adapter = new TourInformationListAdapter(localContext, tour);
         informationList.setAdapter(adapter);
-        informationList.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        LayoutInflater inflater = (LayoutInflater) localContext.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-        addHeader(context, inflater, informationList);
-        addFooter(context, inflater, informationList);
+        addHeader(inflater, informationList);
+        addFooter(inflater, informationList);
     }
 
-    private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
+    private void addFooter(LayoutInflater inflater, ListView informationList) {
         View footer = inflater.inflate(R.layout.tour_details_footer, informationList, false);
 
         /* Set description */
@@ -135,24 +127,26 @@ public class TourDetailsFragment extends Fragment {
 
         /* Add attraction cards */
         RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setLayoutManager(new LinearLayoutManager(localContext));
+
+        // TODO delete this hardcoded seed of attractions
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
         tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
                 new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
 
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.attractions, context);
+        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.attractions, localContext);
         recyclerView.setAdapter(attractionListAdapter);
 
         informationList.addFooterView(footer);
     }
 
 
-    private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
+    private void addHeader(LayoutInflater inflater, ListView informationList) {
         View header = inflater.inflate(R.layout.tour_details_header, informationList, false);
 
         /* Set cover photo */
@@ -161,7 +155,7 @@ public class TourDetailsFragment extends Fragment {
 
         int placeholderId = R.mipmap.photo_placeholder;
         ImageView coverPhoto = (ImageView) header.findViewById(R.id.tour_cover_photo);
-        Glide.with(context)
+        Glide.with(localContext)
                 .load(tour.photoUri)
                 .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
                 .fitCenter()
@@ -210,9 +204,4 @@ public class TourDetailsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//    }
 }
