@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/tour_attraction_title_margin_left"
         android:layout_marginStart="@dimen/tour_attraction_title_margin_left"
-        android:textSize="18sp"
+        android:textSize="@dimen/title_text_size"
         android:text="@string/tour_attractions_title"/>
 
     <android.support.v7.widget.RecyclerView

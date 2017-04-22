@@ -24,6 +24,7 @@
         android:id="@+id/write_review_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/title_text_size"
         android:text="@string/my_opinion" />
 
 
@@ -57,6 +58,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:textSize="@dimen/title_text_size"
             android:text="@string/other_opinions" />
 
 
@@ -97,5 +99,11 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
+    
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/title_text_size"-->
+        <!--android:text="Tours"/>-->
 
 </LinearLayout>
