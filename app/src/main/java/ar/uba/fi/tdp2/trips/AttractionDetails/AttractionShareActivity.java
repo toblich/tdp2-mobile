@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.User;
@@ -27,6 +33,7 @@ public class AttractionShareActivity extends AppCompatActivity {
 
     public CallbackManager callbackManager;
     private CharSequence attractionName;
+    private TwitterLoginButton loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,46 @@ public class AttractionShareActivity extends AppCompatActivity {
 
         final EditText message = (EditText) findViewById(R.id.message);
         message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
+
+        final Activity me = this;
+        User user = User.getInstance(getSharedPreferences("user", 0));
+        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        loginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                // The TwitterSession is also available through:
+                // Twitter.getInstance().core.getSessionManager().getActiveSession()
+                TwitterSession session = result.data;
+                // TODO: Remove toast and use the TwitterSession's userID
+                // with your app's user model
+                User.createFromTwToken(
+                        String.valueOf(session.getUserId()),
+                        session.getAuthToken().token,
+                        session.getAuthToken().secret,
+                        getSharedPreferences("user", 0),
+                        new User.Callback() {
+                            @Override
+                            public void onSuccess(User user) {
+                                Toast.makeText(me, R.string.confirm, Toast.LENGTH_LONG).show();
+                            }
+                            @Override
+                            public void onError(User user) {}
+                        });
+                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Login with Twitter failure", exception);
+            }
+        });
+
+        if (user.twUserId == null) {
+            findViewById(R.id.tw__twitter_logo).setVisibility(View.INVISIBLE);
+        } else {
+            loginButton.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     public void cancel(View view) {
@@ -111,5 +158,6 @@ public class AttractionShareActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        loginButton.onActivityResult(requestCode, resultCode, data);
     }
 }
