@@ -25,7 +25,7 @@ public class Attraction {
     public List<Tour> tours;
     public double latitude;
     public double longitude;
-    
+
     public Attraction(int id, String name, String description, String photoUri, String audioguide,
                       String address, String url, String phone, double price, int duration,
                       List<Review> reviews, Review ownReview, List<Tour> tours) {

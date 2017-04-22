@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -121,6 +122,38 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 attraction = response.body();
 
                 setViewContent(lw);
+
+                /* Enable audioguide floating button if the attraction has one */
+                FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
+                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+                if (Utils.isNotBlank(attraction.audioguide)) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(localContext, AudioguideActivity.class);
+                            intent.putExtra("name", attraction.name);
+                            intent.putExtra("audioguidePath", attraction.audioguide);
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                FloatingActionButton dir = (FloatingActionButton) rl.findViewById(R.id.attraction_details_directions_button);
+                dir.setVisibility(View.VISIBLE);
+                dir.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + attraction.address.replace(" ", "+"));
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                            startActivity(mapIntent);
+                        } else {
+                            Toast.makeText(localContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
 
             @Override
