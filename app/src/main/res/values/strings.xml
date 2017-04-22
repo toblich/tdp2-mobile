@@ -14,7 +14,6 @@
     <string name="see_more">VER MÁS ›</string>
     <string name="location_found">Usted se encuentra en:</string>
     <string name="dollars">dólares</string>
-    <string name="minutes">minutos</string>
     <string name="all_day_open">Abierto 24 horas</string>
     <string name="information">INFORMACIÓN</string>
     <string name="gallery">GALERÍA</string>
@@ -51,4 +50,7 @@
     <string name="short_hours">h</string>
     <string name="short_minutes">m</string>
     <string name="tour_attractions_title">Atracciones incluidas</string>
+    <string name="minutesUnit">minutos</string>
+    <string name="hours_unit">horas</string>
+    <string name="and">y</string>
 </resources>

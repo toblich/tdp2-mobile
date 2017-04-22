@@ -14,6 +14,7 @@ import java.util.List;
 
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Tour;
+import ar.uba.fi.tdp2.trips.Utils;
 
 public class TourInformationListAdapter extends BaseAdapter {
     private List<InfoItem> items;
@@ -40,7 +41,7 @@ public class TourInformationListAdapter extends BaseAdapter {
 
     private void loadInfoItems() {
         if (tour.duration > 0) { // TODO make check here more robust
-            items.add(new InfoItem(R.drawable.ic_timer_black_24dp, String.valueOf(tour.duration)));
+            items.add(new InfoItem(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(tour.duration)));
         }
         // TODO add here extra tour info
     }

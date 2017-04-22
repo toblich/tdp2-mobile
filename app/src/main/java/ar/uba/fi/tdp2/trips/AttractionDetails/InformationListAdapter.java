@@ -50,7 +50,7 @@ public class InformationListAdapter extends BaseAdapter {
         add(R.drawable.ic_phone_black_24dp, attraction.phone);
         add(R.drawable.ic_access_time_black_24dp, attraction.openingHours);
         add(R.drawable.ic_attach_money_black_24dp, attraction.price, context.getString(R.string.dollars));
-        add(R.drawable.ic_timer_black_24dp, attraction.duration, context.getString(R.string.minutes));
+        add(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(attraction.duration));
     }
 
     private void add(int iconId, String string) {
