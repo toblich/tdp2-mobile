@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.facebook.CallbackManager;
 import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.RV_AttractionAdapter;
 import ar.uba.fi.tdp2.trips.Tour;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
@@ -125,6 +128,12 @@ public class TourDetailsFragment extends Fragment {
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.tour_description);
         description.setText(tour.description);
+
+        /* Add attraction cards */
+        RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.attractions, context);
+        recyclerView.setAdapter(attractionListAdapter);
 
         informationList.addFooterView(footer);
     }
