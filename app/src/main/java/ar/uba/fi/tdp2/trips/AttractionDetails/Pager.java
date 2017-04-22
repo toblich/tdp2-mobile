@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import ar.uba.fi.tdp2.trips.TourDetails.TourDetailsFragment;
+
 public class Pager extends FragmentStatePagerAdapter {
     private int tabCount;
     private int attractionId;
@@ -18,7 +20,7 @@ public class Pager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: return AttractionDetailsFragment.newInstance(attractionId);
-            case 1: return new EmptyTabFragment();
+            case 1: return TourDetailsFragment.newInstance(attractionId); // TODO this fragment should not be here (gallery goes here)
             case 2: return PointOfInterestFragment.newInstance(attractionId);
         };
         return null;

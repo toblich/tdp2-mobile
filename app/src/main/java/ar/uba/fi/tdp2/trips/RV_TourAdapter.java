@@ -48,7 +48,7 @@ public class RV_TourAdapter extends RecyclerView.Adapter<RV_TourAdapter.TourView
         final Tour tour = tours.get(position);
         holder.tourName.setText(tour.getName());
         holder.tourDescription.setText(tour.getDescription());
-        holder.tourEstimatedTime.setText(Utils.prettyShortTimeStr(tour.getEstimatedTime()));
+        holder.tourEstimatedTime.setText(Utils.prettyShortTimeStr(tour.getDuration()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
