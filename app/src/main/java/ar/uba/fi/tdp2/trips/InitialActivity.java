@@ -1,20 +1,20 @@
 package ar.uba.fi.tdp2.trips;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.Intent;
-import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,15 +25,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import android.location.Location;
-import android.location.LocationManager;
-import android.location.Address;
-import android.location.Geocoder;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -208,7 +207,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         String addressText = address.getLocality() + ", " + address.getCountryName();
         Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, MainActivity.class);
+//        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, AttractionsToursTabsActivity.class);
         intent.putExtra("locality", address.getLocality());
         intent.putExtra("latitude", loc.getLatitude());
         intent.putExtra("longitude", loc.getLongitude());

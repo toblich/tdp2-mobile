@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity;
+
 public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.CityViewHolder> {
 
     List<City> cities;
@@ -47,10 +49,12 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(actualContext, MainActivity.class);
+//                Intent intent = new Intent(actualContext, MainActivity.class);
+                Intent intent = new Intent(actualContext, AttractionsToursTabsActivity.class);
                 intent.putExtra("locality", city.getName());
                 intent.putExtra("latitude", city.getLatitude());
                 intent.putExtra("longitude", city.getLongitude());
+                intent.putExtra("cityId", city.getCityId());
                 actualContext.startActivity(intent);
             }
         });

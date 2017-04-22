@@ -18,6 +18,8 @@
     <string name="information">INFORMACIÓN</string>
     <string name="gallery">GALERÍA</string>
     <string name="points_of_interest">PUNTOS DE INTERÉS</string>
+    <string name="attractions">ATRACCIONES</string>
+    <string name="tours">RECORRIDOS</string>
 
     <!-- Errores -->
     <string name="no_internet_error">Error: No hay conexión a internet</string>
