@@ -25,6 +25,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
@@ -47,7 +53,7 @@ import retrofit2.Response;
  * Use the {@link AttractionDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AttractionDetailsFragment extends Fragment {
+public class AttractionDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
@@ -145,6 +151,13 @@ public class AttractionDetailsFragment extends Fragment {
 
         addHeader(context, inflater, informationList);
         addFooter(context, inflater, informationList);
+
+        SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+        mMapFragment.getMapAsync(this);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_container, mMapFragment)
+                .commit();
     }
 
     private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
@@ -364,5 +377,16 @@ public class AttractionDetailsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(attraction.latitude, attraction.longitude),
+                15
+        ));
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(attraction.latitude, attraction.longitude))
+                .title(attraction.name));
     }
 }
