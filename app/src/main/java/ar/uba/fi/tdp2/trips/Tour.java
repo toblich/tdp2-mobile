@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
+
 public class Tour {
 
     public int id;

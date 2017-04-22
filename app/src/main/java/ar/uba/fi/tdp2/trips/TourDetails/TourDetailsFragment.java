@@ -20,7 +20,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
 
+import java.util.ArrayList;
+
+import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
+import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_AttractionAdapter;
@@ -132,6 +136,15 @@ public class TourDetailsFragment extends Fragment {
         /* Add attraction cards */
         RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
+
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
+        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
+                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
         RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.attractions, context);
         recyclerView.setAdapter(attractionListAdapter);
 
