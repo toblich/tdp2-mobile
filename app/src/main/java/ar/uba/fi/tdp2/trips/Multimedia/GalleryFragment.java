@@ -88,7 +88,7 @@ public class GalleryFragment extends Fragment {
 
     public void getGallery() {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Gallery> call = (poiId != -1) ? backendService.getPointOfInterestGallery(attractionId, poiId) : backendService.getAttractionGallery(attractionId);
+        Call<Gallery> call = (poiId != Utils.NO_POINT_OF_INTEREST) ? backendService.getPointOfInterestGallery(attractionId, poiId) : backendService.getAttractionGallery(attractionId);
 
         call.enqueue(new Callback<Gallery>() {
             @Override

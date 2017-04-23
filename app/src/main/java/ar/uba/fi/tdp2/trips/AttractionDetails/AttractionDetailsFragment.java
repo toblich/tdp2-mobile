@@ -29,6 +29,7 @@ import com.facebook.CallbackManager;
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.Multimedia.EMVideoViewActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.FullScreenGalleryActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_TourAdapter;
 import ar.uba.fi.tdp2.trips.User;
@@ -162,7 +163,7 @@ public class AttractionDetailsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(localContext, EMVideoViewActivity.class);
-                    intent.putExtra("name", attraction.name + " Audioguide");
+                    intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
                     intent.putExtra("path", attraction.audioguide);
                     startActivity(intent);
                 }
@@ -290,7 +291,7 @@ public class AttractionDetailsFragment extends Fragment {
         writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
 
-    private void addHeader(Context context, LayoutInflater inflater, ListView informationList) {
+    private void addHeader(final Context context, LayoutInflater inflater, ListView informationList) {
         View header = inflater.inflate(R.layout.attraction_details_header, informationList, false);
 
         /* Set cover photo */
@@ -306,6 +307,15 @@ public class AttractionDetailsFragment extends Fragment {
                 .placeholder(placeholderId)
                 .error(placeholderId) // TODO see if it possible to log the error
                 .into(coverPhoto);
+
+        coverPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FullScreenGalleryActivity.class);
+                intent.putExtra("imageURL", attraction.photoUri);
+                context.startActivity(intent);
+            }
+        });
 
         informationList.addHeaderView(header);
     }
