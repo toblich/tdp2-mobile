@@ -23,6 +23,8 @@ public class Attraction {
     public @SerializedName("own_review") Review ownReview;
     public @SerializedName("opening_hours") List<OpeningHour> openingHours;
     public List<Tour> tours;
+    public City city;
+
     public double latitude;
     public double longitude;
 
@@ -56,6 +58,10 @@ public class Attraction {
         return "Attraction {\n  id: " + String.valueOf(id) + "\n  name: " + name +
                 "\n  description: " + description + "\n  photoUri: " + photoUri +  revs + myRev +
                 opens + "\n}";
+    }
+
+    public String getFullAddress() {
+        return address + ", " + city.getName() + ", " + city.getCountry();
     }
 
     public class OpeningHour {

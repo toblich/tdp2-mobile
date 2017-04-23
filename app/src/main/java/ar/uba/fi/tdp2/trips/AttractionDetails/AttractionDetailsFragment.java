@@ -144,7 +144,8 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 dir.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + attraction.address.replace(" ", "+"));
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
+                                attraction.getFullAddress().replace(" ", "+"));
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
                         if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
