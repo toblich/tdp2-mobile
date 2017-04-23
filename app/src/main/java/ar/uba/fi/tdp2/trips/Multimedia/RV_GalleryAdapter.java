@@ -45,7 +45,9 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
         if (position < galleryImageSize) {
             final Gallery.GalleryImage image = gallery.images.get(position);
 
-            loadImage(image.imageURL, holder.imageView);
+            if (!loadImage(image.imageURL, holder.imageView)) {
+                return;
+            }
 
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -55,12 +57,13 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
                     actualContext.startActivity(intent);
                 }
             });
-
         } else {
             int actualPos = position - galleryImageSize;
             final Gallery.GalleryVideo video = gallery.videos.get(actualPos);
 
-            loadImage(video.videoURL, holder.imageView);
+            if (!loadImage(video.videoURL, holder.imageView)) {
+                return;
+            }
 
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,18 +77,23 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
         }
     }
 
-    private void loadImage(String url, ImageView imageView) {
+    private boolean loadImage(String url, ImageView imageView) {
         int placeholderId = R.mipmap.photo_placeholder;
 
-        if (Utils.isNotBlank(url)) {
-            Glide.with(actualContext)
-                    .load(url)
-                    .thumbnail(0.5f)
-                    .crossFade()
-                    .placeholder(placeholderId)
-                    .error(placeholderId)
-                    .into(imageView);
+        if (Utils.isBlank(url)) {
+            imageView.setVisibility(View.GONE);
+            return false;
         }
+
+        Glide.with(actualContext)
+                .load(url)
+                .thumbnail(0.5f)
+                .crossFade()
+                .placeholder(placeholderId)
+                .error(placeholderId)
+                .into(imageView);
+
+        return true;
     }
 
     @Override
