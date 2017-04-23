@@ -25,10 +25,12 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
 
     public static class GalleryViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+        ImageView playImageView;
 
         GalleryViewHolder(View itemView) {
             super(itemView);
-            imageView   = (ImageView) itemView.findViewById(R.id.image_view);
+            imageView     = (ImageView) itemView.findViewById(R.id.image_view);
+            playImageView = (ImageView) itemView.findViewById(R.id.play_image_view);
         }
     }
 
@@ -49,6 +51,8 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
                 return;
             }
 
+            holder.playImageView.setVisibility(View.GONE);
+
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -64,6 +68,8 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
             if (!loadImage(video.videoURL, holder.imageView)) {
                 return;
             }
+
+            holder.playImageView.setVisibility(View.VISIBLE);
 
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
