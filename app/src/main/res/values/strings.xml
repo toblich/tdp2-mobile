@@ -53,5 +53,6 @@
     <string name="minutesUnit">minutos</string>
     <string name="hours_unit">horas</string>
     <string name="and">y</string>
-    <string name="title_activity_tour_details">TourDetailsActivity</string>
+    <string name="title_activity_tour_details" translatable="false">TourDetailsActivity</string>
+    <string name="tours_containing_attraction_title">Recorridos que incluyen esta atracción</string>
 </resources>

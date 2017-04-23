@@ -22,9 +22,11 @@ public class Attraction {
     public List<Review> reviews;
     public @SerializedName("own_review") Review ownReview;
     public @SerializedName("opening_hours") List<OpeningHour> openingHours;
+    public List<Tour> tours;
 
-    public Attraction(int id, String name, String description, String photoUri, String audioguide, String address,
-                      String url, String phone, double price, int duration, List<Review> reviews, Review ownReview) {
+    public Attraction(int id, String name, String description, String photoUri, String audioguide,
+                      String address, String url, String phone, double price, int duration,
+                      List<Review> reviews, Review ownReview, List<Tour> tours) {
         this.id          = id;
         this.name        = name;
         this.description = description;
@@ -39,6 +41,7 @@ public class Attraction {
 
         this.reviews = reviews;
         this.ownReview = ownReview;
+        this.tours = tours;
     }
 
     @Override

@@ -45,4 +45,5 @@
     <string name="hours_unit">hours</string>
     <string name="minutesUnit">minutes</string>
     <string name="and">and</string>
+    <string name="tours_containing_attraction_title">Tours containing this attraction</string>
 </resources>
