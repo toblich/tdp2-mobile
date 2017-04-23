@@ -119,8 +119,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             @Override
             public void onClick(View v) {
                 Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
-                        attraction.address.replace(" ", "+"));
-//                        attraction.getFullAddress().replace(" ", "+"));
+                        attraction.getFullAddress().replace(" ", "+"));
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(activityContext.getPackageManager()) != null) {
