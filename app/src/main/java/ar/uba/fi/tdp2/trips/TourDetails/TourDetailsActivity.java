@@ -10,10 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import ar.uba.fi.tdp2.trips.ActivityWithCallbackManager;
 import ar.uba.fi.tdp2.trips.AttractionDetails.WriteReviewFragment;
 import ar.uba.fi.tdp2.trips.R;
 
-public class TourDetailsActivity extends AppCompatActivity implements TourDetailsFragment.OnFragmentInteractionListener {
+public class TourDetailsActivity extends ActivityWithCallbackManager implements TourDetailsFragment.OnFragmentInteractionListener {
 
     int tourId; // accessed by TourDetailsFragment
     private String tourName;

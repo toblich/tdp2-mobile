@@ -19,10 +19,11 @@ import com.facebook.CallbackManager;
 
 import java.util.List;
 
+import ar.uba.fi.tdp2.trips.ActivityWithCallbackManager;
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.R;
 
-public class AttractionsToursTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, AttractionsToursTabsInterface {
+public class AttractionsToursTabsActivity extends ActivityWithCallbackManager implements TabLayout.OnTabSelectedListener, AttractionsToursTabsInterface {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,13 +44,12 @@ public class AttractionsToursTabsActivity extends AppCompatActivity implements T
 
     private TabLayout tabLayout;
     private AttractionsToursPager adapter;
-    public CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        callbackManager = CallbackManager.Factory.create();
+//        callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_attractions_tours_tabs);
 
