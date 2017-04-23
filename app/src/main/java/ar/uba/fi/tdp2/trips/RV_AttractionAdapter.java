@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
+import ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity;
 
 public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdapter.AttractionViewHolder> {
 
@@ -100,14 +101,14 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         holder.attractionCardFavIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final MainActivity mainActivity = (MainActivity) activityContext;
-                user = User.getInstance(mainActivity.getSharedPreferences("user", 0));
+                final AttractionsToursTabsActivity activity = (AttractionsToursTabsActivity) activityContext;
+                user = User.getInstance(activity.getSharedPreferences("user", 0));
                 if (user != null) {
                     Toast.makeText(activityContext, "Marking as favorite", Toast.LENGTH_SHORT).show();
                 } else {
-                    User.loginWithSocialNetwork(mainActivity,
-                            mainActivity.callbackManager,
-                            mainActivity.getSharedPreferences("user", 0),
+                    User.loginWithSocialNetwork(activity,
+                            activity.callbackManager,
+                            activity.getSharedPreferences("user", 0),
                             new User.Callback() {
                                 @Override
                                 public void onSuccess(User user) {
