@@ -39,8 +39,12 @@
     <string name="title_activity_attraction_tabs" translatable="false">AttractionTabsActivity</string>
     <string name="facebook_app_id" translatable="false">1900304510188978</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1900304510188978</string>
+    <string name="attraction_share_title">Compartir %1$s en redes sociales</string>
+    <string name="attraction_share_ok">Se compartió su mensaje</string>
+    <string name="attraction_share_error">Hubo un error al compartir su mensaje</string>
     <string name="attraction_post_message">Trips me ayudó a conocer más de</string>
     <string name="send">Enviar</string>
+    <string name="sending">Enviando</string>
     <string name="cancel">Cancelar</string>
     <string name="wait_a_second">Espere un momento</string>
     <string name="confirm">CONFIRMAR</string>
@@ -56,4 +60,5 @@
     <string name="and">y</string>
     <string name="title_activity_tour_details" translatable="false">TourDetailsActivity</string>
     <string name="tours_containing_attraction_title">Recorridos que incluyen esta atracción</string>
+    <string name="google_maps_not_installed">Google Maps no está instalado</string>
 </resources>

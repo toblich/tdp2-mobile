@@ -1,8 +1,8 @@
 package ar.uba.fi.tdp2.trips;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,14 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
@@ -115,7 +108,24 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                                 public void onSuccess(User user) {
                                     holder.attractionCardFavIcon.performClick();
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
+                }
+            }
+        });
+
+        holder.attractionCardDirectionsIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
+                        attraction.getFullAddress().replace(" ", "+"));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(activityContext.getPackageManager()) != null) {
+                    activityContext.startActivity(mapIntent);
+                } else {
+                    Toast.makeText(activityContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
                 }
             }
         });

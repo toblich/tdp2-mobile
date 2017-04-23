@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -103,11 +104,15 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
     }
 
     private void openAttractionShareDialog() {
-        AttractionShareFragment shareFragment = new AttractionShareFragment();
-        Bundle bundle = new Bundle();
-        bundle.putCharSequence("attractionName", getTitle());
-        shareFragment.setArguments(bundle);
-        shareFragment.show(getFragmentManager(), "tag");
+        //AttractionShareActivity shareFragment = new AttractionShareActivity();
+        //Bundle bundle = new Bundle();
+        //bundle.putCharSequence("attractionName", getTitle());
+        //shareFragment.setArguments(bundle);
+        //shareFragment.show(getFragmentManager(), "tag");
+///////
+        Intent intent = new Intent(this, AttractionShareActivity.class);
+        intent.putExtra("attractionName", getTitle());
+        startActivity(intent);
     }
 
     @Override
@@ -134,6 +139,8 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
                                 public void onSuccess(User user) {
                                     openAttractionShareDialog();
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
                 } else {
                     User.loginWithSocialNetwork((Activity) activityContext,
@@ -142,7 +149,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
                             new User.Callback() {
                                 @Override
                                 public void onSuccess(User user) {
-                                    Toast.makeText(activityContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(activityContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
                                     user.getFbPostPermissions((Activity) activityContext, callbackManager,
                                             getSharedPreferences("user", 0),
                                             new User.Callback() {
@@ -150,8 +157,12 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
                                                 public void onSuccess(User user) {
                                                     openAttractionShareDialog();
                                                 }
+                                                @Override
+                                                public void onError(User user) {}
                                             });
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
                 }
 

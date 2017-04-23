@@ -54,6 +54,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity" />
         </activity>
+        <activity
+            android:name=".AttractionDetails.AttractionShareActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity" />
+        </activity>
 
         <!--
             ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -106,6 +113,9 @@
             android:name=".Multimedia.FullScreenGalleryActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="96b87c420aff3b01e9c155f657cd7af73a3a307c" />
     </application>
 
 </manifest>

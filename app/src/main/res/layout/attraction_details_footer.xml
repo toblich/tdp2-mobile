@@ -79,26 +79,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"/>
 
-    <RelativeLayout
-        android:id="@+id/floating_action_button_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/attraction_details_audioguide_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:clickable="true"
-            android:visibility="invisible"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/ic_audiotrack_black_24dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
     
     <TextView
         android:id="@+id/tours_containing_attraction_title"

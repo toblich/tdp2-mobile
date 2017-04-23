@@ -1,8 +1,9 @@
 package ar.uba.fi.tdp2.trips;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,9 +31,13 @@ public class User {
     private static User user;
     public int id;
     public String token;
+    public @SerializedName("facebook_id") String fbUserId;
     public @SerializedName("fb_token") String fbToken;
     public @SerializedName("fb_public_profile") boolean fbPublicProfile;
     public @SerializedName("fb_post") boolean fbPost;
+    public @SerializedName("twitter_id") String twUserId;
+    public @SerializedName("tw_token") String twToken;
+    public @SerializedName("tw_secret") String twSecret;
 
     private User(int id, String token, boolean fbPublicProfile, boolean fbPost) {
         this.id     = id;
@@ -41,9 +46,12 @@ public class User {
         this.fbPost = fbPost;
     }
 
-    private User(String fbToken) {
+    private User(String fbUserId, String fbToken) {
+        this.fbUserId = fbUserId;
         this.fbToken = fbToken;
     }
+
+    private User() {}
 
     @Override
     public String toString() {
@@ -52,13 +60,15 @@ public class User {
 
     public interface Callback {
         void onSuccess(User user);
+        void onError(User user);
     }
 
-    private static void createFromFbToken(String fbToken,
-                                         final SharedPreferences settings,
-                                         final Callback callback) {
+    private static void createFromFbToken(String fbUserId,
+                                          String fbToken,
+                                          final SharedPreferences settings,
+                                          final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        user = new User(fbToken);
+        user = new User(fbUserId, fbToken);
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
@@ -69,6 +79,41 @@ public class User {
                 }
                 user = response.body();
                 user.fbPublicProfile = true;
+                user.persistUser(settings);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                user = null;
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Log.d("TRIPS", t.toString());
+            }
+        });
+    }
+
+    public static void createFromTwToken(String twUserId,
+                                          String twToken,
+                                          String twSecret,
+                                          final SharedPreferences settings,
+                                          final Callback callback) {
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        user = User.getInstance(settings);
+        user.twUserId = twUserId;
+        user.twToken = twToken;
+        user.twSecret = twSecret;
+        Call<User> call = backendService.createUser(user);
+
+        call.enqueue(new retrofit2.Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.body() == null) {
+                    Log.d("TRIPS", "came with response: " + response.toString());
+                    return;
+                }
+                Log.d("TRIPS", "got user: " + response.body().toString());
+                user = response.body();
                 user.persistUser(settings);
                 callback.onSuccess(user);
             }
@@ -96,8 +141,17 @@ public class User {
         String userToken = settings.getString("userToken", null);
         boolean fbPublicProfile = settings.getBoolean("userFbPublicProfile", false);
         boolean fbPost = settings.getBoolean("userFbPost", false);
+        String fbUserId = settings.getString("fbUserId", null);
+        String twUserId = settings.getString("twUserId", null);
         if (userId != 0 && userToken != null) {
-            return new User(userId, userToken, fbPublicProfile, fbPost);
+            User user = new User();
+            user.id = userId;
+            user.token = userToken;
+            user.fbPublicProfile = fbPublicProfile;
+            user.fbPost = fbPost;
+            user.fbUserId = fbUserId;
+            user.twUserId = twUserId;
+            return user;
         }
         return null;
     }
@@ -108,6 +162,8 @@ public class User {
         editor.putString("userToken", token);
         editor.putBoolean("userFbPublicProfile", fbPublicProfile);
         editor.putBoolean("userFbPost", fbPost);
+        editor.putString("fbUserId", fbUserId);
+        editor.putString("twUserId", twUserId);
         editor.commit();
         System.out.println(this);
     }
@@ -128,9 +184,10 @@ public class User {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 System.out.println(loginResult.toString());
+                String userId = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
                 System.out.println(token);
-                User.createFromFbToken(token, sharedPreferences, callback);
+                User.createFromFbToken(userId, token, sharedPreferences, callback);
             }
 
             @Override
@@ -181,9 +238,7 @@ public class User {
                 Arrays.asList("publish_actions"));
     }
 
-    public void postInSocialNetwork(final Fragment fragment,
-                                    CallbackManager callbackManager,
-                                    final String message) {
+    public void postInSocialNetwork(final String message, final Callback callback) {
         OkHttpClient okHttpClient = BackendService.okHttpClient;
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
@@ -194,19 +249,31 @@ public class User {
                 .header("Content-Type", "application/json")
                 .post(body)
                 .build();
-        okhttp3.Callback callback = new okhttp3.Callback() {
+        final User me = this;
+        final Handler handler = new Handler(Looper.getMainLooper());
+        okhttp3.Callback httpCallback = new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onError(me);
+                    }
+                });
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) {
-
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(me);
+                    }
+                });
             }
 
         };
         okhttp3.Call call = okHttpClient.newCall(request);
-        call.enqueue(callback);
+        call.enqueue(httpCallback);
     }
 }

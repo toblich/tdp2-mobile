@@ -29,8 +29,12 @@
     <string name="no_points_of_interest">The attraction has no points of interest</string>
     <string name="no_server_error">Error: Could not connect to server</string>
     <string name="other_opinions">Other opinions</string>
+    <string name="attraction_share_title">Share %1$s in social networks</string>
+    <string name="attraction_share_ok">Your message was shared</string>
+    <string name="attraction_share_error">There was an error when sharing your message</string>
     <string name="attraction_post_message">Trips helped me get to know more about</string>
     <string name="send">Send</string>
+    <string name="sending">Sending</string>
     <string name="wait_a_second">Wait a second</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">CONFIRM</string>
@@ -47,4 +51,5 @@
     <string name="and">and</string>
     <string name="tours_containing_attraction_title">Tours containing this attraction</string>
     <string name="audioguide">Audioguide</string>
+    <string name="google_maps_not_installed">Google Maps is not installed</string>
 </resources>

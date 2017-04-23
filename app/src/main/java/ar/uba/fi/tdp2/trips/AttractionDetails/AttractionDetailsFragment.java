@@ -16,15 +16,21 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.CallbackManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
@@ -47,7 +53,7 @@ import retrofit2.Response;
  * Use the {@link AttractionDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AttractionDetailsFragment extends Fragment {
+public class AttractionDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
@@ -115,6 +121,40 @@ public class AttractionDetailsFragment extends Fragment {
                 attraction = response.body();
 
                 setViewContent(lw);
+
+                /* Enable audioguide floating button if the attraction has one */
+//                RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
+//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+                FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
+                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+                if (Utils.isNotBlank(attraction.audioguide)) {
+                    fab.setVisibility(View.VISIBLE);
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(localContext, EMVideoViewActivity.class);
+                            intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
+                            intent.putExtra("path", attraction.audioguide);
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+//                /* Enable audioguide floating button if the attraction has one */
+//                FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
+//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+//                if (Utils.isNotBlank(attraction.audioguide)) {
+//                    fab.setVisibility(View.VISIBLE);
+//                    fab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            Intent intent = new Intent(localContext, AudioguideActivity.class);
+//                            intent.putExtra("name", attraction.name);
+//                            intent.putExtra("audioguidePath", attraction.audioguide);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                }
             }
 
             @Override
@@ -145,6 +185,13 @@ public class AttractionDetailsFragment extends Fragment {
 
         addHeader(context, inflater, informationList);
         addFooter(context, inflater, informationList);
+
+        SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+        mMapFragment.getMapAsync(this);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_container, mMapFragment)
+                .commit();
     }
 
     private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
@@ -153,22 +200,6 @@ public class AttractionDetailsFragment extends Fragment {
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
-
-        /* Enable audioguide floating button if the attraction has one */
-        RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
-        FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-        if (Utils.isNotBlank(attraction.audioguide)) {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(localContext, EMVideoViewActivity.class);
-                    intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
-                    intent.putExtra("path", attraction.audioguide);
-                    startActivity(intent);
-                }
-            });
-        }
 
         final Context activityContext = getActivity();
 
@@ -216,6 +247,8 @@ public class AttractionDetailsFragment extends Fragment {
                                     Toast.makeText(localContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
                                     openWriteReviewDialog();
                                 }
+                                @Override
+                                public void onError(User user) {}
                             });
                 }
 
@@ -362,5 +395,34 @@ public class AttractionDetailsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(attraction.latitude, attraction.longitude),
+                14
+        ));
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(attraction.latitude, attraction.longitude))
+                .title(attraction.name));
+        // Disables scroll for map
+        map.getUiSettings().setAllGesturesEnabled(false);
+
+        // Redirects to GoogleMaps
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+            @Override
+            public void onMapClick(LatLng point) {
+                Uri gmmIntentUri = Uri.parse("geo:<0>,<0>?q=" +
+                        attraction.getFullAddress().replace(" ", "+"));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(localContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

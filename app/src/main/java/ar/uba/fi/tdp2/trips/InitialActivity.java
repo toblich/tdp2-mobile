@@ -15,6 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +48,11 @@ import retrofit2.Response;
 public class InitialActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "ibKtBJe8a3Tjgm6Z9vwsdHbL5";
+    private static final String TWITTER_SECRET = "3m7WkvMIvrlEMuFnfJLhNfbkqR633iyRhcsf6G2TI6pdD0t9kF";
+
+
     private static final int LOCATION_PERMISSION_PETITION = 101;
     private GoogleApiClient apiClient;
     private LocationManager locManager;
@@ -54,6 +67,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_initial);
         this.setTitle(R.string.choose_location);
 
