@@ -123,6 +123,8 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 setViewContent(lw);
 
                 /* Enable audioguide floating button if the attraction has one */
+//                RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
+//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
                 FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
                 FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
                 if (Utils.isNotBlank(attraction.audioguide)) {
@@ -130,13 +132,29 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(localContext, AudioguideActivity.class);
-                            intent.putExtra("name", attraction.name);
-                            intent.putExtra("audioguidePath", attraction.audioguide);
+                            Intent intent = new Intent(localContext, EMVideoViewActivity.class);
+                            intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
+                            intent.putExtra("path", attraction.audioguide);
                             startActivity(intent);
                         }
                     });
                 }
+
+//                /* Enable audioguide floating button if the attraction has one */
+//                FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
+//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
+//                if (Utils.isNotBlank(attraction.audioguide)) {
+//                    fab.setVisibility(View.VISIBLE);
+//                    fab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            Intent intent = new Intent(localContext, AudioguideActivity.class);
+//                            intent.putExtra("name", attraction.name);
+//                            intent.putExtra("audioguidePath", attraction.audioguide);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                }
             }
 
             @Override
@@ -182,22 +200,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
-
-        /* Enable audioguide floating button if the attraction has one */
-        RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
-        FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-        if (Utils.isNotBlank(attraction.audioguide)) {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(localContext, EMVideoViewActivity.class);
-                    intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
-                    intent.putExtra("path", attraction.audioguide);
-                    startActivity(intent);
-                }
-            });
-        }
 
         final Context activityContext = getActivity();
 
