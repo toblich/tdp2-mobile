@@ -20,7 +20,7 @@ public class Pager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: return AttractionDetailsFragment.newInstance(attractionId);
-            case 1: return TourDetailsFragment.newInstance(attractionId); // TODO this fragment should not be here (gallery goes here)
+            case 1: return TourDetailsFragment.newInstance(8); // TODO this fragment should not be here (gallery goes here)
             case 2: return PointOfInterestFragment.newInstance(attractionId);
         };
         return null;

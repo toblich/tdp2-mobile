@@ -40,8 +40,8 @@ public class TourInformationListAdapter extends BaseAdapter {
     }
 
     private void loadInfoItems() {
-        if (tour.duration > 0) { // TODO make check here more robust
-            items.add(new InfoItem(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(tour.duration)));
+        if (tour.getDuration() > 0) { // TODO make check here more robust
+            items.add(new InfoItem(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(tour.getDuration())));
         }
         // TODO add here extra tour info
     }

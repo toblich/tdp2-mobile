@@ -123,23 +123,13 @@ public class TourDetailsFragment extends Fragment {
 
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.tour_description);
-        description.setText(tour.description);
+        description.setText(tour.getDescription());
 
         /* Add attraction cards */
         RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(localContext));
 
-        // TODO delete this hardcoded seed of attractions
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-        tour.attractions.add(new Attraction(1, "hardcodeada","hardcodeada" ,"hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", "hardcodeada", 123.4, 5,
-                new ArrayList<Review>(), new Review(0, "hardcodeada", "hardcodeada", "hardcodeada")));
-
-        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.attractions, localContext);
+        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.getAttractions(), localContext);
         recyclerView.setAdapter(attractionListAdapter);
 
         informationList.addFooterView(footer);
@@ -156,7 +146,7 @@ public class TourDetailsFragment extends Fragment {
         int placeholderId = R.mipmap.photo_placeholder;
         ImageView coverPhoto = (ImageView) header.findViewById(R.id.tour_cover_photo);
         Glide.with(localContext)
-                .load(tour.photoUri)
+                .load(tour.getPhotoUri())
                 .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
                 .fitCenter()
                 .placeholder(placeholderId)

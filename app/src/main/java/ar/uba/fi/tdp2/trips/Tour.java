@@ -6,17 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
-
 public class Tour {
 
-    public int id;
-    public String name;
-    public String description;
-    public @SerializedName("portrait_image") String photoUri;
-    public @SerializedName("estimated_time") int duration;
-    public List<Attraction> attractions;
-
+    private int id;
+    private String name;
+    private String description;
+    private @SerializedName("portrait_image") String photoUri;
+    private @SerializedName("estimated_time") int duration;
+    private List<Attraction> attractions;
 
     public Tour(int id, String name, String description, int duration, String photoUri, List<Attraction> attractions) {
         this.id = id;
@@ -27,12 +24,20 @@ public class Tour {
         this.attractions = (attractions != null) ? attractions : new ArrayList<Attraction>();
     }
 
+
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),
-                "Tour {\n  id: %d\n  name: %s\n  description: %s\n  duration: %d\n  photoUri: %s\n  attractions: " + attractions.toString() +"\n}",
+                "Tour {\n  id: %d\n  name: %s\n  description: %s\n  duration: %d\n  photoUri: %s\n  attractions: " + getAttractions().toString() +"\n}",
                 id, name, description, duration, photoUri
         );
+    }
+
+    public List<Attraction> getAttractions() {
+        if (attractions == null) {
+            attractions = new ArrayList<>();
+        }
+        return attractions;
     }
 
     public int getId() {

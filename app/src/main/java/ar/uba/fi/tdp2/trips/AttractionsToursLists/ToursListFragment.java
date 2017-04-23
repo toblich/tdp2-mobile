@@ -146,7 +146,7 @@ public class ToursListFragment extends Fragment {
         List<Tour> filtered = new ArrayList<>();
         String filter = expr.toLowerCase();
         for (Tour tour : tours) {
-            if (tour.name.toLowerCase().contains(filter)) {
+            if (tour.getName().toLowerCase().contains(filter)) {
                 filtered.add(tour);
             }
         }

@@ -6,11 +6,9 @@ import android.net.NetworkInfo;
 public class Utils {
 
     public static final String LOGTAG = "Trips";
-<<<<<<< HEAD
     private static ConnectivityManager manager;
     private static String shortHoursUnit;
     private static String shortMinutesUnit;
-=======
     private static String hoursUnit;
     private static String minutesUnit;
     private static String and;
@@ -20,7 +18,6 @@ public class Utils {
         Utils.minutesUnit = minutesUnit;
         Utils.and = and;
     }
->>>>>>> Pretty time strings in tour & attraction details
 
     public static void setShortTimeUnits(String h, String m) {
         Utils.shortHoursUnit = h;
@@ -44,17 +41,15 @@ public class Utils {
         return string == null || string.trim().equals("");
     }
 
-<<<<<<< HEAD
     public static String prettyShortTimeStr(int time) {
-        int hours = time / 60;
-        int minutes = time % 60;
-
         StringBuilder builder = new StringBuilder();
 
+        int hours = time / 60;
         if (hours > 0) {
             builder.append(hours).append(shortHoursUnit);
         }
 
+        int minutes = time % 60;
         if (hours > 0 && minutes > 0) {
             builder.append(" ");
         }
@@ -63,27 +58,32 @@ public class Utils {
             builder.append(minutes).append(shortMinutesUnit);
         }
 
-=======
+        return builder.toString();
+    }
+
     public static String prettyTimeStr(int time) {
-        int hours = time / 60;
-        int minutes = time % 60;
         StringBuilder builder = new StringBuilder();
+
+        int hours = time / 60;
         if (hours > 0) {
             builder.append(hours)
                     .append(" ")
                     .append(hoursUnit);
         }
+
+        int minutes = time % 60;
         if (hours > 0 && minutes > 0) {
             builder.append(" ")
                     .append(and)
                     .append(" ");
         }
+
         if (minutes > 0) {
             builder.append(minutes)
                     .append(" ")
                     .append(minutesUnit);
         }
->>>>>>> Pretty time strings in tour & attraction details
+
         return builder.toString();
     }
 }
