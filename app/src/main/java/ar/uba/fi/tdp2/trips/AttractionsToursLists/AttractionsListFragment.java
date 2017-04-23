@@ -90,7 +90,6 @@ public class AttractionsListFragment extends Fragment {
         View fragment = inflater.inflate(R.layout.fragment_attractions_list, container, false);
         recyclerView = (RecyclerView) fragment.findViewById(R.id.rv);
         noAttractionsTextView = (TextView) fragment.findViewById(R.id.noAttractionsTextView);
-        noAttractionsTextView.setVisibility(View.INVISIBLE);
         linearLayoutManager = new LinearLayoutManager(localContext);
         recyclerView.setLayoutManager(linearLayoutManager);
         getAttractionsList();
@@ -101,7 +100,7 @@ public class AttractionsListFragment extends Fragment {
 
         attractions = new ArrayList<>();
 
-        if (!Utils.isNetworkAvailable(localContext.getSystemService(Context.CONNECTIVITY_SERVICE))) {
+        if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;
@@ -116,7 +115,7 @@ public class AttractionsListFragment extends Fragment {
                 Log.d(Utils.LOGTAG, "Got Attractions: " + response.body().toString());
                 attractions = response.body();
 
-                checkChangeLayout();  // ESTOS SON DE LA ACTIVITY
+                checkAttractionsPresence();
                 attractionsAdapter = new RV_AttractionAdapter(attractions, localContext);
                 recyclerView.setAdapter(attractionsAdapter);
             }
@@ -130,7 +129,7 @@ public class AttractionsListFragment extends Fragment {
         });
     }
 
-    private void checkChangeLayout() {
+    private void checkAttractionsPresence() {
         boolean isAttractionsEmpty = (attractions.size() == 0);
 
         if (isAttractionsEmpty) {
@@ -157,6 +156,17 @@ public class AttractionsListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setFilter(String expr) {
+        List<Attraction> filtered = new ArrayList<>();
+        String filter = expr.toLowerCase();
+        for (Attraction attraction : attractions) {
+            if (attraction.name.toLowerCase().contains(filter)) {
+                filtered.add(attraction);
+            }
+        }
+        attractionsAdapter.setFilter(filtered);
     }
 
     /**

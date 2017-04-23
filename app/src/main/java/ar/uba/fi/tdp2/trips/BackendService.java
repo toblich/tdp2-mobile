@@ -1,7 +1,5 @@
 package ar.uba.fi.tdp2.trips;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +27,12 @@ public interface BackendService {
     //Get the list of all the cities
     @GET("/cities")
     Call<List<City>> getCities();
+
+    //Get the list of tours for the city
+    @GET("/cities/{cityId}/tours")
+    Call<List<Tour>> getTours(
+            @Path("cityId") int cityId
+    );
 
     //Get the list of the attractions for the city and radius
     @GET("/attractions")
@@ -122,8 +126,8 @@ public interface BackendService {
     public static final Retrofit retrofit = new Retrofit.Builder()
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
             //.baseUrl("http://192.168.0.49")
-//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-            .baseUrl("http://192.168.0.117")
+            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+//            .baseUrl("https://192.168.0.39")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();

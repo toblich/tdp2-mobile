@@ -3,6 +3,7 @@
     <string name="title_activity_maps">Mapa</string>
     <string name="choose_location">Elegir ubicación</string>
     <string name="no_attractions">No se encontraron atracciones cerca</string>
+    <string name="no_tours">No se encontraron recorridos cerca</string>
     <string name="no_points_of_interest">La atracción no tiene puntos de interés</string>
     <string name="geolocalization_card">Mi ubicación actual</string>
     <string name="action_settings">Ajustes</string>
@@ -47,4 +48,6 @@
     <string name="review_posted">Review subida!</string>
     <string name="review_posting_failure">Falló la review</string>
     <string name="write_here">Escriba aquí</string>
+    <string name="short_hours">h</string>
+    <string name="short_minutes">m</string>
 </resources>

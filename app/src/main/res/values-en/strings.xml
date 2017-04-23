@@ -22,6 +22,7 @@
     <string name="my_opinion">My opinion</string>
     <string name="no_address_error">Error: GPS could not set your address</string>
     <string name="no_attractions">No attractions found nearby</string>
+    <string name="no_tours">No tours found nearby</string>
     <string name="no_google_play_services_error">Error: Could not connect to Google Play Services</string>
     <string name="no_gps_error">Error: GPS disabled, you must enable it for the program to work</string>
     <string name="no_internet_error">Error: No internet connection</string>
@@ -39,4 +40,6 @@
     <string name="review_posted">Review posted!</string>
     <string name="review_posting_failure">Posting review failed</string>
     <string name="write_here">Write here</string>
+    <string name="short_hours">h</string>
+    <string name="short_minutes">m</string>
 </resources>
