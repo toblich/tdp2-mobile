@@ -1,5 +1,8 @@
 package ar.uba.fi.tdp2.trips;
 
+import android.util.Log;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -105,29 +108,47 @@ public interface BackendService {
                     return chain.proceed(request);
                 }
             })
-            .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
-            .addInterceptor(new Interceptor() {
-                @Override public Response intercept(Chain chain) throws IOException {
-                    String cacheControl = Utils.isNetworkAvailable()
-                            ? "public, max-age=" + 60 // one minute
-                            : "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7; // one week
+            .addNetworkInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
+                    String cacheControl = originalResponse.header("Cache-Control");
 
-                    Request request = chain.request()
-                            .newBuilder()
-                            .header("Cache-Control", cacheControl)
-                            .build();
+                    if (cacheControl == null || cacheControl.contains("no-store") || cacheControl.contains("no-cache") ||
+                            cacheControl.contains("must-revalidate") || cacheControl.contains("max-age=0")) {
+                        return originalResponse.newBuilder()
+                                .header("Cache-Control", "public, max-age=" + 10)
+                                .build();
+                    }
+                    return originalResponse;
+                }
+            })
+            .addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+
+                    if (!Utils.isNetworkAvailable()) {
+                        Log.d(Utils.LOGTAG, "rewriting request");
+
+                        int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                        request = request.newBuilder()
+                                .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                                .build();
+                    }
 
                     return chain.proceed(request);
                 }
             })
+            .cache(new Cache(new File(getCacheDir(),  "responses"), 10 * 1024 * 1024)) // 10 MiB
             .addInterceptor(loggingInterceptor)
             .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
             //.baseUrl("http://192.168.0.49")
-            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-//            .baseUrl("https://192.168.0.39")
+//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.1.108")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
