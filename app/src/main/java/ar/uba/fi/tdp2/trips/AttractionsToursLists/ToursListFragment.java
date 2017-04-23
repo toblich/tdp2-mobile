@@ -87,7 +87,6 @@ public class ToursListFragment extends Fragment {
         if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
@@ -146,7 +145,7 @@ public class ToursListFragment extends Fragment {
         List<Tour> filtered = new ArrayList<>();
         String filter = expr.toLowerCase();
         for (Tour tour : tours) {
-            if (tour.name.toLowerCase().contains(filter)) {
+            if (tour.getName().toLowerCase().contains(filter)) {
                 filtered.add(tour);
             }
         }

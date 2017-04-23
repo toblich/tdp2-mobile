@@ -91,6 +91,12 @@ public interface BackendService {
     @POST("/users")
     Call<User> createUser(@Body User user);
 
+    // Get details for a tour
+    @GET("/tours/{tourId}")
+    Call<Tour> getTour(
+        @Path("tourId") int tourId
+    );
+
     HttpLoggingInterceptor loggingInterceptor = (new HttpLoggingInterceptor()).setLevel(HttpLoggingInterceptor.Level.BODY);
 
     OkHttpClient okHttpClient = (new OkHttpClient.Builder())

@@ -60,6 +60,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
 
         Utils.setShortTimeUnits(getString(R.string.short_hours), getString(R.string.short_minutes));
+        Utils.setStrings(getString(R.string.hours_unit), getString(R.string.minutesUnit), getString(R.string.and));
 
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         geocoder   = new Geocoder(localContext);

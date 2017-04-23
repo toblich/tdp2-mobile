@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.RV_TourAdapter;
 import ar.uba.fi.tdp2.trips.User;
 import ar.uba.fi.tdp2.trips.Utils;
 import retrofit2.Call;
@@ -265,6 +268,15 @@ public class AttractionDetailsFragment extends Fragment {
                     context.startActivity(intent);
                 }
             });
+        }
+
+        /* Tours containing this attraction */
+        if (attraction.tours != null && !attraction.tours.isEmpty()) {
+            footer.findViewById(R.id.tours_containing_attraction_title).setVisibility(View.VISIBLE);
+            RecyclerView toursRV = (RecyclerView) footer.findViewById(R.id.tours_containing_attraction);
+            toursRV.setLayoutManager(new LinearLayoutManager(localContext));
+            RV_TourAdapter tourAdapter = new RV_TourAdapter(attraction.tours, context);
+            toursRV.setAdapter(tourAdapter);
         }
 
         informationList.addFooterView(footer);

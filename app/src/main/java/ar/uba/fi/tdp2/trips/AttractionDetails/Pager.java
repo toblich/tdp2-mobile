@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import ar.uba.fi.tdp2.trips.TourDetails.TourDetailsFragment;
+
 public class Pager extends FragmentStatePagerAdapter {
     private int tabCount;
     private int attractionId;

@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+
+import ar.uba.fi.tdp2.trips.TourDetails.TourDetailsActivity;
 
 public class RV_TourAdapter extends RecyclerView.Adapter<RV_TourAdapter.TourViewHolder> {
 
@@ -48,14 +51,15 @@ public class RV_TourAdapter extends RecyclerView.Adapter<RV_TourAdapter.TourView
         final Tour tour = tours.get(position);
         holder.tourName.setText(tour.getName());
         holder.tourDescription.setText(tour.getDescription());
-        holder.tourEstimatedTime.setText(Utils.prettyShortTimeStr(tour.getEstimatedTime()));
+        holder.tourEstimatedTime.setText(Utils.prettyShortTimeStr(tour.getDuration()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(actualContext, "Selected" + tour.getName(), Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(actualContext, TourDetailsActivity.class);
-//                intent.putExtra("tourId", tour.getTourId());
-//                actualContext.startActivity(intent);
+                Intent intent = new Intent(actualContext, TourDetailsActivity.class);
+                intent.putExtra("tourId", tour.getId());
+                System.out.println("Creating activity with tourId: " + String.valueOf(tour.getId()) + " for tour: " + tour.getName());
+                intent.putExtra("tourName", tour.getName());
+                actualContext.startActivity(intent);
             }
         });
     }

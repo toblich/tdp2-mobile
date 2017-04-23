@@ -101,7 +101,8 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         holder.attractionCardFavIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AttractionsToursTabsActivity activity = (AttractionsToursTabsActivity) activityContext;
+                final ActivityWithCallbackManager activity = (ActivityWithCallbackManager) activityContext;
+                System.out.println("Shared preferencies user: " + activity.getSharedPreferences("user", 0));
                 user = User.getInstance(activity.getSharedPreferences("user", 0));
                 if (user != null) {
                     Toast.makeText(activityContext, "Marking as favorite", Toast.LENGTH_SHORT).show();

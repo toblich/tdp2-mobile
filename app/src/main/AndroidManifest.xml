@@ -98,6 +98,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.InitialActivity" />
         </activity>
+        <activity
+            android:name=".TourDetails.TourDetailsActivity"
+            android:label="@string/title_activity_tour_details"
+            android:parentActivityName=".AttractionsToursLists.AttractionsToursTabsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
+        </activity>
     </application>
 
 </manifest>

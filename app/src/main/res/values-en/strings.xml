@@ -18,7 +18,6 @@
     <string name="interrupted_google_play_services_error">Error: Connection to Google Play Services has been interrupted</string>
     <string name="location_found">You are at:</string>
     <string name="location_permittion_denied">Error: Location permission denied</string>
-    <string name="minutes">minutes</string>
     <string name="my_opinion">My opinion</string>
     <string name="no_address_error">Error: GPS could not set your address</string>
     <string name="no_attractions">No attractions found nearby</string>
@@ -42,4 +41,9 @@
     <string name="write_here">Write here</string>
     <string name="short_hours">h</string>
     <string name="short_minutes">m</string>
+    <string name="tour_attractions_title">Included attractions</string>
+    <string name="hours_unit">hours</string>
+    <string name="minutesUnit">minutes</string>
+    <string name="and">and</string>
+    <string name="tours_containing_attraction_title">Tours containing this attraction</string>
 </resources>
