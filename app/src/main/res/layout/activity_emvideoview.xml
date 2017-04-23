@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity">
+    tools:context="ar.uba.fi.tdp2.trips.Multimedia.EMVideoViewActivity">
 
     <com.devbrackets.android.exomedia.ui.widget.EMVideoView
-        android:id="@+id/audioguide_view"
+        android:id="@+id/emvideo_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"

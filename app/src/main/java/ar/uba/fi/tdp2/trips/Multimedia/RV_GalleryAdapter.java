@@ -65,9 +65,9 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(actualContext, AudioguideActivity.class);
-                    intent.putExtra("audioguidePath", video.videoURL);
-                    intent.putExtra("name", "Video");
+                    Intent intent = new Intent(actualContext, EMVideoViewActivity.class);
+                    intent.putExtra("path", video.videoURL);
+                    intent.putExtra("name", "Video " + video.order);
                     actualContext.startActivity(intent);
                 }
             });

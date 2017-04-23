@@ -34,7 +34,7 @@
     <string name="wait_a_second">Wait a second</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">CONFIRM</string>
-    <string name="audioguide_error">Error: There was a problem loading the audioguide</string>
+    <string name="emvideoview_error">Error: There was a problem loading the content</string>
     <string name="not_signed_in">You are not signed in!</string>
     <string name="review_posted">Review posted!</string>
     <string name="review_posting_failure">Posting review failed</string>

@@ -11,29 +11,29 @@ import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
 
 import ar.uba.fi.tdp2.trips.R;
 
-public class AudioguideActivity extends AppCompatActivity implements OnPreparedListener, OnErrorListener {
+public class EMVideoViewActivity extends AppCompatActivity implements OnPreparedListener, OnErrorListener {
 
     private EMVideoView emVideoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audioguide);
+        setContentView(R.layout.activity_emvideoview);
 
-        Bundle bundle           = getIntent().getExtras();
-        String name             = bundle.getString("name");
-        String audioguidePath   = bundle.getString("audioguidePath");
+        Bundle bundle = getIntent().getExtras();
+        String name  = bundle.getString("name");
+        String path  = bundle.getString("path");
 
-        this.setTitle(name + " Audioguide");
+        this.setTitle(name);
 
-        emVideoView = (EMVideoView) findViewById(R.id.audioguide_view);
-        setupVideoView(audioguidePath);
+        emVideoView = (EMVideoView) findViewById(R.id.emvideo_view);
+        setupVideoView(path);
     }
 
-    private void setupVideoView(String audioguidePath) {
+    private void setupVideoView(String path) {
         emVideoView.setOnPreparedListener(this);
         emVideoView.setOnErrorListener(this);
-        emVideoView.setVideoURI(Uri.parse(audioguidePath));
+        emVideoView.setVideoURI(Uri.parse(path));
         emVideoView.getVideoControls().setCanHide(false);
     }
 
@@ -50,7 +50,7 @@ public class AudioguideActivity extends AppCompatActivity implements OnPreparedL
 
     @Override
     public boolean onError() {
-        Toast.makeText(this, getString(R.string.audioguide_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.emvideoview_error), Toast.LENGTH_SHORT).show();
         this.finish();
         return false;
     }

@@ -28,7 +28,7 @@ import com.facebook.CallbackManager;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
-import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.EMVideoViewActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_TourAdapter;
 import ar.uba.fi.tdp2.trips.User;
@@ -161,9 +161,9 @@ public class AttractionDetailsFragment extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(localContext, AudioguideActivity.class);
-                    intent.putExtra("name", attraction.name);
-                    intent.putExtra("audioguidePath", attraction.audioguide);
+                    Intent intent = new Intent(localContext, EMVideoViewActivity.class);
+                    intent.putExtra("name", attraction.name + " Audioguide");
+                    intent.putExtra("path", attraction.audioguide);
                     startActivity(intent);
                 }
             });

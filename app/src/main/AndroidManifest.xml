@@ -86,9 +86,6 @@
             android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"
             android:label="@string/title_activity_point_of_interest_tabs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Multimedia.AudioguideActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity
             android:name=".AttractionsToursLists.AttractionsToursTabsActivity"
             android:label="@string/title_activity_attraction_tabs"
@@ -107,6 +104,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
         </activity>
+        <activity android:name=".Multimedia.EMVideoViewActivity" />
         <activity
             android:name=".Multimedia.FullScreenGalleryActivity"
             android:theme="@style/AppTheme.NoActionBar">
