@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Locale;
 
 import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
-import okhttp3.Cache;
+import ar.uba.fi.tdp2.trips.Multimedia.Gallery;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.Cache;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -60,6 +62,12 @@ public interface BackendService {
           @Path("attractionId") int attractionId
     );
 
+    //Get the gallery of a specific attraction
+    @GET("/attractions/{attractionId}/gallery")
+    Call<Gallery> getAttractionGallery(
+            @Path("attractionId") int attractionId
+    );
+
     //Get the points of interest's list of a specific attraction
     @GET("/attractions/{attractionId}/point_of_interests")
     Call<List<PointOfInterest>> getPointsOfInterest(
@@ -69,6 +77,13 @@ public interface BackendService {
     //Get the details of a specific point of interest
     @GET("/attractions/{attractionId}/point_of_interests/{poiId}")
     Call<PointOfInterest> getPointOfInterest(
+            @Path("attractionId") int attractionId,
+            @Path("poiId") int poiId
+    );
+
+    //Get the gallery of a specific point of interest
+    @GET("/attractions/{attractionId}/point_of_interests/{poiId}/gallery")
+    Call<Gallery> getPointOfInterestGallery(
             @Path("attractionId") int attractionId,
             @Path("poiId") int poiId
     );

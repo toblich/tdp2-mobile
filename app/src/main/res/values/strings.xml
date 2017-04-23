@@ -20,6 +20,7 @@
     <string name="points_of_interest">PUNTOS DE INTERÉS</string>
     <string name="attractions">ATRACCIONES</string>
     <string name="tours">RECORRIDOS</string>
+    <string name="audioguide">Audioguía</string>
 
     <!-- Errores -->
     <string name="no_internet_error">Error: No hay conexión a internet</string>
@@ -31,7 +32,7 @@
     <string name="no_location_error">Error: El GPS no pudo establecer su ubicacion</string>
     <string name="no_address_error">Error: El GPS no pudo establecer su dirección</string>
     <string name="geocoder_error">Error en geocoder:</string>
-    <string name="audioguide_error">Error: Hubo un problema al cargar la audioguía</string>
+    <string name="emvideoview_error">Error: Hubo un problema al cargar el contenido</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_point_of_interest_tabs" translatable="false">PointOfInterestTabsActivity</string>

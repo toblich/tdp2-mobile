@@ -20,7 +20,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import ar.uba.fi.tdp2.trips.BackendService;
-import ar.uba.fi.tdp2.trips.Multimedia.AudioguideActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.EMVideoViewActivity;
+import ar.uba.fi.tdp2.trips.Multimedia.FullScreenGalleryActivity;
 import ar.uba.fi.tdp2.trips.PointOfInterest;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -116,9 +117,9 @@ public class PointOfInterestDetailsFragment extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(localContext, AudioguideActivity.class);
-                    intent.putExtra("name", pointOfInterest.name);
-                    intent.putExtra("audioguidePath", pointOfInterest.audioguide);
+                    Intent intent = new Intent(localContext, EMVideoViewActivity.class);
+                    intent.putExtra("name", pointOfInterest.name + " " + localContext.getString(R.string.audioguide));
+                    intent.putExtra("path", pointOfInterest.audioguide);
                     startActivity(intent);
                 }
             });
@@ -130,6 +131,15 @@ public class PointOfInterestDetailsFragment extends Fragment {
                 .placeholder(placeholderId)
                 .error(placeholderId)
                 .into(poi_cover_photo);
+
+        poi_cover_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(localContext, FullScreenGalleryActivity.class);
+                intent.putExtra("imageURL", pointOfInterest.photoUri);
+                localContext.startActivity(intent);
+            }
+        });
 
     }
 

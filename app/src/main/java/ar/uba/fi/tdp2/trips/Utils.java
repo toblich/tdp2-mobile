@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 public class Utils {
 
     public static final String LOGTAG = "Trips";
+    public static final int NO_POINT_OF_INTEREST = -1;
     private static ConnectivityManager manager;
     private static String shortHoursUnit;
     private static String shortMinutesUnit;
