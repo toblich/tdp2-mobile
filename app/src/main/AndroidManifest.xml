@@ -50,7 +50,6 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".MainActivity" />
         <activity
             android:name=".AttractionDetails.AllReviewsActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -77,11 +76,11 @@
         <activity
             android:name=".AttractionDetails.AttractionTabsActivity"
             android:label="@string/title_activity_attraction_tabs"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".AttractionsToursLists.AttractionsToursTabsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.MainActivity" />
+                android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
         </activity>
         <activity
             android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"

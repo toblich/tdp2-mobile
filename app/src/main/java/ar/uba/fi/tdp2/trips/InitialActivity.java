@@ -210,7 +210,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         String addressText = address.getLocality() + ", " + address.getCountryName();
         Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
 
-//        Intent intent = new Intent(this, MainActivity.class);
         Intent intent = new Intent(this, AttractionsToursTabsActivity.class);
         intent.putExtra("locality", address.getLocality());
         intent.putExtra("latitude", loc.getLatitude());

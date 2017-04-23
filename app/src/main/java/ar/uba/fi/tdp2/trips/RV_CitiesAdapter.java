@@ -49,7 +49,6 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(actualContext, MainActivity.class);
                 Intent intent = new Intent(actualContext, AttractionsToursTabsActivity.class);
                 intent.putExtra("locality", city.getName());
                 intent.putExtra("latitude", city.getLatitude());
