@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,23 +137,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                         }
                     });
                 }
-
-                FloatingActionButton dir = (FloatingActionButton) rl.findViewById(R.id.attraction_details_directions_button);
-                dir.setVisibility(View.VISIBLE);
-                dir.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
-                                attraction.getFullAddress().replace(" ", "+"));
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                        mapIntent.setPackage("com.google.android.apps.maps");
-                        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                            startActivity(mapIntent);
-                        } else {
-                            Toast.makeText(localContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
             }
 
             @Override
@@ -417,10 +399,28 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     public void onMapReady(GoogleMap map) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(attraction.latitude, attraction.longitude),
-                15
+                14
         ));
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(attraction.latitude, attraction.longitude))
                 .title(attraction.name));
+        // Disables scroll for map
+        map.getUiSettings().setAllGesturesEnabled(false);
+
+        // Redirects to GoogleMaps
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+            @Override
+            public void onMapClick(LatLng point) {
+                Uri gmmIntentUri = Uri.parse("geo:<0>,<0>?q=" +
+                        attraction.getFullAddress().replace(" ", "+"));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(localContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
