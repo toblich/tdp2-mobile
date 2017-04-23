@@ -53,4 +53,5 @@
     <string name="minutesUnit">minutos</string>
     <string name="hours_unit">horas</string>
     <string name="and">y</string>
+    <string name="title_activity_tour_details">TourDetailsActivity</string>
 </resources>

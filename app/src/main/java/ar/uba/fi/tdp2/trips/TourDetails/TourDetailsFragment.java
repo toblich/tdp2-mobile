@@ -17,13 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.CallbackManager;
 
-import java.util.ArrayList;
-
-import ar.uba.fi.tdp2.trips.Attraction;
-import ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity;
-import ar.uba.fi.tdp2.trips.AttractionDetails.Review;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_AttractionAdapter;
@@ -35,25 +29,24 @@ import retrofit2.Response;
 
 
 public class TourDetailsFragment extends Fragment {
-    private static final String ARG_TOUR_ID = "tourId";
-
     private int tourId;
     private Tour tour;
     private OnFragmentInteractionListener mListener;
     private Context localContext;
-    public CallbackManager callbackManager;
+    private TourDetailsActivity activity;
+//    public CallbackManager callbackManager;
 
     public TourDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static TourDetailsFragment newInstance(int tourId) {
-        TourDetailsFragment fragment = new TourDetailsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_TOUR_ID, tourId);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static TourDetailsFragment newInstance(int tourId) {
+//        TourDetailsFragment fragment = new TourDetailsFragment();
+//        Bundle args = new Bundle();
+//        args.putInt(ARG_TOUR_ID, tourId);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void setMenuVisibility(boolean b) {
@@ -63,23 +56,21 @@ public class TourDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            tourId = getArguments().getInt(ARG_TOUR_ID);
-        }
-        // TODO change activity casting when putting this fragment somewhere else
-        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager;
+        activity = (TourDetailsActivity) getActivity();
+//        callbackManager = activity.callbackManager;
         localContext = getContext();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        tourId = activity.tourId;
         View fragment = inflater.inflate(R.layout.fragment_tour_details, container, false);
         ListView lw = (ListView) fragment.findViewById(R.id.tour_information_list);
-        getAttractionDetails(lw);
+        getTourDetails(lw);
         return fragment;
     }
 
-    public void getAttractionDetails(final ListView lw) {
+    public void getTourDetails(final ListView lw) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         Call<Tour> call = backendService.getTour(tourId);
 
@@ -146,7 +137,7 @@ public class TourDetailsFragment extends Fragment {
         int placeholderId = R.mipmap.photo_placeholder;
         ImageView coverPhoto = (ImageView) header.findViewById(R.id.tour_cover_photo);
         Glide.with(localContext)
-                .load(tour.getPhotoUri())
+                .load(tour.getPhotoUri() != null ? tour.getPhotoUri() : placeholderId)
                 .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
                 .fitCenter()
                 .placeholder(placeholderId)

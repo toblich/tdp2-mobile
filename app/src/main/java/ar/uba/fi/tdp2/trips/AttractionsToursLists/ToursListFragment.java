@@ -87,7 +87,6 @@ public class ToursListFragment extends Fragment {
         if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
