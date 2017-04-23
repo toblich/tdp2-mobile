@@ -95,6 +95,10 @@ public class AttractionDetailsFragment extends Fragment {
     }
 
     public void getAttractionDetails(final ListView lw) {
+        if (!Utils.isNetworkAvailable()) {
+            Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
+        }
+
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         Call<Attraction> call = backendService.getAttraction(attractionId);
 

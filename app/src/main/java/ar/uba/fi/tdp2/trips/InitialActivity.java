@@ -79,16 +79,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         initializeData();
-        // TODO Agus: la siguiente es la llamada que se usa para pedir permisos de posteo.
-        // TODO: Fijate que no necesita el botón (puede hacerse sin nada del layout).
-        // TODO: Para el botón de compartir entonces, no debería ser necesario hacer el tema del LoginButton.
-//        LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("publish_actions"));
     }
 
     private void initializeData() {
@@ -97,7 +89,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-//            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);

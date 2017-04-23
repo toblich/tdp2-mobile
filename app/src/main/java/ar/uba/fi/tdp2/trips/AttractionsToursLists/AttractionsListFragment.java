@@ -103,7 +103,6 @@ public class AttractionsListFragment extends Fragment {
         if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
-            return;
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
@@ -112,6 +111,9 @@ public class AttractionsListFragment extends Fragment {
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
             public void onResponse(Call<List<Attraction>> call, Response<List<Attraction>> response) {
+                if (response.body() == null) {
+                    return;
+                }
                 Log.d(Utils.LOGTAG, "Got Attractions: " + response.body().toString());
                 attractions = response.body();
 
