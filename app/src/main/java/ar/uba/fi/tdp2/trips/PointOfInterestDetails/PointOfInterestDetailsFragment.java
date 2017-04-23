@@ -89,7 +89,9 @@ public class PointOfInterestDetailsFragment extends Fragment {
         call.enqueue(new Callback<PointOfInterest>() {
             @Override
             public void onResponse(Call<PointOfInterest> call, Response<PointOfInterest> response) {
-                Log.d(Utils.LOGTAG, "Got Point of Interest: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
                 pointOfInterest = response.body();
                 setContentView(ll, rl);
             }

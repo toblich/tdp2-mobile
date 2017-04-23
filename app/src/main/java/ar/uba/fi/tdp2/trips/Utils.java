@@ -7,15 +7,15 @@ import android.net.NetworkInfo;
 public class Utils {
 
     public static final String LOGTAG = "Trips";
+    private static ConnectivityManager manager;
 
-    public static boolean isNetworkAvailable(ConnectivityManager manager) {
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+    public static void setConnectivityManager(Object manager) {
+        Utils.manager = (ConnectivityManager) manager;
     }
 
-    public static boolean isNetworkAvailable(Object managerAsObject) {
-        ConnectivityManager manager = (ConnectivityManager) managerAsObject;
-        return isNetworkAvailable(manager);
+    public static boolean isNetworkAvailable() {
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     public static boolean isNotBlank(final String string) {

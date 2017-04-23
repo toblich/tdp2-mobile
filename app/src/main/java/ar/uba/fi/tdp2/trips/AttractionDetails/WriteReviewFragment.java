@@ -93,6 +93,10 @@ public class WriteReviewFragment extends DialogFragment {
                         call.enqueue(new Callback<Review>() {
                             @Override
                             public void onResponse(Call<Review> call, Response<Review> response) {
+                                if (response.body() == null) {
+                                    Toast.makeText(context, R.string.review_posting_failure, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 Toast.makeText(context, R.string.review_posted, Toast.LENGTH_SHORT).show();
                             }
 
