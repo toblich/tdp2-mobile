@@ -40,33 +40,57 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
 
     @Override
     public void onBindViewHolder(RV_GalleryAdapter.GalleryViewHolder holder, int position) {
-        final Gallery.GalleryImage image = gallery.images.get(position);
+        int galleryImageSize = gallery.images.size();
 
+        if (position < galleryImageSize) {
+            final Gallery.GalleryImage image = gallery.images.get(position);
+
+            loadImage(image.imageURL, holder.imageView);
+
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(actualContext, FullScreenGalleryActivity.class);
+                    intent.putExtra("imageURL", image.imageURL);
+                    actualContext.startActivity(intent);
+                }
+            });
+
+        } else {
+            int actualPos = position - galleryImageSize;
+            final Gallery.GalleryVideo video = gallery.videos.get(actualPos);
+
+            loadImage(video.videoURL, holder.imageView);
+
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(actualContext, AudioguideActivity.class);
+                    intent.putExtra("audioguidePath", video.videoURL);
+                    intent.putExtra("name", "Video");
+                    actualContext.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private void loadImage(String url, ImageView imageView) {
         int placeholderId = R.mipmap.photo_placeholder;
 
-        if (Utils.isNotBlank(image.imageURL)) {
+        if (Utils.isNotBlank(url)) {
             Glide.with(actualContext)
-                    .load(image.imageURL)
+                    .load(url)
                     .thumbnail(0.5f)
                     .crossFade()
                     .placeholder(placeholderId)
                     .error(placeholderId)
-                    .into(holder.imageView);
+                    .into(imageView);
         }
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(actualContext, FullscreenGalleryActivity.class);
-                intent.putExtra("imageURL", image.imageURL);
-                actualContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        return (gallery.images.size());
+        return (gallery.images.size() + gallery.videos.size());
     }
 
 }

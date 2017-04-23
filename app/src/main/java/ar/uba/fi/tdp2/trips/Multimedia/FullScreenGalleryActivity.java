@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Utils;
 
-public class FullscreenGalleryActivity extends AppCompatActivity {
+public class FullScreenGalleryActivity extends AppCompatActivity {
 
     private Context actualContext = this;
 

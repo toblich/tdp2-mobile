@@ -94,6 +94,9 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onResponse(Call<Gallery> call, Response<Gallery> response) {
                 Log.d(Utils.LOGTAG, "Got Gallery: " + response.body().toString());
+                if (response.body() == null) {
+                    return;
+                }
                 gallery = response.body();
 
                 RV_GalleryAdapter adapter = new RV_GalleryAdapter(gallery, localContext);

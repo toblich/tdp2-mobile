@@ -108,7 +108,7 @@
                 android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
         </activity>
         <activity
-            android:name=".Multimedia.FullscreenGalleryActivity"
+            android:name=".Multimedia.FullScreenGalleryActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
