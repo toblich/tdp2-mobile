@@ -84,7 +84,7 @@ public class ToursListFragment extends Fragment {
 
         tours = new ArrayList<>();
 
-        if (!Utils.isNetworkAvailable(localContext.getSystemService(Context.CONNECTIVITY_SERVICE))) {
+        if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;
@@ -140,6 +140,17 @@ public class ToursListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setFilter(String expr) {
+        List<Tour> filtered = new ArrayList<>();
+        String filter = expr.toLowerCase();
+        for (Tour tour : tours) {
+            if (tour.name.toLowerCase().contains(filter)) {
+                filtered.add(tour);
+            }
+        }
+        toursAdapter.setFilter(filtered);
     }
 
 

@@ -48,4 +48,6 @@
     <string name="review_posted">Review subida!</string>
     <string name="review_posting_failure">Falló la review</string>
     <string name="write_here">Escriba aquí</string>
+    <string name="short_hours">h</string>
+    <string name="short_minutes">m</string>
 </resources>

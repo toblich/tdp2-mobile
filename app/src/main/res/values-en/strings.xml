@@ -40,4 +40,6 @@
     <string name="review_posted">Review posted!</string>
     <string name="review_posting_failure">Posting review failed</string>
     <string name="write_here">Write here</string>
+    <string name="short_hours">h</string>
+    <string name="short_minutes">m</string>
 </resources>

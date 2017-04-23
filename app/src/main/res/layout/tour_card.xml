@@ -40,18 +40,14 @@
 
             <TextView
                 android:id="@+id/tour_estimated_time"
-
-                android:layout_width="@dimen/attraction_card_cover_photo_width"
-                android:layout_height="@dimen/attraction_card_cover_photo_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="false"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentStart="false"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="@dimen/tour_card_cover_photo_margin"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="@dimen/tour_card_cover_photo_margin"
                 android:layout_marginTop="@dimen/tour_card_title_top_margin"
-                android:adjustViewBounds="false"
                 android:textSize="@dimen/tour_card_title_text_size"
                 android:textColor="@android:color/black"/>
 
