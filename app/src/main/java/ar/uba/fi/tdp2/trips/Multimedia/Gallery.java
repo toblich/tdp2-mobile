@@ -41,12 +41,14 @@ public class Gallery {
         public String language;
         public int order;
         public @SerializedName("video") String videoURL;
+        public String thumbnail;
 
-        public GalleryVideo(int id, String language, int order, String videoURL){
+        public GalleryVideo(int id, String language, int order, String videoURL, String thumbnail){
             this.id = id;
             this.language = language;
             this.order = order;
             this.videoURL = videoURL;
+            this.thumbnail = thumbnail;
         }
 
         @Override

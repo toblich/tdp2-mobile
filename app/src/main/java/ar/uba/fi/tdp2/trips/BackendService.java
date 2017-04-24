@@ -167,6 +167,7 @@ public interface BackendService {
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             //TODO: IP, ya acomode apiary para que funcione bien sin tener que hardcodear los parámetros.
+            //.baseUrl("https://private-0e956b-trips5.apiary-mock.com")
             .baseUrl("http://192.168.1.108")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
