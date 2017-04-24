@@ -65,7 +65,7 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
             int actualPos = position - galleryImageSize;
             final Gallery.GalleryVideo video = gallery.videos.get(actualPos);
 
-            if (!loadImage(video.videoURL, holder.imageView)) {
+            if (!loadImage(video.thumbnail, holder.imageView)) {
                 return;
             }
 
