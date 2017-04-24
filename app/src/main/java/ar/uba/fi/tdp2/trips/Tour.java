@@ -14,6 +14,7 @@ public class Tour {
     private @SerializedName("portrait_image") String photoUri;
     private @SerializedName("estimated_time") int duration;
     private List<Attraction> attractions;
+    private @SerializedName("average_rating") float avgRating; // TODO Pancho. Ponele el nombre que te pinte
 
     public Tour(int id, String name, String description, int duration, String photoUri, List<Attraction> attractions) {
         this.id = id;
@@ -58,5 +59,9 @@ public class Tour {
 
     public int getDuration() {
         return duration;
+    }
+
+    public float getAvgRating() {
+        return avgRating;
     }
 }

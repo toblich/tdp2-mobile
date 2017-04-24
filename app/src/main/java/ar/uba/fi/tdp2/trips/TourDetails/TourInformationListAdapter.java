@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Tour;
 import ar.uba.fi.tdp2.trips.Utils;
@@ -43,7 +45,11 @@ public class TourInformationListAdapter extends BaseAdapter {
         if (tour.getDuration() > 0) { // TODO make check here more robust
             items.add(new InfoItem(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(tour.getDuration())));
         }
-        // TODO add here extra tour info
+
+        if (tour.getAvgRating() > 0) {
+            items.add(new InfoItem(R.drawable.ic_stars_black_24dp, String.format(Locale.getDefault(),
+                    "%.1f %s 5.0", tour.getAvgRating(), context.getString(R.string.out_of))));
+        }
     }
 
     @Override

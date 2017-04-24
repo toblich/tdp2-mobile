@@ -61,4 +61,5 @@
     <string name="title_activity_tour_details" translatable="false">TourDetailsActivity</string>
     <string name="tours_containing_attraction_title">Recorridos que incluyen esta atracción</string>
     <string name="google_maps_not_installed">Google Maps no está instalado</string>
+    <string name="out_of">de</string>
 </resources>

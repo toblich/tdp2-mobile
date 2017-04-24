@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.R;
+import ar.uba.fi.tdp2.trips.TourDetails.TourInformationListAdapter;
 import ar.uba.fi.tdp2.trips.Utils;
 
 public class InformationListAdapter extends BaseAdapter {
@@ -51,6 +53,11 @@ public class InformationListAdapter extends BaseAdapter {
         add(R.drawable.ic_access_time_black_24dp, attraction.openingHours);
         add(R.drawable.ic_attach_money_black_24dp, attraction.price, context.getString(R.string.dollars));
         add(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(attraction.duration));
+
+        if (attraction.avgRating > 0) { // Else, there where no ratings
+            add(R.drawable.ic_stars_black_24dp, String.format(Locale.getDefault(),
+                    "%.1f %s 5.0", attraction.avgRating, context.getString(R.string.out_of)));
+        }
     }
 
     private void add(int iconId, String string) {

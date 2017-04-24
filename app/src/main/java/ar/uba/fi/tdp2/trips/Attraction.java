@@ -17,6 +17,7 @@ public class Attraction {
     public String url;
     public String phone;
     public double price;
+    public @SerializedName("average_rating") float avgRating; // TODO Pancho. Ponele el nombre que te pinte
 
     public @SerializedName("average_visit_duration") int duration;
     public List<Review> reviews;
@@ -30,7 +31,7 @@ public class Attraction {
 
     public Attraction(int id, String name, String description, String photoUri, String audioguide,
                       String address, String url, String phone, double price, int duration,
-                      List<Review> reviews, Review ownReview, List<Tour> tours) {
+                      List<Review> reviews, Review ownReview, List<Tour> tours, float avgRating) {
 
         this.id          = id;
         this.name        = name;
@@ -43,6 +44,7 @@ public class Attraction {
         this.phone = phone;
         this.price = price;
         this.duration = duration;
+        this.avgRating = avgRating;
 
         this.reviews = reviews;
         this.ownReview = ownReview;
