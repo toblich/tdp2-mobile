@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips.TourDetails;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,13 +12,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
+import ar.uba.fi.tdp2.trips.Attraction;
 import ar.uba.fi.tdp2.trips.BackendService;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.RV_AttractionAdapter;
@@ -28,25 +37,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class TourDetailsFragment extends Fragment {
+public class TourDetailsFragment extends Fragment implements OnMapReadyCallback {
     private int tourId;
     private Tour tour;
     private OnFragmentInteractionListener mListener;
     private Context localContext;
     private TourDetailsActivity activity;
-//    public CallbackManager callbackManager;
 
     public TourDetailsFragment() {
         // Required empty public constructor
     }
-
-//    public static TourDetailsFragment newInstance(int tourId) {
-//        TourDetailsFragment fragment = new TourDetailsFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(ARG_TOUR_ID, tourId);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public void setMenuVisibility(boolean b) {
@@ -57,7 +57,6 @@ public class TourDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (TourDetailsActivity) getActivity();
-//        callbackManager = activity.callbackManager;
         localContext = getContext();
     }
 
@@ -107,6 +106,13 @@ public class TourDetailsFragment extends Fragment {
 
         addHeader(inflater, informationList);
         addFooter(inflater, informationList);
+
+        SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+        mMapFragment.getMapAsync(this);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_container, mMapFragment)
+                .commit();
     }
 
     private void addFooter(LayoutInflater inflater, ListView informationList) {
@@ -129,21 +135,7 @@ public class TourDetailsFragment extends Fragment {
 
     private void addHeader(LayoutInflater inflater, ListView informationList) {
         View header = inflater.inflate(R.layout.tour_details_header, informationList, false);
-
-        /* Set cover photo */
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        int placeholderId = R.mipmap.photo_placeholder;
-        ImageView coverPhoto = (ImageView) header.findViewById(R.id.tour_cover_photo);
-        Glide.with(localContext)
-                .load(tour.getPhotoUri() != null ? tour.getPhotoUri() : placeholderId)
-                .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
-                .fitCenter()
-                .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
-                .into(coverPhoto);
-
+        // The next line enables the map to be loaded
         informationList.addHeaderView(header);
     }
 
@@ -168,6 +160,70 @@ public class TourDetailsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap map) {
+        final List<Attraction> attractions = tour.getAttractions();
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Attraction attraction : attractions) {
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(attraction.latitude, attraction.longitude))
+                    .title(attraction.name));
+
+            builder.include(new LatLng(attraction.latitude, attraction.longitude));
+        }
+
+        final LatLngBounds bounds = builder.build();
+
+        // Disables scroll for map
+        map.getUiSettings().setAllGesturesEnabled(false);
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;
+        if (height > width)
+            height /= 2; // map uses about half the height when in portrait mode
+        int padding = (int) (Math.max(width, height) * 0.12); // offset from edges of the map 12% of screen
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+        // Redirects to GoogleMaps
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+            @Override
+            public void onMapClick(LatLng point) {
+                Attraction firstAttraction = attractions.get(0);
+                int size = attractions.size();
+                Attraction lastAttraction = attractions.get(size-1);
+
+                StringBuilder builder = new StringBuilder();
+
+                builder.append("https://maps.google.com/maps?")
+                        .append("saddr=")
+                        .append(getLatLngStr(firstAttraction))
+                        .append("&daddr=")
+                        .append(getLatLngStr(lastAttraction));
+
+                for (int i = 1; i < size-1; i++) {
+                    builder.append("+to:")
+                            .append(getLatLngStr(attractions.get(i)));
+                }
+
+                Uri gmmIntentUri = Uri.parse(builder.toString());
+
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(localContext, R.string.google_maps_not_installed, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            private String getLatLngStr(Attraction attraction) {
+                return attraction.latitude + "," + attraction.longitude;
+            }
+        });
     }
 
     /**
