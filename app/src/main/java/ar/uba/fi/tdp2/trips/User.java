@@ -13,6 +13,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
@@ -68,7 +69,12 @@ public class User {
                                           final SharedPreferences settings,
                                           final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        user = new User(fbUserId, fbToken);
+        user = User.getInstance(settings);
+        if (user == null) {
+            user = new User();
+        }
+        user.fbUserId = fbUserId;
+        user.fbToken = fbToken;
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
@@ -77,7 +83,6 @@ public class User {
                 if (response.body() == null) {
                     return;
                 }
-                user = response.body();
                 user.fbPublicProfile = true;
                 user.persistUser(settings);
                 callback.onSuccess(user);
@@ -100,6 +105,9 @@ public class User {
                                           final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         user = User.getInstance(settings);
+        if (user == null) {
+            user = new User();
+        }
         user.twUserId = twUserId;
         user.twToken = twToken;
         user.twSecret = twSecret;
@@ -113,7 +121,6 @@ public class User {
                     return;
                 }
                 Log.d("TRIPS", "got user: " + response.body().toString());
-                user = response.body();
                 user.persistUser(settings);
                 callback.onSuccess(user);
             }
@@ -176,9 +183,9 @@ public class User {
 //    }
 
     public static void loginWithSocialNetwork(Activity activity,
-                                              CallbackManager callbackManager,
-                                              final SharedPreferences sharedPreferences,
-                                              final Callback callback) {
+                                               CallbackManager callbackManager,
+                                               final SharedPreferences sharedPreferences,
+                                               final Callback callback) {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -201,6 +208,58 @@ public class User {
             }
         });
         loginManager.logInWithReadPermissions(activity, Arrays.asList("email", "public_profile"));
+    }
+
+    public static void loginWithFacebook(CallbackManager callbackManager,
+                                         final SharedPreferences sharedPreferences,
+                                         final Callback callback,
+                                         LoginButton loginButton) {
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                System.out.println(loginResult.toString());
+                String userId = loginResult.getAccessToken().getUserId();
+                String token = loginResult.getAccessToken().getToken();
+                System.out.println(token);
+                User.createFromFbToken(userId, token, sharedPreferences, callback);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(Utils.LOGTAG, "Login canceled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(Utils.LOGTAG, "Login failed");
+            }
+        });
+    }
+
+    public static void postWithFacebook(CallbackManager callbackManager,
+                                         final SharedPreferences sharedPreferences,
+                                         final Callback callback,
+                                         LoginButton loginButton) {
+        loginButton.setPublishPermissions(Arrays.asList("publish_actions"));
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                user.fbPost = true;
+                user.persistUser(sharedPreferences);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(Utils.LOGTAG, "Login canceled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(Utils.LOGTAG, "Login failed");
+            }
+        });
     }
 
     private void _getFbPostPermissions(CallbackManager callbackManager,

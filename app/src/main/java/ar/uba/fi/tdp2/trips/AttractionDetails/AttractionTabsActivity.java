@@ -126,6 +126,8 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                openAttractionShareDialog();
+                /*
                 User user = User.getInstance(getSharedPreferences("user", 0));
                 if (user != null && user.fbPost && user.fbPublicProfile) {
                     openAttractionShareDialog();
@@ -165,7 +167,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
                                 public void onError(User user) {}
                             });
                 }
-
+                */
 
 
                 return false;

@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -34,25 +35,63 @@ public class AttractionShareActivity extends AppCompatActivity {
     public CallbackManager callbackManager;
     private CharSequence attractionName;
     private TwitterLoginButton loginButton;
+    private LoginButton fbLoginButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_attraction_share);
+    public void onResume() {
+        super.onResume();
+        processSocialNetworks();
+    }
 
-        Bundle bundle = getIntent().getExtras();
-        attractionName = bundle.getCharSequence("attractionName");
-        setTitle(getString(R.string.attraction_share_title, attractionName));
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        callbackManager = CallbackManager.Factory.create();
-
-        final EditText message = (EditText) findViewById(R.id.message);
-        message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
-
+    public void processSocialNetworks() {
         final Activity me = this;
         User user = User.getInstance(getSharedPreferences("user", 0));
+
+        fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        if (user == null || user.fbUserId == null || !user.fbPublicProfile || !user.fbPost) {
+            findViewById(R.id.fb_logo).setVisibility(View.GONE);
+            if (user == null || !user.fbPublicProfile) {
+                User.loginWithFacebook(
+                        callbackManager,
+                        getSharedPreferences("user", 0),
+                        new User.Callback() {
+                            @Override
+                            public void onSuccess(User user) {
+                                Toast.makeText(me, R.string.wait_a_second, Toast.LENGTH_LONG).show();
+                                user.getFbPostPermissions(me, callbackManager,
+                                        getSharedPreferences("user", 0),
+                                        new User.Callback() {
+                                            @Override
+                                            public void onSuccess(User user) {
+                                                processSocialNetworks();
+                                            }
+                                            @Override
+                                            public void onError(User user) {}
+                                        });
+                            }
+                            @Override
+                            public void onError(User user) {}
+                        },
+                        fbLoginButton);
+            } else if(!user.fbPost) {
+                User.postWithFacebook(
+                        callbackManager,
+                        getSharedPreferences("user", 0),
+                        new User.Callback() {
+                            @Override
+                            public void onSuccess(User user) {
+                                processSocialNetworks();
+                            }
+                            @Override
+                            public void onError(User user) {}
+                        },
+                        fbLoginButton);
+            }
+        } else {
+            findViewById(R.id.fb_logo).setVisibility(View.VISIBLE);
+            fbLoginButton.setVisibility(View.GONE);
+        }
+
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
@@ -70,7 +109,7 @@ public class AttractionShareActivity extends AppCompatActivity {
                         new User.Callback() {
                             @Override
                             public void onSuccess(User user) {
-                                Toast.makeText(me, R.string.confirm, Toast.LENGTH_LONG).show();
+                                processSocialNetworks();
                             }
                             @Override
                             public void onError(User user) {}
@@ -84,12 +123,29 @@ public class AttractionShareActivity extends AppCompatActivity {
             }
         });
 
-        if (user.twUserId == null) {
-            findViewById(R.id.tw__twitter_logo).setVisibility(View.INVISIBLE);
+        if (user == null || user.twUserId == null) {
+            findViewById(R.id.tw__twitter_logo).setVisibility(View.GONE);
         } else {
-            loginButton.setVisibility(View.INVISIBLE);
+            findViewById(R.id.tw__twitter_logo).setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.GONE);
         }
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_attraction_share);
+
+        Bundle bundle = getIntent().getExtras();
+        attractionName = bundle.getCharSequence("attractionName");
+        setTitle(getString(R.string.attraction_share_title, attractionName));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        callbackManager = CallbackManager.Factory.create();
+
+        final EditText message = (EditText) findViewById(R.id.message);
+        message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
     }
 
     public void cancel(View view) {
