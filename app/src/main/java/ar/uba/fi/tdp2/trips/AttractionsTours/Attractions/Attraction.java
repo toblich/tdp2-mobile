@@ -19,7 +19,7 @@ public class Attraction {
     public String url;
     public String phone;
     public double price;
-    public @SerializedName("average_rating") float avgRating; // TODO Pancho. Ponele el nombre que te pinte
+    public @SerializedName("average_rating") float avgRating;
 
     public @SerializedName("average_visit_duration") int duration;
     public List<Review> reviews;

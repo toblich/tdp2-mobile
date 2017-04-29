@@ -126,8 +126,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 setViewContent(lw);
 
                 /* Enable audioguide floating button if the attraction has one */
-//                RelativeLayout rl = (RelativeLayout) footer.findViewById(R.id.floating_action_button_relative_layout);
-//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
                 FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
                 FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
                 if (Utils.isNotBlank(attraction.audioguide)) {
@@ -142,22 +140,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                         }
                     });
                 }
-
-//                /* Enable audioguide floating button if the attraction has one */
-//                FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
-//                FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
-//                if (Utils.isNotBlank(attraction.audioguide)) {
-//                    fab.setVisibility(View.VISIBLE);
-//                    fab.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            Intent intent = new Intent(localContext, AudioguideActivity.class);
-//                            intent.putExtra("name", attraction.name);
-//                            intent.putExtra("audioguidePath", attraction.audioguide);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                }
             }
 
             @Override
@@ -391,9 +373,11 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 new LatLng(attraction.latitude, attraction.longitude),
                 14
         ));
+
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(attraction.latitude, attraction.longitude))
                 .title(attraction.name));
+
         // Disables scroll for map
         map.getUiSettings().setAllGesturesEnabled(false);
 

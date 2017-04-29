@@ -43,11 +43,7 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        callbackManager = CallbackManager.Factory.create();
-
         setContentView(R.layout.activity_attractions_tours_tabs);
-
 
         Bundle bundle = getIntent().getExtras();
 

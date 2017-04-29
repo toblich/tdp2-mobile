@@ -97,6 +97,7 @@ public class AttractionsListFragment extends Fragment {
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        // TODO only use city_id if not using geolocalization
         Call<List<Attraction>> call  = backendService.getAttractionsRadiusAndCityID(latitude, longitude, 2.0, cityId);
 
         call.enqueue(new Callback<List<Attraction>>() {

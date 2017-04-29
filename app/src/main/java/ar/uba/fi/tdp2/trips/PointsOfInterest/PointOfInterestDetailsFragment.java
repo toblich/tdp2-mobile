@@ -32,7 +32,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PointOfInterestDetailsFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link PointOfInterestDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -72,9 +72,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_point_of_interest_details, container, false);
         RelativeLayout rl = (RelativeLayout) fragment.findViewById(R.id.poi_details_relative_layout);
         ScrollView scrollView = (ScrollView) fragment.findViewById(R.id.poi_details_scroll_view);
@@ -112,7 +110,7 @@ public class PointOfInterestDetailsFragment extends Fragment {
 
         poi_description.setText(pointOfInterest.description);
 
-        if (pointOfInterest.audioguide != null && pointOfInterest.audioguide != "") {
+        if (Utils.isNotBlank(pointOfInterest.audioguide)) {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override

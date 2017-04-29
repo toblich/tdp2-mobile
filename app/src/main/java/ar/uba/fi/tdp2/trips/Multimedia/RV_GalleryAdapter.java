@@ -42,6 +42,7 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
 
     @Override
     public void onBindViewHolder(RV_GalleryAdapter.GalleryViewHolder holder, int position) {
+        // TODO filter out images/videos with NULL uri
         int galleryImageSize = gallery.images.size();
 
         if (position < galleryImageSize) {
@@ -84,13 +85,12 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
     }
 
     private boolean loadImage(String url, ImageView imageView) {
-        int placeholderId = R.mipmap.photo_placeholder;
-
         if (Utils.isBlank(url)) {
             imageView.setVisibility(View.GONE);
             return false;
         }
 
+        int placeholderId = R.mipmap.photo_placeholder;
         Glide.with(actualContext)
                 .load(url)
                 .thumbnail(0.5f)

@@ -24,7 +24,6 @@ public class TourInformationListAdapter extends BaseAdapter {
     public class InfoItem {
         String value;
         int iconId;
-//        OnClickCallback callback;
 
         public InfoItem(int iconId, String value) {
             this.value = value;
@@ -77,16 +76,6 @@ public class TourInformationListAdapter extends BaseAdapter {
 
         value.setText(item.value);
         icon.setImageResource(item.iconId);
-
-//        if (item.callback != null) {
-//            infoItem.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    TextView hours = (TextView) infoItem.findViewById(R.id.hours);
-//                    item.callback.call(value, hours);
-//                }
-//            });
-//        }
 
         return infoItem;
     }
