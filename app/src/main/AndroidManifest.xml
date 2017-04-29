@@ -48,18 +48,18 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".AttractionDetails.AllReviewsActivity"
+            android:name=".Reviews.AllReviewsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity" />
+                android:value=".AttractionsTours.Attractions.AttractionTabsActivity" />
         </activity>
         <activity
-            android:name=".AttractionDetails.AttractionShareActivity"
+            android:name=".AttractionsTours.Attractions.AttractionShareActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionTabsActivity" />
+                android:value=".AttractionsTours.Attractions.AttractionTabsActivity" />
         </activity>
 
         <!--
@@ -70,7 +70,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".InitialActivity">
+        <activity android:name=".Cities.InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -78,35 +78,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AttractionDetails.AttractionTabsActivity"
+            android:name=".AttractionsTours.Attractions.AttractionTabsActivity"
             android:label="@string/title_activity_attraction_tabs"
-            android:parentActivityName=".AttractionsToursLists.AttractionsToursTabsActivity"
+            android:parentActivityName=".AttractionsTours.AttractionsToursTabsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
+                android:value="ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity" />
         </activity>
         <activity
-            android:name=".PointOfInterestDetails.PointOfInterestTabsActivity"
+            android:name=".PointsOfInterest.PointOfInterestTabsActivity"
             android:label="@string/title_activity_point_of_interest_tabs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AttractionsToursLists.AttractionsToursTabsActivity"
+            android:name=".AttractionsTours.AttractionsToursTabsActivity"
             android:label="@string/title_activity_attraction_tabs"
-            android:parentActivityName=".InitialActivity"
+            android:parentActivityName=".Cities.InitialActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.InitialActivity" />
+                android:value="ar.uba.fi.tdp2.trips.Cities.InitialActivity" />
         </activity>
         <activity
-            android:name=".TourDetails.TourDetailsActivity"
+            android:name=".AttractionsTours.Tours.TourDetailsActivity"
             android:label="@string/title_activity_tour_details"
-            android:parentActivityName=".AttractionsToursLists.AttractionsToursTabsActivity"
+            android:parentActivityName=".AttractionsTours.AttractionsToursTabsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity" />
+                android:value="ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity" />
         </activity>
         <activity android:name=".Multimedia.EMVideoViewActivity" />
         <activity

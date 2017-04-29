@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import ar.uba.fi.tdp2.trips.R;
-import ar.uba.fi.tdp2.trips.Utils;
+import ar.uba.fi.tdp2.trips.Common.Utils;
 
 public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.GalleryViewHolder> {
 

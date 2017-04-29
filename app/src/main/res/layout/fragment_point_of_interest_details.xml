@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.uba.fi.tdp2.trips.PointOfInterestDetails.PointOfInterestDetailsFragment">
+    tools:context="ar.uba.fi.tdp2.trips.PointsOfInterest.PointOfInterestDetailsFragment">
 
     <ScrollView
         android:id="@+id/poi_details_scroll_view"

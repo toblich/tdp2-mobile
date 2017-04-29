@@ -11,7 +11,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.AttractionDetailsFragment"
+        tools:context=".AttractionsTours.Attractions.AttractionDetailsFragment"
         android:fillViewport="true"
         android:id="@+id/attraction_information_list"
         android:divider="@android:color/transparent"

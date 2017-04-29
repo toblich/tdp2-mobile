@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ar.uba.fi.tdp2.trips.AttractionsToursLists.AttractionsToursTabsActivity">
+    tools:context="ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity">
 
     <LinearLayout
         android:id="@+id/main_layout"
@@ -16,7 +16,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".AttractionsToursLists.AttractionsToursTabsActivity">
+        tools:context=".AttractionsTours.AttractionsToursTabsActivity">
 
         <!-- our toolbar -->
         <android.support.v7.widget.Toolbar

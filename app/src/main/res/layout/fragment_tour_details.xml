@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="ar.uba.fi.tdp2.trips.TourDetails.TourDetailsFragment"
+    tools:context=".AttractionsTours.Tours.TourDetailsFragment"
     android:fillViewport="true"
     android:id="@+id/tour_information_list"
     android:divider="@android:color/transparent"

@@ -6,7 +6,7 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingTop="2dp"
-    tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.PointOfInterestFragment">
+    tools:context=".PointsOfInterest.PointOfInterestFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvPointsOfInterest"

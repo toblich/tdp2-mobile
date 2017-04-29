@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ar.uba.fi.tdp2.trips.PointOfInterestDetails.PointOfInterestTabsActivity">
+    tools:context="ar.uba.fi.tdp2.trips.PointsOfInterest.PointOfInterestTabsActivity">
 
     <LinearLayout
         android:id="@+id/main_layout"

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.uba.fi.tdp2.trips.TourDetails.TourDetailsActivity">
+    tools:context=".AttractionsTours.Tours.TourDetailsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/tour_details_fragment"
-        android:name="ar.uba.fi.tdp2.trips.TourDetails.TourDetailsFragment"
+        android:name="ar.uba.fi.tdp2.trips.AttractionsTours.Tours.TourDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

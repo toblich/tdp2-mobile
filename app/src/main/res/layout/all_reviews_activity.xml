@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.uba.fi.tdp2.trips.AttractionDetails.AllReviewsActivity">
+    tools:context=".Reviews.AllReviewsActivity">
 
     <!-- our toolbar -->
     <android.support.v7.widget.Toolbar
