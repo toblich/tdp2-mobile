@@ -8,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,8 @@ public class WriteReviewFragment extends DialogFragment {
     private String text;
     private int rating;
     private Context context;
+    private AlertDialog dialog;
+    private EditText message;
 
     public static WriteReviewFragment newInstance(String text, int rating) {
         WriteReviewFragment f = new WriteReviewFragment();
@@ -65,7 +70,7 @@ public class WriteReviewFragment extends DialogFragment {
         final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
         ratingBar.setRating(rating);
 
-        final EditText message = (EditText) view.findViewById(R.id.message);
+        message = (EditText) view.findViewById(R.id.message);
         message.setText(text);
 
         builder.setView(view)
@@ -78,13 +83,13 @@ public class WriteReviewFragment extends DialogFragment {
 
                         updateDetailsFragmentReview(activity, finalRating, finalText);
 
-                        Toast.makeText(context, "CONFIRM!", Toast.LENGTH_LONG).show(); // TODO sacar
                         BackendService backendService = BackendService.retrofit.create(BackendService.class);
                         User user = User.getInstance(context.getSharedPreferences("user", 0));
                         if (user == null) {
                             Toast.makeText(context, R.string.not_signed_in, Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        System.out.println(user.toString());
                         String bearer = "Bearer " + user.token;
                         Review review = new Review((int)finalRating, finalText);
                         Call<Review> call = backendService.postReview(activity.attractionId, bearer, review);
@@ -111,9 +116,40 @@ public class WriteReviewFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.d(Utils.LOGTAG, "cancel review");
                     }
-                });
-        // Create the AlertDialog object and return it
-        return builder.create();
+                })
+        ;
+
+        // Create the AlertDialog object
+        dialog = builder.create();
+        dialog.show();
+
+        System.out.println("onCreateDialog ending");
+        activatePositiveButtonDynamicEnabling();
+
+        // Return the AlertDialog object
+        return dialog;
+    }
+
+    // HACK: This has to be executed once dialog.show() has been called
+    public void activatePositiveButtonDynamicEnabling() {
+        System.out.println("activate thing");
+        // Start with positive button disabled, and enable it only if it changes and is not empty
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+        message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String newText = s.toString();
+                boolean enabled = Utils.isNotBlank(newText) && !newText.equals(text);
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enabled);
+            }
+        });
     }
 
     // this method could be changed into a callback on the details fragment

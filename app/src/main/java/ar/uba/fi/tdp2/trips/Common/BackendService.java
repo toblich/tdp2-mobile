@@ -177,8 +177,8 @@ public interface BackendService {
             .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-//            .baseUrl("http://192.168.43.248")
+//            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
+            .baseUrl("http://192.168.1.5")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
