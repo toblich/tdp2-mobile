@@ -110,7 +110,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity" />
         </activity>
-        <activity android:name=".Multimedia.EMVideoViewActivity" />
+        <activity
+            android:name=".Multimedia.EMVideoViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Multimedia.FullScreenGalleryActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>

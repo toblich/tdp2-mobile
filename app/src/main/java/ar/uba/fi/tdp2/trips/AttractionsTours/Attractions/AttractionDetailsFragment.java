@@ -134,7 +134,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                         @Override
                         public void onClick(View view) {
                             Intent intent = new Intent(localContext, EMVideoViewActivity.class);
-                            intent.putExtra("name", attraction.name + " " + localContext.getString(R.string.audioguide));
                             intent.putExtra("path", attraction.audioguide);
                             startActivity(intent);
                         }

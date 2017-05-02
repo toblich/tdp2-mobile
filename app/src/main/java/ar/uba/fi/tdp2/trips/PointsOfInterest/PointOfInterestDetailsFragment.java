@@ -116,7 +116,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(localContext, EMVideoViewActivity.class);
-                    intent.putExtra("name", pointOfInterest.name + " " + localContext.getString(R.string.audioguide));
                     intent.putExtra("path", pointOfInterest.audioguide);
                     startActivity(intent);
                 }
