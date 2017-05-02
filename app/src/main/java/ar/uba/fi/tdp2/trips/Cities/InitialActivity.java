@@ -12,8 +12,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.twitter.sdk.android.Twitter;
@@ -30,6 +34,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InitialActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.ConnectionCallbacks, NavigationView.OnNavigationItemSelectedListener {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "ibKtBJe8a3Tjgm6Z9vwsdHbL5";
@@ -72,10 +77,25 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity_initial);
         this.setTitle(R.string.choose_location);
 
+        //Menu Navigation Drawer
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //Cosas de estilo y conectividad
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
         Utils.setShortTimeUnits(getString(R.string.short_hours), getString(R.string.short_minutes));
         Utils.setStrings(getString(R.string.hours_unit), getString(R.string.minutesUnit), getString(R.string.and));
 
+        //Geolocalizacion
         locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         geocoder   = new Geocoder(localContext);
         geolocalizationCard = (CardView) findViewById(R.id.geolocalization_card);
@@ -85,6 +105,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 updateLocation();
             }
         });
+
+        //Rv para la lista de ciudades
         recyclerView = (RecyclerView) findViewById(R.id.rvCities);
         llm = new LinearLayoutManager(localContext);
         recyclerView.setLayoutManager(llm);
@@ -96,6 +118,41 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .build();
 
         initializeData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_cities) {
+            //Ciudades
+            //Aca no hace nada porque ya esta en ciudades
+        } else if (id == R.id.nav_notifications) {
+            //Notificaciones
+            //Intent intent = new Intent(this, AttractionsToursTabsActivity.class);
+            //intent.putExtra("param", param);
+            //startActivity(intent);
+            Toast.makeText(localContext, "Push Notifications", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_close_session) {
+            //Cerrar sesión
+            Toast.makeText(localContext, "Cerrando Sesión...", Toast.LENGTH_SHORT).show();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void initializeData() {
