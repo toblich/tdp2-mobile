@@ -92,7 +92,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
-//        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager; // TODO go to login instead
         localContext = getContext();
     }
 
@@ -181,8 +180,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
-
-        final Context activityContext = getActivity();
 
         /* Set own rating/review value and behaviour */
         AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
@@ -291,6 +288,7 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         WriteReviewFragment writeReviewFragment = (attraction.ownReview == null)
                 ? WriteReviewFragment.newInstance("", 0)
                 : WriteReviewFragment.newInstance(attraction.ownReview.text, attraction.ownReview.rating);
+
         writeReviewFragment.setTargetFragment(this, -1);
         writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
@@ -351,16 +349,13 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SessionActivity.RequestCode.REVIEW:
-                Toast.makeText(localContext, "RequestCode REVIEW", Toast.LENGTH_SHORT).show();
                 User user = User.getInstance(localContext.getSharedPreferences("user", 0));
                 if (user != null) {
                     openWriteReviewDialog();
-                } else {
-                    Toast.makeText(localContext, "USER IS NULL", Toast.LENGTH_LONG).show();
                 }
+                Toast.makeText(localContext, R.string.login_required_for_review, Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(localContext, "RequestCode WRONG (fragment): " + requestCode, Toast.LENGTH_LONG).show();
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
