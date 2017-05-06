@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
 import ar.uba.fi.tdp2.trips.R;
@@ -37,7 +38,7 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO for back-arrow in navbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO for back-arrow in navbar
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -61,6 +62,17 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
