@@ -38,7 +38,7 @@ public class PointOfInterestTabsActivity extends AppCompatActivity implements Ta
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO for back-arrow in navbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

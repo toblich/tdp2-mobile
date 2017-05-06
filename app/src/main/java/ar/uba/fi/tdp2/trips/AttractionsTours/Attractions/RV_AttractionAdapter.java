@@ -28,7 +28,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
     public RV_AttractionAdapter(List<Attraction> attractions, Context activityContext) {
         this.attractions = attractions;
-        this.activityContext = activityContext; // TODO validate it's correct activityContext
+        this.activityContext = activityContext;
     }
 
     public static class AttractionViewHolder extends RecyclerView.ViewHolder {

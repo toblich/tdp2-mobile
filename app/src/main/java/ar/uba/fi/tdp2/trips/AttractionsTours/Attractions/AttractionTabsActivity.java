@@ -53,7 +53,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
