@@ -55,7 +55,7 @@
                 android:value=".AttractionsTours.Attractions.AttractionTabsActivity" />
         </activity>
         <activity
-            android:name=".AttractionsTours.Attractions.AttractionShareActivity"
+            android:name=".AttractionsTours.Attractions.SessionActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

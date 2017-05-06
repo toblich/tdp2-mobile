@@ -1,6 +1,5 @@
 package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.CallbackManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -63,7 +61,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     public Attraction attraction; // Accessed by review modal
     private OnFragmentInteractionListener mListener;
     private Context localContext;
-    public CallbackManager callbackManager;
 
     public AttractionDetailsFragment() {
         // Required empty public constructor
@@ -95,7 +92,7 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
-        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager;
+//        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager; // TODO go to login instead
         localContext = getContext();
     }
 
@@ -222,18 +219,8 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 if (user != null) {
                     openWriteReviewDialog();
                 } else {
-                    User.loginWithSocialNetwork((Activity) activityContext,
-                            callbackManager,
-                            localContext.getSharedPreferences("user", 0),
-                            new User.Callback() {
-                                @Override
-                                public void onSuccess(User user) {
-                                    Toast.makeText(localContext, R.string.wait_a_second, Toast.LENGTH_LONG).show();
-                                    openWriteReviewDialog();
-                                }
-                                @Override
-                                public void onError(User user) {}
-                            });
+                    Intent intent = new Intent(localContext, SessionActivity.class);
+                    startActivityForResult(intent, SessionActivity.RequestCode.REVIEW);
                 }
 
 
@@ -362,8 +349,20 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SessionActivity.RequestCode.REVIEW:
+                Toast.makeText(localContext, "RequestCode REVIEW", Toast.LENGTH_SHORT).show();
+                User user = User.getInstance(localContext.getSharedPreferences("user", 0));
+                if (user != null) {
+                    openWriteReviewDialog();
+                } else {
+                    Toast.makeText(localContext, "USER IS NULL", Toast.LENGTH_LONG).show();
+                }
+                break;
+            default:
+                Toast.makeText(localContext, "RequestCode WRONG (fragment): " + requestCode, Toast.LENGTH_LONG).show();
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
