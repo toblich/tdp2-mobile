@@ -54,7 +54,7 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -120,6 +120,17 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

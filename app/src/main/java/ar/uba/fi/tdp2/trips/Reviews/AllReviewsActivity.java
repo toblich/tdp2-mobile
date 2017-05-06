@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class AllReviewsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.setTitle(attractionName);
         System.out.println("SET TITLE: " + attractionName);
@@ -68,5 +70,16 @@ public class AllReviewsActivity extends AppCompatActivity {
                 Log.d(Utils.LOGTAG, t.toString());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

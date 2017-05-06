@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import com.facebook.CallbackManager;
 
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
-import ar.uba.fi.tdp2.trips.Multimedia.GalleryFragment;
-import ar.uba.fi.tdp2.trips.PointsOfInterest.PointOfInterestFragment;
 import ar.uba.fi.tdp2.trips.R;
 
 public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, OnFragmentInteractionListener {
@@ -55,7 +53,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
 
         //Initializing the tablayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -174,6 +172,17 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
