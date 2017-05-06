@@ -50,7 +50,9 @@
     <string name="minutesUnit">minutes</string>
     <string name="and">and</string>
     <string name="tours_containing_attraction_title">Tours containing this attraction</string>
-    <string name="audioguide">Audioguide</string>
     <string name="google_maps_not_installed">Google Maps is not installed</string>
     <string name="out_of">out of</string>
+    <string name="nav_menu_cities">Cities</string>
+    <string name="nav_menu_close_session">Close session</string>
+    <string name="nav_menu_notifications">Notifications</string>
 </resources>

@@ -70,7 +70,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Cities.InitialActivity">
+        <activity
+            android:name=".Cities.InitialActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -108,14 +110,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity" />
         </activity>
-        <activity android:name=".Multimedia.EMVideoViewActivity" />
+        <activity
+            android:name=".Multimedia.EMVideoViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Multimedia.FullScreenGalleryActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="96b87c420aff3b01e9c155f657cd7af73a3a307c" />
+
     </application>
 
 </manifest>

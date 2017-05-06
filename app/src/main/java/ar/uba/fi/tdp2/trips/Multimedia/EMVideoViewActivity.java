@@ -3,6 +3,8 @@ package ar.uba.fi.tdp2.trips.Multimedia;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.devbrackets.android.exomedia.listener.OnErrorListener;
@@ -18,13 +20,13 @@ public class EMVideoViewActivity extends AppCompatActivity implements OnPrepared
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_emvideoview);
 
         Bundle bundle = getIntent().getExtras();
-        String name  = bundle.getString("name");
         String path  = bundle.getString("path");
-
-        this.setTitle(name);
 
         emVideoView = (EMVideoView) findViewById(R.id.emvideo_view);
         setupVideoView(path);

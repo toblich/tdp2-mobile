@@ -77,7 +77,6 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
                 public void onClick(View v) {
                     Intent intent = new Intent(actualContext, EMVideoViewActivity.class);
                     intent.putExtra("path", video.videoURL);
-                    intent.putExtra("name", "Video " + video.order);
                     actualContext.startActivity(intent);
                 }
             });
