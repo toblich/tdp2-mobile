@@ -1,9 +1,12 @@
 package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.SessionActivity.RequestCode;
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
+import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.R;
 
 public class AttractionTabsActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, OnFragmentInteractionListener {
@@ -36,6 +40,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
     private TabLayout tabLayout;
     public int attractionId; // Accessed by fragments
+    private String attractionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,7 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
         setContentView(R.layout.activity_attraction_tabs);
 
         Bundle bundle = getIntent().getExtras();
-        String attractionName = bundle.getString("attractionName");
+        attractionName = bundle.getString("attractionName");
         this.setTitle(attractionName);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -132,18 +137,22 @@ public class AttractionTabsActivity extends AppCompatActivity implements TabLayo
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RequestCode.SHARE:
-                Toast.makeText(this, "RequestCode SHARE", Toast.LENGTH_LONG).show();
-                // TODO open share fragment
-                break;
-            case RequestCode.REVIEW:
-                Toast.makeText(this, "RequestCode REVIEW", Toast.LENGTH_LONG).show();
-                break;
-            default:
-                Toast.makeText(this, "RequestCode WRONG (activity): " + requestCode, Toast.LENGTH_LONG).show();
-                super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != RequestCode.SHARE) {
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
         }
+
+        User user = User.getInstance(getSharedPreferences("user", 0));
+        if (user == null) {
+            return;
+        }
+        String initialText = String.format("%s %s!", getString(R.string.attraction_post_message), attractionName);
+
+        ShareAttractionFragment shareAttractionFragment = ShareAttractionFragment.newInstance(initialText);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(shareAttractionFragment, "shareAttractionDialog")
+                .commitAllowingStateLoss();
     }
 
 }
