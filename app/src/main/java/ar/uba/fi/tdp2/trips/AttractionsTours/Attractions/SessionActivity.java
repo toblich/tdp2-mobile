@@ -24,7 +24,6 @@ import ar.uba.fi.tdp2.trips.Common.User;
 public class SessionActivity extends AppCompatActivity {
 
     public CallbackManager callbackManager;
-//    private CharSequence attractionName;
     private TwitterLoginButton twLoginButton;
     private LoginButton fbLoginButton;
 
@@ -138,82 +137,13 @@ public class SessionActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session);
-
-//        Bundle bundle = getIntent().getExtras();
-//        attractionName = bundle.getCharSequence("attractionName");
-//        setTitle(getString(R.string.attraction_share_title, attractionName));
         setTitle(getString(R.string.manage_sessions));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         callbackManager = CallbackManager.Factory.create();
-
-//        final EditText message = (EditText) findViewById(R.id.message);
-//        message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
     }
-
-//    public void cancel(View view) {
-//        finish();
-//    }
-
-//    public void send(View view) {
-//        User user = User.getInstance(getSharedPreferences("user", 0));
-//        System.out.println(user);
-//        final Button button = (Button) view;
-//        button.setClickable(false);
-//        button.setText(R.string.sending);
-//        if (user != null) {
-//            final EditText message = (EditText) findViewById(R.id.message);
-//            final Activity activity = this;
-//            user.postInSocialNetwork(message.getText().toString(), new User.Callback() {
-//                @Override
-//                public void onSuccess(User user) {
-//                    button.setClickable(true);
-//                    button.setText(R.string.done);
-//                    Toast.makeText(activity, R.string.attraction_share_ok,
-//                            Toast.LENGTH_LONG).show();
-//                    finish();
-//                }
-//
-//                @Override
-//                public void onError(User user) {
-//                    button.setClickable(true);
-//                    button.setText(R.string.done);
-//                    Toast.makeText(activity, R.string.attraction_share_error,
-//                            Toast.LENGTH_LONG).show();
-//                }
-//            });
-//        } else {
-//            System.out.println("Error grave");
-//        }
-//    }
-
-    /*@Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final EditText message = (EditText) view.findViewById(R.id.message);
-        message.setText(getString(R.string.attraction_post_message) + getArguments().getCharSequence("attractionName") + "!");
-        final SessionActivity fragment = this;
-        builder.setView(view)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        User user = User.getInstance(getActivity().getSharedPreferences("user", 0));
-                        System.out.println(user);
-                        if (user != null) {
-                            user.postInSocialNetwork(fragment,
-                                    fragment.callbackManager,
-                                    message.getText().toString());
-                        } else {
-                            System.out.println("Error grave");
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {}
-                });
-        // Create the AlertDialog object and return it
-        return builder.create();
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

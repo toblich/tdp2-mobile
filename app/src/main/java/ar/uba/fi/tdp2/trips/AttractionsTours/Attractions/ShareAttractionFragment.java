@@ -53,16 +53,15 @@ public class ShareAttractionFragment extends DialogFragment {
         final AttractionTabsActivity activity = (AttractionTabsActivity) getActivity();
         LayoutInflater inflater = activity.getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        View view = inflater.inflate(R.layout.fragment_share_attraction, null); // TODO MAKE NEW LAYOUT
+        View view = inflater.inflate(R.layout.fragment_share_attraction, null);
 
         final EditText message = (EditText) view.findViewById(R.id.message);
         message.setText(text);
+        // TODO disable confirm if text is empty
 
         builder.setView(view)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // TODO POST SHARE
-                        Toast.makeText(context, "SHARE ATTRACTION", Toast.LENGTH_SHORT).show();
                         User user = User.getInstance(activity.getSharedPreferences("user", 0));
                         System.out.println(user);
                         user.postInSocialNetwork(message.getText().toString(), new User.Callback() {
