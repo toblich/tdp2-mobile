@@ -8,8 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -23,12 +21,19 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.User;
 
-public class AttractionShareActivity extends AppCompatActivity {
+public class SessionActivity extends AppCompatActivity {
 
     public CallbackManager callbackManager;
-    private CharSequence attractionName;
-    private TwitterLoginButton loginButton;
+//    private CharSequence attractionName;
+    private TwitterLoginButton twLoginButton;
     private LoginButton fbLoginButton;
+
+    public static class RequestCode {
+        public static final int SHARE = 1;
+        public static final int REVIEW = 2;
+        public static final int FAVORITE = 3;
+        public static final int VISITED = 4;
+    }
 
     @Override
     public void onResume() {
@@ -40,6 +45,11 @@ public class AttractionShareActivity extends AppCompatActivity {
         final Activity me = this;
         User user = User.getInstance(getSharedPreferences("user", 0));
 
+        fbLogin(me, user);
+        twLogin(user);
+    }
+
+    public void fbLogin(final Activity me, User user) {
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
         if (user == null || user.fbUserId == null || !user.fbPublicProfile || !user.fbPost) {
             findViewById(R.id.fb_logo).setVisibility(View.GONE);
@@ -66,7 +76,7 @@ public class AttractionShareActivity extends AppCompatActivity {
                             public void onError(User user) {}
                         },
                         fbLoginButton);
-            } else if(!user.fbPost) {
+            } else if (!user.fbPost) {
                 User.postWithFacebook(
                         callbackManager,
                         getSharedPreferences("user", 0),
@@ -84,16 +94,16 @@ public class AttractionShareActivity extends AppCompatActivity {
             findViewById(R.id.fb_logo).setVisibility(View.VISIBLE);
             fbLoginButton.setVisibility(View.GONE);
         }
+    }
 
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        loginButton.setCallback(new Callback<TwitterSession>() {
+    public void twLogin(User user) {
+        twLoginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+        twLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 // The TwitterSession is also available through:
                 // Twitter.getInstance().core.getSessionManager().getActiveSession()
                 TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                // with your app's user model
                 User.createFromTwToken(
                         String.valueOf(session.getUserId()),
                         session.getAuthToken().token,
@@ -120,69 +130,70 @@ public class AttractionShareActivity extends AppCompatActivity {
             findViewById(R.id.tw__twitter_logo).setVisibility(View.GONE);
         } else {
             findViewById(R.id.tw__twitter_logo).setVisibility(View.VISIBLE);
-            loginButton.setVisibility(View.GONE);
+            twLoginButton.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_attraction_share);
+        setContentView(R.layout.activity_session);
 
-        Bundle bundle = getIntent().getExtras();
-        attractionName = bundle.getCharSequence("attractionName");
-        setTitle(getString(R.string.attraction_share_title, attractionName));
+//        Bundle bundle = getIntent().getExtras();
+//        attractionName = bundle.getCharSequence("attractionName");
+//        setTitle(getString(R.string.attraction_share_title, attractionName));
+        setTitle(getString(R.string.manage_sessions));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         callbackManager = CallbackManager.Factory.create();
 
-        final EditText message = (EditText) findViewById(R.id.message);
-        message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
+//        final EditText message = (EditText) findViewById(R.id.message);
+//        message.setText(getString(R.string.attraction_post_message) + " " + attractionName + "!");
     }
 
-    public void cancel(View view) {
-        finish();
-    }
+//    public void cancel(View view) {
+//        finish();
+//    }
 
-    public void send(View view) {
-        User user = User.getInstance(getSharedPreferences("user", 0));
-        System.out.println(user);
-        final Button button = (Button) view;
-        button.setClickable(false);
-        button.setText(R.string.sending);
-        if (user != null) {
-            final EditText message = (EditText) findViewById(R.id.message);
-            final Activity activity = this;
-            user.postInSocialNetwork(message.getText().toString(), new User.Callback() {
-                @Override
-                public void onSuccess(User user) {
-                    button.setClickable(true);
-                    button.setText(R.string.send);
-                    Toast.makeText(activity, R.string.attraction_share_ok,
-                            Toast.LENGTH_LONG).show();
-                    finish();
-                }
-
-                @Override
-                public void onError(User user) {
-                    button.setClickable(true);
-                    button.setText(R.string.send);
-                    Toast.makeText(activity, R.string.attraction_share_error,
-                            Toast.LENGTH_LONG).show();
-                }
-            });
-        } else {
-            System.out.println("Error grave");
-        }
-    }
+//    public void send(View view) {
+//        User user = User.getInstance(getSharedPreferences("user", 0));
+//        System.out.println(user);
+//        final Button button = (Button) view;
+//        button.setClickable(false);
+//        button.setText(R.string.sending);
+//        if (user != null) {
+//            final EditText message = (EditText) findViewById(R.id.message);
+//            final Activity activity = this;
+//            user.postInSocialNetwork(message.getText().toString(), new User.Callback() {
+//                @Override
+//                public void onSuccess(User user) {
+//                    button.setClickable(true);
+//                    button.setText(R.string.done);
+//                    Toast.makeText(activity, R.string.attraction_share_ok,
+//                            Toast.LENGTH_LONG).show();
+//                    finish();
+//                }
+//
+//                @Override
+//                public void onError(User user) {
+//                    button.setClickable(true);
+//                    button.setText(R.string.done);
+//                    Toast.makeText(activity, R.string.attraction_share_error,
+//                            Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        } else {
+//            System.out.println("Error grave");
+//        }
+//    }
 
     /*@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final EditText message = (EditText) view.findViewById(R.id.message);
         message.setText(getString(R.string.attraction_post_message) + getArguments().getCharSequence("attractionName") + "!");
-        final AttractionShareActivity fragment = this;
+        final SessionActivity fragment = this;
         builder.setView(view)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -208,7 +219,7 @@ public class AttractionShareActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        loginButton.onActivityResult(requestCode, resultCode, data);
+        twLoginButton.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -220,5 +231,9 @@ public class AttractionShareActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onDoneButtonClick(View view) {
+        finish();
     }
 }
