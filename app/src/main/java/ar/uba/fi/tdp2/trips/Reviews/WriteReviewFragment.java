@@ -114,6 +114,7 @@ public class WriteReviewFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        resetDetailsFragmentRating(activity);
                         Log.d(Utils.LOGTAG, "cancel review");
                     }
                 })
@@ -166,5 +167,13 @@ public class WriteReviewFragment extends DialogFragment {
             ownReviewText.setText(finalText);
             ownReviewText.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void resetDetailsFragmentRating(AttractionTabsActivity activity) {
+        AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
+        AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
+        int originalRating = attractionDetailsFragment.attraction.ownReview.rating;
+        System.out.println(originalRating);
+        ownReviewRatingBar.setRating(originalRating);
     }
 }
