@@ -2,6 +2,7 @@ package ar.uba.fi.tdp2.trips.Notifications;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,7 +53,14 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //TODO: open web browser.
+                String url = notification.url;
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    url = "http://" + url;
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
+                    actualContext.startActivity(intent);
+                }
             }
         });
     }
