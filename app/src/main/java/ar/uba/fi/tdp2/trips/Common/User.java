@@ -75,6 +75,7 @@ public class User {
         }
         user.fbUserId = fbUserId;
         user.fbToken = fbToken;
+
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
@@ -83,6 +84,8 @@ public class User {
                 if (response.body() == null) {
                     return;
                 }
+                user.id = response.body().id;
+                user.token = response.body().token;
                 user.fbPublicProfile = true;
                 user.persistUser(settings);
                 callback.onSuccess(user);
@@ -117,9 +120,10 @@ public class User {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() == null) {
-                    Log.d("TRIPS", "came with response: " + response.toString());
                     return;
                 }
+                user.id = response.body().id;
+                user.token = response.body().token;
                 Log.d("TRIPS", "got user: " + response.body().toString());
                 user.persistUser(settings);
                 callback.onSuccess(user);
@@ -150,6 +154,7 @@ public class User {
         boolean fbPost = settings.getBoolean("userFbPost", false);
         String fbUserId = settings.getString("fbUserId", null);
         String twUserId = settings.getString("twUserId", null);
+        Log.d("TRIPS", userId + " " + userToken);
         if (userId != 0 && userToken != null) {
             User user = new User();
             user.id = userId;
