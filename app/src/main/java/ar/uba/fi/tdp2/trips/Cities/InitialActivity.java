@@ -24,6 +24,7 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import ar.uba.fi.tdp2.trips.Common.BackendService;
+import ar.uba.fi.tdp2.trips.Notifications.NotificationsActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import io.fabric.sdk.android.Fabric;
@@ -139,12 +140,12 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         if (id == R.id.nav_cities) {
             //Ciudades
             //Aca no hace nada porque ya esta en ciudades
+            //TODO: Ver como hacer que ya aparezca marcado desde el menu.
         } else if (id == R.id.nav_notifications) {
             //Notificaciones
-            //Intent intent = new Intent(this, AttractionsToursTabsActivity.class);
+            Intent intent = new Intent(this, NotificationsActivity.class);
             //intent.putExtra("param", param);
-            //startActivity(intent);
-            Toast.makeText(localContext, "Push Notifications", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
         } else if (id == R.id.nav_close_session) {
             //Cerrar sesión
             Toast.makeText(localContext, "Cerrando Sesión...", Toast.LENGTH_SHORT).show();
