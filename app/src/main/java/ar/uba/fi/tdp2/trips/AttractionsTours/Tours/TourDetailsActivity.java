@@ -28,7 +28,7 @@ public class TourDetailsActivity extends ActivityWithCallbackManager implements 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(tourName);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // TODO enable for back-button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
