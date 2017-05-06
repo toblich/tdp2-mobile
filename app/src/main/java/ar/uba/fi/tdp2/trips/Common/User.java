@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips.Common;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.util.Arrays;
 
+import ar.uba.fi.tdp2.trips.R;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -133,7 +135,8 @@ public class User {
             public void onFailure(Call<User> call, Throwable t) {
                 user = null;
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Context context = getApplicationContext();
+                Toast.makeText(context, context.getString(R.string.no_server_error), Toast.LENGTH_LONG).show();
                 Log.d("TRIPS", t.toString());
             }
         });
