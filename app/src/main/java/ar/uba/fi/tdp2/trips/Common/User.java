@@ -20,6 +20,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.util.Arrays;
 
+import ar.uba.fi.tdp2.trips.DeviceToken;
 import ar.uba.fi.tdp2.trips.R;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -41,6 +42,7 @@ public class User {
     public @SerializedName("twitter_id") String twUserId;
     public @SerializedName("tw_token") String twToken;
     public @SerializedName("tw_secret") String twSecret;
+    public @SerializedName("device_token") String deviceToken;
 
     private User(int id, String token, boolean fbPublicProfile, boolean fbPost) {
         this.id     = id;
@@ -54,7 +56,8 @@ public class User {
         this.fbToken = fbToken;
     }
 
-    private User() {}
+    private User() {
+    }
 
     @Override
     public String toString() {
@@ -75,8 +78,10 @@ public class User {
         if (user == null) {
             user = new User();
         }
+
         user.fbUserId = fbUserId;
         user.fbToken = fbToken;
+        user.deviceToken = DeviceToken.getInstance().getDeviceToken();
 
         Call<User> call = backendService.createUser(user);
 
@@ -116,6 +121,8 @@ public class User {
         user.twUserId = twUserId;
         user.twToken = twToken;
         user.twSecret = twSecret;
+        user.deviceToken = DeviceToken.getInstance().getDeviceToken();
+
         Call<User> call = backendService.createUser(user);
 
         call.enqueue(new retrofit2.Callback<User>() {
@@ -166,6 +173,7 @@ public class User {
             user.fbPost = fbPost;
             user.fbUserId = fbUserId;
             user.twUserId = twUserId;
+            user.deviceToken = DeviceToken.getInstance().getDeviceToken();
             return user;
         }
         return null;
