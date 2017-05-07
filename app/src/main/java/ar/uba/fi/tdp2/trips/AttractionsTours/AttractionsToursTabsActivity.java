@@ -11,8 +11,12 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 import ar.uba.fi.tdp2.trips.Common.ActivityWithCallbackManager;
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
@@ -78,6 +82,27 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
+    }
+
+    public void getDeviceToken() {
+        final Context context = this;
+        new Thread(new Runnable() {
+            public void run() {
+                InstanceID myID = InstanceID.getInstance(context);
+                String deviceToken = "Couldn't get device token";
+                try {
+                    deviceToken = myID.getToken(
+                            getString(R.string.gcm_defaultSenderId),
+                            GoogleCloudMessaging.INSTANCE_ID_SCOPE,
+                            null
+                    );
+                } catch (Exception e) {
+
+                }
+
+                Log.d("device token: ", deviceToken);
+            }
+        }).start();
     }
 
     @Override
