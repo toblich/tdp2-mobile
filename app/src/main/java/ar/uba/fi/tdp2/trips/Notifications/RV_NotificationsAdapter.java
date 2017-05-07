@@ -78,7 +78,6 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         long diff = Math.abs(myEpoch - dateInMilliseconds);
 
         StringBuilder builder = new StringBuilder();
-        builder.append("");
         String unit;
 
         long days = TimeUnit.MILLISECONDS.toDays(diff);

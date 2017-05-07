@@ -25,6 +25,7 @@ import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
+import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
 import retrofit2.Call;
@@ -81,8 +82,11 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        //TODO: Obtener el userId
-        Call<List<Notification>> call  = backendService.getNotifications(0);
+        User user = User.getInstance(getSharedPreferences("user", 0));
+        //TODO: cambiar de bearer a usar
+        //String bearer = "Bearer " + user.token;
+        String bearer = "Bearer " + "token";
+        Call<List<Notification>> call  = backendService.getNotifications(bearer);
 
         call.enqueue(new Callback<List<Notification>>() {
             @Override
@@ -122,9 +126,9 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         MenuItem item = menu.findItem(R.id.switch_notification);
         item.setActionView(R.layout.switch_item);
 
-        SwitchCompat switch1 = (SwitchCompat) menu.findItem(R.id.switch_notification).getActionView().findViewById(R.id.switch_notification);
-        switch1.setChecked(isSwitchChecked);
-        switch1.setOnCheckedChangeListener(new SwitchCompat.OnCheckedChangeListener() {
+        SwitchCompat switchCompat = (SwitchCompat) menu.findItem(R.id.switch_notification).getActionView().findViewById(R.id.switch_notification);
+        switchCompat.setChecked(isSwitchChecked);
+        switchCompat.setOnCheckedChangeListener(new SwitchCompat.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

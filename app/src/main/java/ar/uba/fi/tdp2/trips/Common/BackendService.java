@@ -118,10 +118,9 @@ public interface BackendService {
     );
 
     // Get notifications
-    @GET("/users/{userId}/notifications")
+    @GET("/notifications")
     Call<List<Notification>> getNotifications(
-            @Path("userId") int userId
-            //@Header("Authorization") String bearer
+            @Header("Authorization") String bearer
     );
 
     HttpLoggingInterceptor loggingInterceptor = (new HttpLoggingInterceptor()).setLevel(HttpLoggingInterceptor.Level.BODY);
