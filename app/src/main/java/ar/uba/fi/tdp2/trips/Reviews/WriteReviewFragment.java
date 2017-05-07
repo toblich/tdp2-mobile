@@ -131,7 +131,8 @@ public class WriteReviewFragment extends DialogFragment {
 
         System.out.println("onCreateDialog ending");
 
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        // Initial positive button state
+        calculatePositiveButtonEnabledState();
 
         message.addTextChangedListener(new TextWatcher() {
             @Override
@@ -142,6 +143,7 @@ public class WriteReviewFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                // Update positive button state
                 calculatePositiveButtonEnabledState();
             }
         });
@@ -149,6 +151,7 @@ public class WriteReviewFragment extends DialogFragment {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                // Update positive button state
                 calculatePositiveButtonEnabledState();
             }
         });
@@ -159,7 +162,7 @@ public class WriteReviewFragment extends DialogFragment {
 
     public void calculatePositiveButtonEnabledState() {
         String newText = message.getEditableText().toString();
-        boolean hasRatingChanged = (attractionDetailsFragment.attraction.ownReview.rating == (int)ratingBar.getRating());
+        boolean hasRatingChanged = (attractionDetailsFragment.attraction.ownReview.rating != (int)ratingBar.getRating());
         boolean enabled = Utils.isNotBlank(newText) && (!newText.equals(text) || hasRatingChanged);
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enabled);
     }
