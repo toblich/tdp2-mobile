@@ -56,4 +56,14 @@
     <string name="nav_menu_close_session">Close session</string>
     <string name="nav_menu_notifications">Notifications</string>
     <string name="manage_sessions">Manage sessions</string>
+    <string name="days_unit">days</string>
+    <string name="months_unit">months</string>
+    <string name="years_unit">years</string>
+    <string name="day_unit">day</string>
+    <string name="hour_unit">hour</string>
+    <string name="minute_unit">minute</string>
+    <string name="month_unit">month</string>
+    <string name="year_unit">year</string>
+    <string name="ago">%1$d %2$s ago</string>
+    <string name="just_now">Just now</string>
 </resources>

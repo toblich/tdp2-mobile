@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.Attraction;
+import ar.uba.fi.tdp2.trips.Notifications.Notification;
 import ar.uba.fi.tdp2.trips.PointsOfInterest.PointOfInterest;
 import ar.uba.fi.tdp2.trips.Reviews.Review;
 import ar.uba.fi.tdp2.trips.AttractionsTours.Tours.Tour;
@@ -114,6 +115,12 @@ public interface BackendService {
     @GET("/tours/{tourId}")
     Call<Tour> getTour(
         @Path("tourId") int tourId
+    );
+
+    // Get notifications
+    @GET("/notifications")
+    Call<List<Notification>> getNotifications(
+            @Header("Authorization") String bearer
     );
 
     HttpLoggingInterceptor loggingInterceptor = (new HttpLoggingInterceptor()).setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -36,7 +36,7 @@
     <string name="geocoder_error">Error en geocoder:</string>
     <string name="emvideoview_error">Error: Hubo un problema al cargar el contenido</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="title_activity_point_of_interest_tabs" translatable="false">PointOfInterestTabsActivity</string>
     <string name="title_activity_attraction_tabs" translatable="false">AttractionTabsActivity</string>
     <string name="facebook_app_id" translatable="false">1900304510188978</string>
@@ -57,8 +57,19 @@
     <string name="short_hours">h</string>
     <string name="short_minutes">m</string>
     <string name="tour_attractions_title">Atracciones incluidas</string>
+
+    <string name="just_now">Justo ahora</string>
+    <string name="ago">Hace %1$d %2$s</string>
     <string name="minutesUnit">minutos</string>
     <string name="hours_unit">horas</string>
+    <string name="days_unit">días</string>
+    <string name="months_unit">meses</string>
+    <string name="years_unit">años</string>
+    <string name="minute_unit">minuto</string>
+    <string name="hour_unit">hora</string>
+    <string name="day_unit">día</string>
+    <string name="month_unit">mes</string>
+    <string name="year_unit">año</string>
     <string name="and">y</string>
     <string name="title_activity_tour_details" translatable="false">TourDetailsActivity</string>
     <string name="tours_containing_attraction_title">Recorridos que incluyen esta atracción</string>
@@ -68,4 +79,5 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="manage_sessions">Administrar sesiones</string>
+    <string name="title_activity_notifications" translatable="false">Notificaciones</string>
 </resources>
