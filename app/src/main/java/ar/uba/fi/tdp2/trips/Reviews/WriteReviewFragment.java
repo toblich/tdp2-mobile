@@ -37,6 +37,7 @@ public class WriteReviewFragment extends DialogFragment {
     private Context context;
     private AlertDialog dialog;
     private EditText message;
+    private AttractionTabsActivity activity;
 
     public static WriteReviewFragment newInstance(String text, int rating) {
         WriteReviewFragment f = new WriteReviewFragment();
@@ -62,7 +63,7 @@ public class WriteReviewFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
-        final AttractionTabsActivity activity = (AttractionTabsActivity) getActivity();
+        activity = (AttractionTabsActivity) getActivity();
         LayoutInflater inflater = activity.getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View view = inflater.inflate(R.layout.fragment_write_review, null);
@@ -114,7 +115,7 @@ public class WriteReviewFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        resetDetailsFragmentRating(activity);
+                        resetDetailsFragmentRating();
                         Log.d(Utils.LOGTAG, "cancel review");
                     }
                 })
@@ -133,7 +134,6 @@ public class WriteReviewFragment extends DialogFragment {
 
     // HACK: This has to be executed once dialog.show() has been called
     public void activatePositiveButtonDynamicEnabling() {
-        System.out.println("activate thing");
         // Start with positive button disabled, and enable it only if it changes and is not empty
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
 
@@ -147,10 +147,16 @@ public class WriteReviewFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 final String newText = s.toString();
-                boolean enabled = Utils.isNotBlank(newText) && !newText.equals(text);
+                boolean enabled = Utils.isNotBlank(newText) && !newText.equals(text); // TODO
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enabled);
             }
         });
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        resetDetailsFragmentRating();
+        Log.d(Utils.LOGTAG, "onCancel dialogFragment");
     }
 
     // this method could be changed into a callback on the details fragment
@@ -169,7 +175,7 @@ public class WriteReviewFragment extends DialogFragment {
         }
     }
 
-    private void resetDetailsFragmentRating(AttractionTabsActivity activity) {
+    private void resetDetailsFragmentRating() {
         AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
         AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
         int originalRating = attractionDetailsFragment.attraction.ownReview.rating;
