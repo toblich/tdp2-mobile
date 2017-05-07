@@ -61,6 +61,8 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     public Attraction attraction; // Accessed by review modal
     private OnFragmentInteractionListener mListener;
     private Context localContext;
+    private View header;
+    private View footer;
 
     public AttractionDetailsFragment() {
         // Required empty public constructor
@@ -92,7 +94,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         if (getArguments() != null) {
             attractionId = getArguments().getInt(ARG_ATTRACTION_ID);
         }
-//        callbackManager = ((AttractionTabsActivity) getActivity()).callbackManager; // TODO go to login instead
         localContext = getContext();
     }
 
@@ -176,16 +177,14 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     }
 
     private void addFooter(final Context context, LayoutInflater inflater, ListView informationList) {
-        View footer = inflater.inflate(R.layout.attraction_details_footer, informationList, false);
+        footer = inflater.inflate(R.layout.attraction_details_footer, informationList, false);
 
         /* Set description */
         TextView description = (TextView) footer.findViewById(R.id.attraction_description);
         description.setText(attraction.description);
 
-        final Context activityContext = getActivity();
-
         /* Set own rating/review value and behaviour */
-        AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
+        final AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
         TextView ownRatingText = (TextView) footer.findViewById(R.id.own_review_text);
 
         if (attraction.ownReview != null) {
@@ -209,10 +208,12 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         ratingBar.setOnRatingBarChangeListener(new AppCompatRatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (!fromUser) {
+                    return;
+                }
+
                 if (attraction.ownReview == null) {
-                    attraction.ownReview = new Review((int)rating, "", "", "");
-                } else {
-                    attraction.ownReview.rating = (int)rating;
+                    attraction.ownReview = new Review(0, "", "", "");
                 }
 
                 User user = User.getInstance(context.getSharedPreferences("user", 0));
@@ -222,9 +223,8 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                     Intent intent = new Intent(localContext, SessionActivity.class);
                     startActivityForResult(intent, SessionActivity.RequestCode.REVIEW);
                 }
-
-
             }
+
         });
 
         /* Set other people's reviews */
@@ -288,15 +288,17 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     }
 
     private void openWriteReviewDialog() {
+        final AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
         WriteReviewFragment writeReviewFragment = (attraction.ownReview == null)
                 ? WriteReviewFragment.newInstance("", 0)
-                : WriteReviewFragment.newInstance(attraction.ownReview.text, attraction.ownReview.rating);
+                : WriteReviewFragment.newInstance(attraction.ownReview.text, (int)ratingBar.getRating());
+
         writeReviewFragment.setTargetFragment(this, -1);
         writeReviewFragment.show(getFragmentManager(), "writeReviewDialog");
     }
 
     private void addHeader(final Context context, LayoutInflater inflater, ListView informationList) {
-        View header = inflater.inflate(R.layout.attraction_details_header, informationList, false);
+        header = inflater.inflate(R.layout.attraction_details_header, informationList, false);
 
         /* Set cover photo */
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -351,16 +353,13 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SessionActivity.RequestCode.REVIEW:
-                Toast.makeText(localContext, "RequestCode REVIEW", Toast.LENGTH_SHORT).show();
                 User user = User.getInstance(localContext.getSharedPreferences("user", 0));
                 if (user != null) {
                     openWriteReviewDialog();
-                } else {
-                    Toast.makeText(localContext, "USER IS NULL", Toast.LENGTH_LONG).show();
                 }
+                Toast.makeText(localContext, R.string.login_required_for_review, Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(localContext, "RequestCode WRONG (fragment): " + requestCode, Toast.LENGTH_LONG).show();
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }

@@ -8,10 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,11 @@ public class WriteReviewFragment extends DialogFragment {
     private String text;
     private int rating;
     private Context context;
+    private AlertDialog dialog;
+    private EditText message;
+    private AppCompatRatingBar ratingBar;
+    private AttractionTabsActivity activity;
+    private AttractionDetailsFragment attractionDetailsFragment;
 
     public static WriteReviewFragment newInstance(String text, int rating) {
         WriteReviewFragment f = new WriteReviewFragment();
@@ -57,15 +65,17 @@ public class WriteReviewFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
-        final AttractionTabsActivity activity = (AttractionTabsActivity) getActivity();
+        activity = (AttractionTabsActivity) getActivity();
+        attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
+
         LayoutInflater inflater = activity.getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View view = inflater.inflate(R.layout.fragment_write_review, null);
 
-        final AppCompatRatingBar ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
+        ratingBar = (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
         ratingBar.setRating(rating);
 
-        final EditText message = (EditText) view.findViewById(R.id.message);
+        message = (EditText) view.findViewById(R.id.message);
         message.setText(text);
 
         builder.setView(view)
@@ -76,15 +86,15 @@ public class WriteReviewFragment extends DialogFragment {
                         float finalRating = ratingBar.getRating();
                         String finalText = message.getText().toString();
 
-                        updateDetailsFragmentReview(activity, finalRating, finalText);
+                        updateDetailsFragmentReview(finalRating, finalText);
 
-                        Toast.makeText(context, "CONFIRM!", Toast.LENGTH_LONG).show(); // TODO sacar
                         BackendService backendService = BackendService.retrofit.create(BackendService.class);
                         User user = User.getInstance(context.getSharedPreferences("user", 0));
                         if (user == null) {
                             Toast.makeText(context, R.string.not_signed_in, Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        System.out.println(user.toString());
                         String bearer = "Bearer " + user.token;
                         Review review = new Review((int)finalRating, finalText);
                         Call<Review> call = backendService.postReview(activity.attractionId, bearer, review);
@@ -109,17 +119,62 @@ public class WriteReviewFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        resetDetailsFragmentRating();
                         Log.d(Utils.LOGTAG, "cancel review");
                     }
-                });
-        // Create the AlertDialog object and return it
-        return builder.create();
+                })
+        ;
+
+        // Create the AlertDialog object
+        dialog = builder.create();
+        dialog.show();
+
+        System.out.println("onCreateDialog ending");
+
+        // Initial positive button state
+        calculatePositiveButtonEnabledState();
+
+        message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Update positive button state
+                calculatePositiveButtonEnabledState();
+            }
+        });
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                // Update positive button state
+                calculatePositiveButtonEnabledState();
+            }
+        });
+
+        // Return the AlertDialog object
+        return dialog;
+    }
+
+    public void calculatePositiveButtonEnabledState() {
+        String newText = message.getEditableText().toString();
+        boolean hasRatingChanged = (attractionDetailsFragment.attraction.ownReview.rating != (int)ratingBar.getRating());
+        boolean enabled = Utils.isNotBlank(newText) && (!newText.equals(text) || hasRatingChanged);
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enabled);
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        resetDetailsFragmentRating();
+        Log.d(Utils.LOGTAG, "onCancel dialogFragment");
     }
 
     // this method could be changed into a callback on the details fragment
-    private void updateDetailsFragmentReview(AttractionTabsActivity activity, float finalRating, String finalText) {
-        AttractionDetailsFragment attractionDetailsFragment = (AttractionDetailsFragment) getTargetFragment();
-
+    private void updateDetailsFragmentReview(float finalRating, String finalText) {
         attractionDetailsFragment.attraction.ownReview.rating = (int)finalRating;
         AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
         ownReviewRatingBar.setRating(finalRating);
@@ -130,5 +185,12 @@ public class WriteReviewFragment extends DialogFragment {
             ownReviewText.setText(finalText);
             ownReviewText.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void resetDetailsFragmentRating() {
+        AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
+        int originalRating = attractionDetailsFragment.attraction.ownReview.rating;
+        System.out.println(originalRating);
+        ownReviewRatingBar.setRating(originalRating);
     }
 }
