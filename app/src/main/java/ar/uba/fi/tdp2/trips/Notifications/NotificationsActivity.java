@@ -129,8 +129,8 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    recyclerView.setVisibility(View.VISIBLE);
                     getNotificactions();
+                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
                     recyclerView.setVisibility(View.GONE);
                 }

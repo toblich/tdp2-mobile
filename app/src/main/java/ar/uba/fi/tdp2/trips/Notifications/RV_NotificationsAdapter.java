@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.lang.Math;
+import java.util.concurrent.TimeUnit;
 
 import ar.uba.fi.tdp2.trips.R;
 
@@ -49,7 +51,7 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         final Notification notification = notifications.get(position);
         holder.notificationTitle.setText(notification.title);
         holder.notificationMsg.setText(notification.message);
-        holder.notificationDate.setText(getNotificationDate(notification.dateInMilliseconds));
+        holder.notificationDate.setText(getNotificationDate(notification.dateInMilliseconds, actualContext));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,8 +72,47 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         return notifications.size();
     }
 
-    private static String getNotificationDate(long dateInMilliseconds) {
-        return "Hace 2 minutos";
+    private static String getNotificationDate(long dateInMilliseconds, Context actualContext) {
+        //Obtengo el epoch actual y la diferencia con el de la notificación
+        long myEpoch = System.currentTimeMillis();
+        long diff = Math.abs(myEpoch - dateInMilliseconds);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("");
+        String unit;
+
+        long days = TimeUnit.MILLISECONDS.toDays(diff);
+
+        if (days > 0) {
+            long years = days / 365;
+            long months = days / 30;
+            //Ver si son Años, meses o dias
+            if (years > 0) {
+                unit = (years != 1) ? actualContext.getString(R.string.years_unit) : actualContext.getString(R.string.year_unit);
+                builder.append(actualContext.getString(R.string.ago, years, unit));
+            } else if (months > 0) {
+                unit = (months != 1) ? actualContext.getString(R.string.months_unit) : actualContext.getString(R.string.month_unit);
+                builder.append(actualContext.getString(R.string.ago, months, unit));
+            } else {
+                unit = (days != 1) ? actualContext.getString(R.string.days_unit) : actualContext.getString(R.string.day_unit);
+                builder.append(actualContext.getString(R.string.ago, days, unit));
+            }
+        } else {
+            long hours = TimeUnit.MILLISECONDS.toHours(diff);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+            //Ver si son horas o minutos
+            if (hours > 0) {
+                unit = (hours != 1) ? actualContext.getString(R.string.hours_unit) : actualContext.getString(R.string.hour_unit);
+                builder.append(actualContext.getString(R.string.ago, hours, unit));
+            } else if (minutes > 0) {
+                unit = (minutes != 1) ? actualContext.getString(R.string.minutesUnit) : actualContext.getString(R.string.minute_unit);
+                builder.append(actualContext.getString(R.string.ago, minutes, unit));
+            } else {
+                builder.append(actualContext.getString(R.string.just_now));
+            }
+        }
+
+        return builder.toString();
     }
 
 }
