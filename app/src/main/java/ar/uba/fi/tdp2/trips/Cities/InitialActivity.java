@@ -24,6 +24,7 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import ar.uba.fi.tdp2.trips.Common.BackendService;
+import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Notifications.NotificationsActivity;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.Utils;
@@ -69,6 +70,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private LinearLayoutManager llm;
     private List<City> cities;
     RV_CitiesAdapter adapter;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +90,12 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_cities).setChecked(true);
+
+        //En el caso de que el usuario no este autenticado, no debe poder ir a las notificaciones
+        checkUserAuthenticated(navigationView);
 
         //Cosas de estilo y conectividad
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
@@ -120,6 +125,22 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .build();
 
         initializeData();
+    }
+
+    private void checkUserAuthenticated(NavigationView navigationView) {
+        MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
+        User user = User.getInstance(getSharedPreferences("user", 0));
+        if (user == null) {
+            notificationsMenuItem.setVisible(false);
+        } else {
+            notificationsMenuItem.setVisible(true);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        checkUserAuthenticated(navigationView);
+        super.onResume();
     }
 
     @Override
