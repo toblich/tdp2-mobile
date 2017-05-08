@@ -57,6 +57,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_notifications).setChecked(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.rvNotifications);
         LinearLayoutManager llm = new LinearLayoutManager(localContext);

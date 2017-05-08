@@ -90,6 +90,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_cities).setChecked(true);
 
         //Cosas de estilo y conectividad
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
