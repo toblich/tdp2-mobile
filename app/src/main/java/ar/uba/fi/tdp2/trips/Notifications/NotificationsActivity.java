@@ -57,6 +57,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_notifications).setChecked(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.rvNotifications);
         LinearLayoutManager llm = new LinearLayoutManager(localContext);
@@ -83,9 +84,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         User user = User.getInstance(getSharedPreferences("user", 0));
-        //TODO: cambiar de bearer a usar
-        //String bearer = "Bearer " + user.token;
-        String bearer = "Bearer " + "token";
+        String bearer = "Bearer " + user.token;
         Call<List<Notification>> call  = backendService.getNotifications(bearer);
 
         call.enqueue(new Callback<List<Notification>>() {
