@@ -48,6 +48,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import ar.uba.fi.tdp2.trips.AttractionsTours.AttractionsToursTabsActivity;
+import ar.uba.fi.tdp2.trips.DeviceToken;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -176,6 +177,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     private void initializeData() {
+        DeviceToken.getInstance().initializeDeviceToken();
         cities = new ArrayList<>();
 
         if (!Utils.isNetworkAvailable()) {
