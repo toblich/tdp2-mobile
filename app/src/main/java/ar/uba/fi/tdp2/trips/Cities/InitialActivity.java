@@ -95,7 +95,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         navigationView.getMenu().findItem(R.id.nav_cities).setChecked(true);
 
         //En el caso de que el usuario no este autenticado, no debe poder ir a las notificaciones
-        checkUserAuthenticated(navigationView);
+        checkUserAuthenticationToShowNotifications(navigationView);
 
         //Cosas de estilo y conectividad
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
@@ -127,19 +127,16 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         initializeData();
     }
 
-    private void checkUserAuthenticated(NavigationView navigationView) {
+    private void checkUserAuthenticationToShowNotifications(NavigationView navigationView) {
         MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
         User user = User.getInstance(getSharedPreferences("user", 0));
-        if (user == null) {
-            notificationsMenuItem.setVisible(false);
-        } else {
-            notificationsMenuItem.setVisible(true);
-        }
+
+        notificationsMenuItem.setVisible(user != null);
     }
 
     @Override
     public void onResume() {
-        checkUserAuthenticated(navigationView);
+        checkUserAuthenticationToShowNotifications(navigationView);
         super.onResume();
     }
 
