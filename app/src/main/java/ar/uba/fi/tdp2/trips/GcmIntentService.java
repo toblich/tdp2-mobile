@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -49,9 +51,12 @@ public class GcmIntentService extends IntentService {
         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification_sound);
         ringtone.play();
 
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.trips_icon);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.com_facebook_button_icon)
+                        .setSmallIcon(R.drawable.trips_icon)
+                        .setLargeIcon(largeIcon)
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                         .setContentText(message)
