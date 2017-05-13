@@ -42,7 +42,7 @@
     <dimen name="tour_attraction_card_horizontal_margin">4dp</dimen>
     <dimen name="tour_attraction_title_margin_left">16dp</dimen>
     <dimen name="title_text_size">18sp</dimen>
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
 
     <!-- Notifications card -->
