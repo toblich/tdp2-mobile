@@ -36,6 +36,7 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
     private String locality;
     private Double latitude;
     private Double longitude;
+    private int cityId;
 
     private TabLayout tabLayout;
     private AttractionsToursPager adapter;
@@ -69,7 +70,7 @@ public class AttractionsToursTabsActivity extends ActivityWithCallbackManager im
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         //Creating our pager adapter
-        int cityId = bundle.getInt("cityId");
+        cityId = bundle.getInt("cityId");
         adapter = new AttractionsToursPager(getSupportFragmentManager(), tabLayout.getTabCount(),
                 latitude, longitude, cityId);
 
