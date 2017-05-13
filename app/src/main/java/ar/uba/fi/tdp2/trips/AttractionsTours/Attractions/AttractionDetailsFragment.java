@@ -111,7 +111,16 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Attraction> call = backendService.getAttraction(attractionId);
+
+        Call<Attraction> call;
+        User user = User.getInstance(getContext().getSharedPreferences("user", 0));
+        if (user != null) {
+            String bearer = "Bearer " + user.token;
+            call = backendService.getAttractionWithAuth(attractionId, bearer);
+        } else {
+            call = backendService.getAttraction(attractionId);
+        }
+
 
         call.enqueue(new Callback<Attraction>() {
             @Override
