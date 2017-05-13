@@ -365,8 +365,11 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 User user = User.getInstance(localContext.getSharedPreferences("user", 0));
                 if (user != null) {
                     openWriteReviewDialog();
+                } else {
+                    AppCompatRatingBar ratingBar = (AppCompatRatingBar) footer.findViewById(R.id.own_review_rating);
+                    ratingBar.setRating(0);
+                    Toast.makeText(localContext, R.string.login_required_for_review, Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(localContext, R.string.login_required_for_review, Toast.LENGTH_LONG).show();
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
