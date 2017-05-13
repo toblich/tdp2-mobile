@@ -43,6 +43,7 @@ public class User {
     public @SerializedName("tw_token") String twToken;
     public @SerializedName("tw_secret") String twSecret;
     public @SerializedName("device_token") String deviceToken;
+    public @SerializedName("profile_image") String profilePhotoUri;
 
     private User(int id, String token, boolean fbPublicProfile, boolean fbPost) {
         this.id     = id;
@@ -61,6 +62,7 @@ public class User {
 
     @Override
     public String toString() {
+        String photo = profilePhotoUri == null ? "" : "\n  profilePhotoUri: " + profilePhotoUri;
         return "User {\n  id: " + id + "\n  token: " + token + "\n fbPublicProfile: " + fbPublicProfile + "\n fbPost: " + fbPost + "\n}";
     }
 
@@ -94,6 +96,7 @@ public class User {
                 user.id = response.body().id;
                 user.token = response.body().token;
                 user.fbPublicProfile = true;
+                user.profilePhotoUri = response.body().profilePhotoUri;
                 user.persistUser(settings);
                 callback.onSuccess(user);
             }
@@ -133,6 +136,7 @@ public class User {
                 }
                 user.id = response.body().id;
                 user.token = response.body().token;
+                user.profilePhotoUri = response.body().profilePhotoUri;
                 Log.d("TRIPS", "got user: " + response.body().toString());
                 user.persistUser(settings);
                 callback.onSuccess(user);
@@ -164,6 +168,7 @@ public class User {
         boolean fbPost = settings.getBoolean("userFbPost", false);
         String fbUserId = settings.getString("fbUserId", null);
         String twUserId = settings.getString("twUserId", null);
+        String profilePhotoUri = settings.getString("profilePhotoUri", null);
         Log.d("TRIPS", userId + " " + userToken);
         if (userId != 0 && userToken != null) {
             User user = new User();
@@ -174,6 +179,7 @@ public class User {
             user.fbUserId = fbUserId;
             user.twUserId = twUserId;
             user.deviceToken = DeviceToken.getInstance().getDeviceToken();
+            user.profilePhotoUri = profilePhotoUri;
             return user;
         }
         return null;
@@ -187,6 +193,7 @@ public class User {
         editor.putBoolean("userFbPost", fbPost);
         editor.putString("fbUserId", fbUserId);
         editor.putString("twUserId", twUserId);
+        editor.putString("profilePhotoUri", profilePhotoUri);
         editor.commit();
         System.out.println(this);
     }
