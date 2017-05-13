@@ -18,7 +18,7 @@ public class Attraction {
     public String address;
     public String url;
     public String phone;
-    public double price;
+    public Double price;
     public @SerializedName("average_rating") float avgRating;
 
     public @SerializedName("average_visit_duration") int duration;
