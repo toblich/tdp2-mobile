@@ -1,7 +1,20 @@
 package ar.uba.fi.tdp2.trips.Common;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.NavigationView;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+
+import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.SessionActivity;
+import ar.uba.fi.tdp2.trips.R;
 
 public class Utils {
 
@@ -86,5 +99,56 @@ public class Utils {
         }
 
         return builder.toString();
+    }
+
+    public static void applySessionToDrawer(Context context, NavigationView navigationView, User user) {
+        MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
+        MenuItem logInMenuItem = navigationView.getMenu().findItem(R.id.nav_initiate_session);
+        MenuItem logOutMenuItem = navigationView.getMenu().findItem(R.id.nav_close_session);
+
+        boolean isLoggedIn = user != null;
+
+        notificationsMenuItem.setVisible(isLoggedIn);
+        logInMenuItem.setVisible(!isLoggedIn);
+        logOutMenuItem.setVisible(isLoggedIn);
+
+        ImageView profilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
+
+        if (!isLoggedIn || isBlank(user.profilePhotoUri)) {
+            profilePic.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        profilePic.setVisibility(View.VISIBLE);
+        Glide.with(context)
+                .load(user.profilePhotoUri)
+                .dontAnimate()
+                .transform(new CircleTransform(context))
+                .into(profilePic);
+    }
+
+    public static void logout(final Activity activity, final NavigationView navigationView, final boolean finishOnLogout) {
+        Toast.makeText(activity, R.string.logging_out, Toast.LENGTH_SHORT).show();
+        User.logout(activity.getSharedPreferences("user", 0), new User.Callback() {
+            @Override
+            public void onSuccess(User user) {
+                Utils.applySessionToDrawer(activity, navigationView, null);
+                Toast.makeText(activity, R.string.logged_out, Toast.LENGTH_SHORT).show();
+                if (finishOnLogout) {
+                    activity.finish();
+                }
+            }
+
+            @Override
+            public void onError(User user) {
+                Utils.applySessionToDrawer(activity, navigationView, User.getInstance(activity.getSharedPreferences("user", 0)));
+                Toast.makeText(activity, R.string.could_not_log_out, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void login(final Context context) {
+        Intent intent = new Intent(context, SessionActivity.class);
+        context.startActivity(intent);
     }
 }

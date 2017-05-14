@@ -71,7 +71,7 @@ public class User {
         void onError(User user);
     }
 
-    public static void logout(final SharedPreferences settings) {
+    public static void logout(final SharedPreferences settings, final Callback callback) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         user = User.getInstance(settings);
         if (user == null) {
@@ -85,6 +85,7 @@ public class User {
                 LoginManager loginManager = LoginManager.getInstance();
                 loginManager.logOut();
                 user.deleteUser(settings);
+                callback.onSuccess(response.body());
                 user = null;
             }
 
@@ -93,6 +94,7 @@ public class User {
                 t.printStackTrace();
                 Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
                 Log.d("TRIPS", t.toString());
+                callback.onError(null);
             }
         });
     }

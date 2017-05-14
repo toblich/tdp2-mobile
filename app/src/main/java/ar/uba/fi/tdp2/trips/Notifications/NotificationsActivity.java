@@ -62,7 +62,6 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_notifications).setChecked(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.rvNotifications);
         LinearLayoutManager llm = new LinearLayoutManager(localContext);
@@ -153,24 +152,10 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         return true;
     }
 
-    private void checkUserAuthenticationToShowNotifications(NavigationView navigationView) {
-        MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
-        User user = User.getInstance(getSharedPreferences("user", 0));
-
-        if (user != null && user.profilePhotoUri != null) {
-            ImageView profilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
-            Glide.with(this)
-                    .load(user.profilePhotoUri)
-                    .transform(new CircleTransform(NotificationsActivity.this))
-                    .into(profilePic);
-        }
-
-        notificationsMenuItem.setVisible(user != null);
-    }
-
     @Override
     public void onResume() {
-        checkUserAuthenticationToShowNotifications(navigationView);
+        Utils.applySessionToDrawer(this, navigationView, User.getInstance(getSharedPreferences("user", 0)));
+        navigationView.getMenu().findItem(R.id.nav_notifications).setChecked(true);
         super.onResume();
     }
 
@@ -180,17 +165,25 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_cities) {
-            //Ciudades
-            Intent intent = new Intent(this, InitialActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_notifications) {
-            //Notificaciones
-            //Aca no hace nada porque ya esta en ciudades
-            //TODO: Ver como hacer que ya aparezca marcado desde el menu.
-        } else if (id == R.id.nav_close_session) {
-            //Cerrar sesión
-            Toast.makeText(localContext, "Cerrando Sesión...", Toast.LENGTH_SHORT).show();
+        switch (id) {
+            case R.id.nav_cities:
+                Intent intent = new Intent(this, InitialActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_notifications:
+                // Do nothing
+                break;
+            case R.id.nav_close_session:
+                Utils.logout(this, navigationView, true);
+                break;
+            case R.id.nav_initiate_session:
+                // This is here just in case. The notifications page should never be
+                // visible when the user is logged out but, just in case, the button
+                // is functional.
+                Utils.login(this);
+                break;
+            default:
+                Log.d(Utils.LOGTAG, "Unknown navigation item selected. Id: " + id);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

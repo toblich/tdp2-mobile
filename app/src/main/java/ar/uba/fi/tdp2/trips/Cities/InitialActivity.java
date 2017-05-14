@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
+import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.SessionActivity;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
 import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.User;
@@ -96,10 +97,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().findItem(R.id.nav_cities).setChecked(true);
-
-        //En el caso de que el usuario no este autenticado, no debe poder ir a las notificaciones
-        checkUserAuthenticationToShowNotifications(navigationView);
 
         //Cosas de estilo y conectividad
         Utils.setConnectivityManager(getSystemService(Context.CONNECTIVITY_SERVICE));
@@ -131,25 +128,10 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         initializeData();
     }
 
-    private void checkUserAuthenticationToShowNotifications(NavigationView navigationView) {
-        MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
-        User user = User.getInstance(getSharedPreferences("user", 0));
-
-        if (user != null && user.profilePhotoUri != null) {
-            ImageView profilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
-            Glide.with(this)
-                    .load(user.profilePhotoUri)
-                    .dontAnimate()
-                    .transform(new CircleTransform(InitialActivity.this))
-                    .into(profilePic);
-        }
-
-        notificationsMenuItem.setVisible(user != null);
-    }
-
     @Override
     public void onResume() {
-        checkUserAuthenticationToShowNotifications(navigationView);
+        Utils.applySessionToDrawer(this, navigationView, User.getInstance(getSharedPreferences("user", 0)));
+        navigationView.getMenu().findItem(R.id.nav_cities).setChecked(true);
         super.onResume();
     }
 
@@ -169,19 +151,22 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_cities) {
-            //Ciudades
-            //Aca no hace nada porque ya esta en ciudades
-            //TODO: Ver como hacer que ya aparezca marcado desde el menu.
-        } else if (id == R.id.nav_notifications) {
-            //Notificaciones
-            Intent intent = new Intent(this, NotificationsActivity.class);
-            //intent.putExtra("param", param);
-            startActivity(intent);
-        } else if (id == R.id.nav_close_session) {
-            //Cerrar sesión
-            User.logout(getSharedPreferences("user", 0));
-            Toast.makeText(localContext, "Cerrando Sesión...", Toast.LENGTH_SHORT).show();
+        switch (id) {
+            case R.id.nav_cities:
+                // Do nothing
+                break;
+            case R.id.nav_notifications:
+                Intent intent = new Intent(this, NotificationsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_close_session:
+                Utils.logout(this, navigationView, false);
+                break;
+            case R.id.nav_initiate_session:
+                Utils.login(this);
+                break;
+            default:
+                Log.d(Utils.LOGTAG, "Unknown navigation item selected. Id: " + id);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
