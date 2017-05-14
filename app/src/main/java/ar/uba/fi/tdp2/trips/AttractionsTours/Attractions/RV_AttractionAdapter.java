@@ -3,8 +3,10 @@ package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +19,25 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import ar.uba.fi.tdp2.trips.Common.ActivityWithCallbackManager;
+import ar.uba.fi.tdp2.trips.Common.BackendService;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdapter.AttractionViewHolder> {
 
     List<Attraction> attractions;
     Context activityContext;
     private User user;
+    private FragmentActivity fragment;
 
-    public RV_AttractionAdapter(List<Attraction> attractions, Context activityContext) {
+    public RV_AttractionAdapter(List<Attraction> attractions, Context activityContext, FragmentActivity fragment) {
         this.attractions = attractions;
         this.activityContext = activityContext;
+        this.fragment = fragment;
     }
 
     public static class AttractionViewHolder extends RecyclerView.ViewHolder {
@@ -39,8 +46,11 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         TextView attractionDescription;
         ImageView attractionPhoto;
         ImageView attractionCardFavIcon;
+        ImageView attractionCardFavIconRed;
         ImageView attractionCardVisitedIcon;
+        ImageView attractionCardVisitedIconBlack;
         ImageView attractionCardDirectionsIcon;
+
 
         AttractionViewHolder(View itemView) {
             super(itemView);
@@ -48,12 +58,11 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             attractionName        = (TextView) itemView.findViewById(R.id.attraction_name);
             attractionDescription = (TextView) itemView.findViewById(R.id.attraction_description);
             attractionPhoto       = (ImageView) itemView.findViewById(R.id.attraction_photo);
-            attractionCardFavIcon =
-                    (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon);
-            attractionCardVisitedIcon =
-                    (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon);
-            attractionCardDirectionsIcon =
-                    (ImageView) itemView.findViewById(R.id.attraction_card_directions_icon);
+            attractionCardFavIcon = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon);
+            attractionCardFavIconRed = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon_red);
+            attractionCardVisitedIcon = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon);
+            attractionCardVisitedIconBlack = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon_black);
+            attractionCardDirectionsIcon = (ImageView) itemView.findViewById(R.id.attraction_card_directions_icon);
         }
     }
 
@@ -68,6 +77,8 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         final Attraction attraction = attractions.get(position);
         holder.attractionName.setText(attraction.name);
         holder.attractionDescription.setText(attraction.description);
+        //Obtengo el user si es que hizo LogIn
+        user = User.getInstance(activityContext.getSharedPreferences("user", 0));
 
         int placeholderId = R.mipmap.photo_placeholder;
 
@@ -95,26 +106,154 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             }
         });
 
+        //Si el user hizo LogIn y tiene marcada como favorita la atraccion es otro icono.
+        if (user != null && attraction.favorite) {
+            holder.attractionCardFavIcon.setVisibility(View.GONE);
+            holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
+        }
+
         holder.attractionCardFavIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ActivityWithCallbackManager activity = (ActivityWithCallbackManager) activityContext;
-                System.out.println("Shared preferencies user: " + activity.getSharedPreferences("user", 0));
-                user = User.getInstance(activity.getSharedPreferences("user", 0));
+                user = User.getInstance(activityContext.getSharedPreferences("user", 0));
                 if (user != null) {
-                    Toast.makeText(activityContext, "Marking as favorite", Toast.LENGTH_SHORT).show();
+                    //Marco como favorito
+                    String bearer = "Bearer " + user.token;
+                    BackendService backendService = BackendService.retrofit.create(BackendService.class);
+                    Call<Attraction> call = backendService.markFavoriteAttraction(attraction.id, bearer);
+                    call.enqueue(new Callback<Attraction>() {
+                        @Override
+                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                            if (response.code() != 201) {
+                                Toast.makeText(activityContext, R.string.error_marked_as_favorite, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //Cambio el icono
+                            holder.attractionCardFavIcon.setVisibility(View.GONE);
+                            holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
+                            //Aviso al User
+                            Toast.makeText(activityContext, R.string.marked_as_favorite, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onFailure(Call<Attraction> call, Throwable t) {
+                            Log.d(Utils.LOGTAG, t.getMessage());
+                            t.printStackTrace();
+                            Toast.makeText(activityContext, R.string.error_marked_as_favorite, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
-                    User.loginWithSocialNetwork(activity,
-                            activity.callbackManager,
-                            activity.getSharedPreferences("user", 0),
-                            new User.Callback() {
-                                @Override
-                                public void onSuccess(User user) {
-                                    holder.attractionCardFavIcon.performClick();
-                                }
-                                @Override
-                                public void onError(User user) {}
-                            });
+                    //Iniciar Sesión
+                    Intent intent = new Intent(activityContext, SessionActivity.class);
+                    fragment.startActivityForResult(intent, SessionActivity.RequestCode.FAVORITE);
+                }
+            }
+        });
+
+        holder.attractionCardFavIconRed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user = User.getInstance(activityContext.getSharedPreferences("user", 0));
+                if (user != null) {
+                    //Desmarco como favorito
+                    String bearer = "Bearer " + user.token;
+                    BackendService backendService = BackendService.retrofit.create(BackendService.class);
+                    Call<Attraction> call = backendService.unmarkFavoriteAttraction(attraction.id, bearer);
+                    call.enqueue(new Callback<Attraction>() {
+                        @Override
+                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                            if (response.code() != 204) {
+                                Toast.makeText(activityContext, R.string.error_unmarked_as_favorite, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //Cambio el icono
+                            holder.attractionCardFavIcon.setVisibility(View.VISIBLE);
+                            holder.attractionCardFavIconRed.setVisibility(View.GONE);
+                            //Aviso al User
+                            Toast.makeText(activityContext, R.string.unmarked_as_favorite, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onFailure(Call<Attraction> call, Throwable t) {
+                            Log.d(Utils.LOGTAG, t.getMessage());
+                            t.printStackTrace();
+                            Toast.makeText(activityContext, R.string.error_unmarked_as_favorite, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
+        //Si el user hizo LogIn y tiene marcada como visitada la atraccion es otro icono.
+        if (user != null && attraction.visited) {
+            holder.attractionCardVisitedIcon.setVisibility(View.GONE);
+            holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
+        }
+
+        holder.attractionCardVisitedIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user = User.getInstance(activityContext.getSharedPreferences("user", 0));
+                if (user != null) {
+                    //Marco como visitado
+                    String bearer = "Bearer " + user.token;
+                    BackendService backendService = BackendService.retrofit.create(BackendService.class);
+                    Call<Attraction> call = backendService.markVisitedAttraction(attraction.id, bearer);
+                    call.enqueue(new Callback<Attraction>() {
+                        @Override
+                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                            if (response.code() != 201) {
+                                Toast.makeText(activityContext, R.string.error_marked_as_visited, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //Cambio el icono
+                            holder.attractionCardVisitedIcon.setVisibility(View.GONE);
+                            holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
+                            //Aviso al User
+                            Toast.makeText(activityContext, R.string.marked_as_visited, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onFailure(Call<Attraction> call, Throwable t) {
+                            Log.d(Utils.LOGTAG, t.getMessage());
+                            t.printStackTrace();
+                            Toast.makeText(activityContext, R.string.error_marked_as_visited, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    //Iniciar Sesión
+                    Intent intent = new Intent(activityContext, SessionActivity.class);
+                    fragment.startActivityForResult(intent, SessionActivity.RequestCode.VISITED);
+                }
+            }
+        });
+
+        holder.attractionCardVisitedIconBlack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user = User.getInstance(activityContext.getSharedPreferences("user", 0));
+                if (user != null) {
+                    //Desmarco como visitado
+                    String bearer = "Bearer " + user.token;
+                    BackendService backendService = BackendService.retrofit.create(BackendService.class);
+                    Call<Attraction> call = backendService.unmarkVisitedAttraction(attraction.id, bearer);
+                    call.enqueue(new Callback<Attraction>() {
+                        @Override
+                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                            if (response.code() != 204) {
+                                Toast.makeText(activityContext, R.string.error_unmarked_as_visited, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //Cambio el icono
+                            holder.attractionCardVisitedIcon.setVisibility(View.VISIBLE);
+                            holder.attractionCardVisitedIconBlack.setVisibility(View.GONE);
+                            //Aviso al User
+                            Toast.makeText(activityContext, R.string.unmarked_as_visited, Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onFailure(Call<Attraction> call, Throwable t) {
+                            Log.d(Utils.LOGTAG, t.getMessage());
+                            t.printStackTrace();
+                            Toast.makeText(activityContext, R.string.error_unmarked_as_visited, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });

@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -64,6 +65,35 @@ public interface BackendService {
         @Path("attractionId") int attractionId,
         @Header("Authorization") String bearer
     );
+
+    //Marked an attraction as favorite
+    @POST("/attractions/{attractionId}/favorite")
+    Call<Attraction> markFavoriteAttraction(
+        @Path("attractionId") int attractionId,
+        @Header("Authorization") String bearer
+    );
+
+    //Unmarked an attraction as favorite
+    @DELETE("/attractions/{attractionId}/favorite")
+    Call<Attraction> unmarkFavoriteAttraction(
+            @Path("attractionId") int attractionId,
+            @Header("Authorization") String bearer
+    );
+
+    //Marked an attraction as visited
+    @POST("/attractions/{attractionId}/visited")
+    Call<Attraction> markVisitedAttraction(
+            @Path("attractionId") int attractionId,
+            @Header("Authorization") String bearer
+    );
+
+    //Unmarked an attraction as visited
+    @DELETE("/attractions/{attractionId}/visited")
+    Call<Attraction> unmarkVisitedAttraction(
+            @Path("attractionId") int attractionId,
+            @Header("Authorization") String bearer
+    );
+
 
     //Get the gallery of a specific attraction
     @GET("/attractions/{attractionId}/gallery")
