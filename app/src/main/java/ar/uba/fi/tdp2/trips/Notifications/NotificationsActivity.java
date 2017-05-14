@@ -18,13 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
+import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
@@ -38,6 +42,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
     private List<Notification> notifications;
     private RecyclerView recyclerView;
     private boolean isSwitchChecked;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().findItem(R.id.nav_notifications).setChecked(true);
 
@@ -146,6 +151,27 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         });
 
         return true;
+    }
+
+    private void checkUserAuthenticationToShowNotifications(NavigationView navigationView) {
+        MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
+        User user = User.getInstance(getSharedPreferences("user", 0));
+
+        if (user != null && user.profilePhotoUri != null) {
+            ImageView profilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
+            Glide.with(this)
+                    .load(user.profilePhotoUri)
+                    .transform(new CircleTransform(NotificationsActivity.this))
+                    .into(profilePic);
+        }
+
+        notificationsMenuItem.setVisible(user != null);
+    }
+
+    @Override
+    public void onResume() {
+        checkUserAuthenticationToShowNotifications(navigationView);
+        super.onResume();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

@@ -20,10 +20,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import ar.uba.fi.tdp2.trips.Common.BackendService;
+import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Notifications.NotificationsActivity;
 import ar.uba.fi.tdp2.trips.R;
@@ -41,6 +43,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -131,6 +134,15 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private void checkUserAuthenticationToShowNotifications(NavigationView navigationView) {
         MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
         User user = User.getInstance(getSharedPreferences("user", 0));
+
+        if (user != null && user.profilePhotoUri != null) {
+            ImageView profilePic = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
+            Glide.with(this)
+                    .load(user.profilePhotoUri)
+                    .dontAnimate()
+                    .transform(new CircleTransform(InitialActivity.this))
+                    .into(profilePic);
+        }
 
         notificationsMenuItem.setVisible(user != null);
     }
