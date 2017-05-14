@@ -84,4 +84,9 @@
     <string name="gcm_defaultSenderId">295203185705</string>
     <string name="understood">ENTENDIDO</string>
     <string name="user_blocked">Fuiste bloqueado por un administrador</string>
+    <string name="gcm_defaultSenderId" translatable="false">295203185705</string>
+    <string name="nav_menu_initiate_session">Iniciar sesión</string>
+    <string name="logging_out">Cerrando Sesión...</string>
+    <string name="logged_out">Sesión cerrada</string>
+    <string name="could_not_log_out">No se pudo cerrar sesión</string>
 </resources>
