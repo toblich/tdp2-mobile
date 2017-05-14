@@ -56,12 +56,14 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
             @Override
             public void onClick(View v) {
                 String url = notification.url;
-                if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                    url = "http://" + url;
-                }
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
-                    actualContext.startActivity(intent);
+                if (!url.equals("")) {
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "http://" + url;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
+                        actualContext.startActivity(intent);
+                    }
                 }
             }
         });

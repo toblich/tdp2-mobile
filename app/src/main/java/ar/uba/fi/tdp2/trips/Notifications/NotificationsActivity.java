@@ -16,19 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
-import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
@@ -70,10 +65,6 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
         //Obtengo el estado del switch
         SharedPreferences prefs = getSharedPreferences("switchCheck", MODE_PRIVATE);
         isSwitchChecked = prefs.getBoolean("isChecked", false);
-
-        if (!isSwitchChecked) {
-            recyclerView.setVisibility(View.GONE);
-        }
 
         getNotificactions();
     }
@@ -135,13 +126,6 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    getNotificactions();
-                    recyclerView.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                }
-
                 //Guardo el estado actual del switch
                 SharedPreferences.Editor editor = getSharedPreferences("switchCheck", MODE_PRIVATE).edit();
                 editor.putBoolean("isChecked", isChecked);
