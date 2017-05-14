@@ -27,4 +27,8 @@ public class Review {
         return "Review {\n  rating: " + String.valueOf(rating) + "\n  user: " + user +
                 "\n  date: " + date + "\n  text: " + text + "\n}";
     }
+
+    public Review clone() {
+        return new Review(rating, user, date, text);
+    }
 }

@@ -80,13 +80,16 @@ public class WriteReviewFragment extends DialogFragment {
 
         builder.setView(view)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(final DialogInterface dialog, int id) {
                         Log.d(Utils.LOGTAG, "confirm review");
 
                         float finalRating = ratingBar.getRating();
                         String finalText = message.getText().toString();
 
-                        updateDetailsFragmentReview(finalRating, finalText);
+                        final Review previousReview = attractionDetailsFragment.attraction.ownReview.clone();
+                        final Review newReview = new Review((int)finalRating, finalText);
+
+                        updateDetailsFragmentReview(newReview);
 
                         BackendService backendService = BackendService.retrofit.create(BackendService.class);
                         User user = User.getInstance(context.getSharedPreferences("user", 0));
@@ -96,16 +99,29 @@ public class WriteReviewFragment extends DialogFragment {
                         }
                         System.out.println(user.toString());
                         String bearer = "Bearer " + user.token;
-                        Review review = new Review((int)finalRating, finalText);
-                        Call<Review> call = backendService.postReview(activity.attractionId, bearer, review);
+                        Call<Review> call = backendService.postReview(activity.attractionId, bearer, newReview);
                         call.enqueue(new Callback<Review>() {
                             @Override
                             public void onResponse(Call<Review> call, Response<Review> response) {
-                                if (response.body() == null) {
+                                if (response.code() == 403) {
+                                    AlertDialog.Builder blockedDialogBuilder = new AlertDialog.Builder(activity)
+                                            .setTitle(R.string.user_blocked)
+                                            .setCancelable(true)
+                                            .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface blockedDialog, int which) {
+                                                    updateDetailsFragmentReview(previousReview);
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    blockedDialogBuilder.create().show();
+                                }
+                                else if (response.body() == null) {
                                     Toast.makeText(context, R.string.review_posting_failure, Toast.LENGTH_SHORT).show();
                                     return;
+                                } else {
+                                    Toast.makeText(context, R.string.review_posted, Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(context, R.string.review_posted, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -174,16 +190,22 @@ public class WriteReviewFragment extends DialogFragment {
     }
 
     // this method could be changed into a callback on the details fragment
-    private void updateDetailsFragmentReview(float finalRating, String finalText) {
-        attractionDetailsFragment.attraction.ownReview.rating = (int)finalRating;
+    private void updateDetailsFragmentReview(Review newReview) {
+        int finalRating = newReview.rating;
+        String finalText = newReview.text;
+
+        attractionDetailsFragment.attraction.ownReview.rating = finalRating;
         AppCompatRatingBar ownReviewRatingBar = (AppCompatRatingBar) activity.findViewById(R.id.own_review_rating);
         ownReviewRatingBar.setRating(finalRating);
 
         attractionDetailsFragment.attraction.ownReview.text = finalText;
+        TextView ownReviewText = (TextView) activity.findViewById(R.id.own_review_text);
         if (Utils.isNotBlank(finalText)) {
-            TextView ownReviewText = (TextView) activity.findViewById(R.id.own_review_text);
             ownReviewText.setText(finalText);
             ownReviewText.setVisibility(View.VISIBLE);
+        } else {
+            ownReviewText.setText("");
+            ownReviewText.setVisibility(View.GONE);
         }
     }
 

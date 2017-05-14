@@ -82,4 +82,6 @@
     <string name="title_activity_notifications" translatable="false">Notificaciones</string>
     <string name="login_required_for_review">Debes iniciar sesión para escribir una reseña</string>
     <string name="gcm_defaultSenderId">295203185705</string>
+    <string name="understood">ENTENDIDO</string>
+    <string name="user_blocked">Fuiste bloqueado por un administrador</string>
 </resources>
