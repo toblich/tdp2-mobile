@@ -83,7 +83,7 @@
                 android:layout_toLeftOf="@+id/attraction_card_visited_icon"
                 android:layout_toStartOf="@+id/attraction_card_visited_icon"
                 android:layout_below="@+id/attraction_description"
-                android:visibility="gone"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -108,7 +108,7 @@
                 android:layout_toLeftOf="@+id/attraction_card_directions_icon"
                 app:srcCompat="@drawable/ic_check_box_black_24dp"
                 android:layout_below="@+id/attraction_description"
-                android:visibility="gone"
+                android:visibility="invisible"
                 />
 
             <ImageView

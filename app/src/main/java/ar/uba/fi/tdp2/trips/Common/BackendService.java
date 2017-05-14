@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,9 +21,11 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.Cache;
 import retrofit2.Call;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
@@ -53,6 +57,15 @@ public interface BackendService {
             @Query("radius")    double radius
     );
 
+    //Get the list of the nearest attractions with auth
+    @GET("/attractions")
+    Call<List<Attraction>> getAttractionsWithAuth(
+            @Query("latitude")  double latitude,
+            @Query("longitude") double longitude,
+            @Query("radius")    double radius,
+            @Header("Authorization") String bearer
+    );
+
     //Get the details of a specific attraction
     @GET("/attractions/{attractionId}")
     Call<Attraction> getAttraction(
@@ -67,30 +80,34 @@ public interface BackendService {
     );
 
     //Marked an attraction as favorite
-    @POST("/attractions/{attractionId}/favorite")
-    Call<Attraction> markFavoriteAttraction(
-        @Path("attractionId") int attractionId,
+    @POST("/users/{user_id}/favorite_attractions")
+    Call<Void> markFavoriteAttraction(
+        @Path("user_id") int userId,
+        @Body Attraction attraction,
         @Header("Authorization") String bearer
     );
 
     //Unmarked an attraction as favorite
-    @DELETE("/attractions/{attractionId}/favorite")
-    Call<Attraction> unmarkFavoriteAttraction(
-            @Path("attractionId") int attractionId,
+    @DELETE("/users/{user_id}/favorite_attractions")
+    Call<Void> unmarkFavoriteAttraction(
+            @Path("user_id") int userId,
+            @Query("attractionId") int attractionId,
             @Header("Authorization") String bearer
     );
 
     //Marked an attraction as visited
-    @POST("/attractions/{attractionId}/visited")
-    Call<Attraction> markVisitedAttraction(
-            @Path("attractionId") int attractionId,
+    @POST("/users/{user_id}/visited_attractions")
+    Call<Void> markVisitedAttraction(
+            @Path("user_id") int userId,
+            @Body Attraction attraction,
             @Header("Authorization") String bearer
     );
 
     //Unmarked an attraction as visited
-    @DELETE("/attractions/{attractionId}/visited")
-    Call<Attraction> unmarkVisitedAttraction(
-            @Path("attractionId") int attractionId,
+    @DELETE("/users/{user_id}/visited_attractions")
+    Call<Void> unmarkVisitedAttraction(
+            @Path("user_id") int userId,
+            @Query("attractionId") int attractionId,
             @Header("Authorization") String bearer
     );
 
@@ -212,8 +229,9 @@ public interface BackendService {
 
     public static final Retrofit retrofit = new Retrofit.Builder()
 //            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-            .baseUrl("http://192.168.0.6")
+            .baseUrl("http://192.168.0.29")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
+
 }

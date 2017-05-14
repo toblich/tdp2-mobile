@@ -94,6 +94,11 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                 .load(placeholderId)
                 .error(placeholderId)
                 .into(holder.attractionPhoto);
+        } else { // No picture, load only placeholder
+            Glide.with(activityContext)
+                    .load(placeholderId)
+                    .error(placeholderId)
+                    .into(holder.attractionPhoto);
         }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +113,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
         //Si el user hizo LogIn y tiene marcada como favorita la atraccion es otro icono.
         if (user != null && attraction.favorite) {
-            holder.attractionCardFavIcon.setVisibility(View.GONE);
+            holder.attractionCardFavIcon.setVisibility(View.INVISIBLE);
             holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
         }
 
@@ -120,22 +125,23 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Marco como favorito
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Attraction> call = backendService.markFavoriteAttraction(attraction.id, bearer);
-                    call.enqueue(new Callback<Attraction>() {
+                    Call<Void> call = backendService.markFavoriteAttraction(user.id, attraction, bearer);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 201) {
                                 Toast.makeText(activityContext, R.string.error_marked_as_favorite, Toast.LENGTH_SHORT).show();
+                                System.out.println(response.code());
                                 return;
                             }
                             //Cambio el icono
-                            holder.attractionCardFavIcon.setVisibility(View.GONE);
+                            holder.attractionCardFavIcon.setVisibility(View.INVISIBLE);
                             holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.marked_as_favorite, Toast.LENGTH_SHORT).show();
                         }
                         @Override
-                        public void onFailure(Call<Attraction> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.d(Utils.LOGTAG, t.getMessage());
                             t.printStackTrace();
                             Toast.makeText(activityContext, R.string.error_marked_as_favorite, Toast.LENGTH_SHORT).show();
@@ -157,22 +163,22 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Desmarco como favorito
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Attraction> call = backendService.unmarkFavoriteAttraction(attraction.id, bearer);
-                    call.enqueue(new Callback<Attraction>() {
+                    Call<Void> call = backendService.unmarkFavoriteAttraction(user.id, attraction.id, bearer);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 204) {
                                 Toast.makeText(activityContext, R.string.error_unmarked_as_favorite, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             //Cambio el icono
                             holder.attractionCardFavIcon.setVisibility(View.VISIBLE);
-                            holder.attractionCardFavIconRed.setVisibility(View.GONE);
+                            holder.attractionCardFavIconRed.setVisibility(View.INVISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.unmarked_as_favorite, Toast.LENGTH_SHORT).show();
                         }
                         @Override
-                        public void onFailure(Call<Attraction> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.d(Utils.LOGTAG, t.getMessage());
                             t.printStackTrace();
                             Toast.makeText(activityContext, R.string.error_unmarked_as_favorite, Toast.LENGTH_SHORT).show();
@@ -184,7 +190,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
         //Si el user hizo LogIn y tiene marcada como visitada la atraccion es otro icono.
         if (user != null && attraction.visited) {
-            holder.attractionCardVisitedIcon.setVisibility(View.GONE);
+            holder.attractionCardVisitedIcon.setVisibility(View.INVISIBLE);
             holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
         }
 
@@ -196,22 +202,22 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Marco como visitado
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Attraction> call = backendService.markVisitedAttraction(attraction.id, bearer);
-                    call.enqueue(new Callback<Attraction>() {
+                    Call<Void> call = backendService.markVisitedAttraction(user.id, attraction, bearer);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 201) {
                                 Toast.makeText(activityContext, R.string.error_marked_as_visited, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             //Cambio el icono
-                            holder.attractionCardVisitedIcon.setVisibility(View.GONE);
+                            holder.attractionCardVisitedIcon.setVisibility(View.INVISIBLE);
                             holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.marked_as_visited, Toast.LENGTH_SHORT).show();
                         }
                         @Override
-                        public void onFailure(Call<Attraction> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.d(Utils.LOGTAG, t.getMessage());
                             t.printStackTrace();
                             Toast.makeText(activityContext, R.string.error_marked_as_visited, Toast.LENGTH_SHORT).show();
@@ -233,22 +239,22 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Desmarco como visitado
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Attraction> call = backendService.unmarkVisitedAttraction(attraction.id, bearer);
-                    call.enqueue(new Callback<Attraction>() {
+                    Call<Void> call = backendService.unmarkVisitedAttraction(user.id, attraction.id, bearer);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<Attraction> call, Response<Attraction> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 204) {
                                 Toast.makeText(activityContext, R.string.error_unmarked_as_visited, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             //Cambio el icono
                             holder.attractionCardVisitedIcon.setVisibility(View.VISIBLE);
-                            holder.attractionCardVisitedIconBlack.setVisibility(View.GONE);
+                            holder.attractionCardVisitedIconBlack.setVisibility(View.INVISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.unmarked_as_visited, Toast.LENGTH_SHORT).show();
                         }
                         @Override
-                        public void onFailure(Call<Attraction> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.d(Utils.LOGTAG, t.getMessage());
                             t.printStackTrace();
                             Toast.makeText(activityContext, R.string.error_unmarked_as_visited, Toast.LENGTH_SHORT).show();

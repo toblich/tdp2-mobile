@@ -87,11 +87,18 @@ public class AttractionsListFragment extends Fragment {
         noAttractionsTextView = (TextView) fragment.findViewById(R.id.noAttractionsTextView);
         linearLayoutManager = new LinearLayoutManager(localContext);
         recyclerView.setLayoutManager(linearLayoutManager);
-        attractionCard = (CardView) inflater.inflate(R.layout.attraction_card, container, false);
+        attractionCard = (CardView) (inflater.inflate(R.layout.attraction_card, container, false).findViewById(R.id.attraction_card));
         getAttractionsList();
         return fragment;
     }
 
+    @Override
+    public void onResume() {
+        getAttractionsList();
+        super.onResume();
+    }
+
+    //TODO: ver como obtener el fragmento para que llame a este onActivityResult
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         user = User.getInstance(localContext.getSharedPreferences("user", 0));
@@ -99,6 +106,7 @@ public class AttractionsListFragment extends Fragment {
             case SessionActivity.RequestCode.FAVORITE:
                 if (user != null) {
                     //Marco como favorito
+                    Toast.makeText(localContext, "CallbackFavorito", Toast.LENGTH_SHORT).show();
                     attractionCard.findViewById(R.id.attraction_card_fav_icon).performClick();
                 } else {
                     Toast.makeText(localContext, R.string.login_required_for_favorite, Toast.LENGTH_SHORT).show();
@@ -107,6 +115,7 @@ public class AttractionsListFragment extends Fragment {
             case SessionActivity.RequestCode.VISITED:
                 if (user != null) {
                     //Marco como visitado
+                    Toast.makeText(localContext, "CallbackVisitado", Toast.LENGTH_SHORT).show();
                     attractionCard.findViewById(R.id.attraction_card_visited_icon).performClick();
                 } else {
                     Toast.makeText(localContext, R.string.login_required_for_visited, Toast.LENGTH_SHORT).show();
@@ -127,7 +136,14 @@ public class AttractionsListFragment extends Fragment {
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 2.0);
+        Call<List<Attraction>> call;
+        user = User.getInstance(getContext().getSharedPreferences("user", 0));
+        if (user != null) {
+            String bearer = "Bearer " + user.token;
+            call = backendService.getAttractionsWithAuth(latitude, longitude, 2.0, bearer);
+        } else {
+            call = backendService.getAttractions(latitude, longitude, 2.0);
+        }
 
         call.enqueue(new Callback<List<Attraction>>() {
             @Override

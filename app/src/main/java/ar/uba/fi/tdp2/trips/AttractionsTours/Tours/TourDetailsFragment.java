@@ -126,7 +126,7 @@ public class TourDetailsFragment extends Fragment implements OnMapReadyCallback 
         RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(localContext));
 
-        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.getAttractions(), localContext);
+        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.getAttractions(), localContext, getActivity());
         recyclerView.setAdapter(attractionListAdapter);
 
         informationList.addFooterView(footer);
