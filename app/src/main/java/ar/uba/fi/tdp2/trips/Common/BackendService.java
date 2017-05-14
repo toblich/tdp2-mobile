@@ -109,6 +109,12 @@ public interface BackendService {
     @POST("/users")
     Call<User> createUser(@Body User user);
 
+    //Logout
+    @POST("/logout")
+    Call<User> logoutUser(
+            @Header("Authorization") String bearer,
+            @Body User user);
+
     // Get details for a tour
     @GET("/tours/{tourId}")
     Call<Tour> getTour(
@@ -176,7 +182,7 @@ public interface BackendService {
 
     public static final Retrofit retrofit = new Retrofit.Builder()
 //            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-            .baseUrl("http://192.168.1.105")
+            .baseUrl("http://172.20.10.5")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();

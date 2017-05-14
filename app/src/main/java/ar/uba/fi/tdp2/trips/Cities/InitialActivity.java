@@ -168,6 +168,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             startActivity(intent);
         } else if (id == R.id.nav_close_session) {
             //Cerrar sesión
+            User.logout(getSharedPreferences("user", 0));
             Toast.makeText(localContext, "Cerrando Sesión...", Toast.LENGTH_SHORT).show();
         }
 

@@ -69,6 +69,32 @@ public class User {
         void onError(User user);
     }
 
+    public static void logout(final SharedPreferences settings) {
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        user = User.getInstance(settings);
+        if (user == null) {
+            return;
+        }
+        String bearer = "Bearer " + user.token;
+        Call<User> call = backendService.logoutUser(bearer, user);
+        call.enqueue(new retrofit2.Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                LoginManager loginManager = LoginManager.getInstance();
+                loginManager.logOut();
+                user.deleteUser(settings);
+                user = null;
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Log.d("TRIPS", t.toString());
+            }
+        });
+    }
+
     private static void createFromFbToken(String fbUserId,
                                           String fbToken,
                                           final SharedPreferences settings,
@@ -177,6 +203,17 @@ public class User {
             return user;
         }
         return null;
+    }
+
+    private void deleteUser(final SharedPreferences settings) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove("userId");
+        editor.remove("userToken");
+        editor.remove("userFbPublicProfile");
+        editor.remove("userFbPost");
+        editor.remove("fbUserId");
+        editor.remove("twUserId");
+        editor.commit();
     }
 
     private void persistUser(final SharedPreferences settings) {
