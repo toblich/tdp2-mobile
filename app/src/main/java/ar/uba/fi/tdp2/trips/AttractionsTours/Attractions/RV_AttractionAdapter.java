@@ -13,10 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Common.ActivityWithCallbackManager;
+import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.User;
 
@@ -69,16 +71,17 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
 
         int placeholderId = R.mipmap.photo_placeholder;
 
-        if (attraction.photoUri != null && !attraction.photoUri.equals("")) {
+        if (Utils.isNotBlank(attraction.photoUri)) {
             Glide.with(activityContext)
                 .load(attraction.photoUri)
                 .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .error(placeholderId)
                 .into(holder.attractionPhoto);
         } else { // No picture, load only placeholder
             Glide.with(activityContext)
                 .load(placeholderId)
-                .error(placeholderId) // TODO this is kind of redundant...
+                .error(placeholderId)
                 .into(holder.attractionPhoto);
         }
 

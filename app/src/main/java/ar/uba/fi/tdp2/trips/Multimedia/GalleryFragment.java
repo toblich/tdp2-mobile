@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ar.uba.fi.tdp2.trips.Common.BackendService;
@@ -39,6 +40,7 @@ public class GalleryFragment extends Fragment {
     private Context localContext;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager glm;
+    private TextView noGalleryTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -80,6 +82,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_gallery, container, false);
+        noGalleryTextView = (TextView) fragment.findViewById(R.id.noGalleryTextView);
         recyclerView = (RecyclerView) fragment.findViewById(R.id.rvGallery);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(glm);
@@ -100,6 +103,8 @@ public class GalleryFragment extends Fragment {
                 Log.d(Utils.LOGTAG, "Got Gallery: " + response.body().toString());
                 gallery = response.body();
 
+                checkGalleryPresence();
+                gallery.setImagesAndVideosWithFilter();
                 RV_GalleryAdapter adapter = new RV_GalleryAdapter(gallery, localContext);
                 recyclerView.setAdapter(adapter);
             }
@@ -113,7 +118,18 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void checkGalleryPresence() {
+        boolean isGalleryEmpty = (gallery.images.size() == 0 && gallery.videos.size() == 0);
+
+        if (isGalleryEmpty) {
+            noGalleryTextView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noGalleryTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
