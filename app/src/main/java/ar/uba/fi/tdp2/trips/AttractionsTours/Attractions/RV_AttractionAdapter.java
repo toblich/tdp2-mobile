@@ -94,11 +94,6 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                 .load(placeholderId)
                 .error(placeholderId)
                 .into(holder.attractionPhoto);
-        } else { // No picture, load only placeholder
-            Glide.with(activityContext)
-                    .load(placeholderId)
-                    .error(placeholderId)
-                    .into(holder.attractionPhoto);
         }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
