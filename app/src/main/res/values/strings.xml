@@ -81,6 +81,9 @@
     <string name="manage_sessions">Administrar sesiones</string>
     <string name="title_activity_notifications" translatable="false">Notificaciones</string>
     <string name="login_required_for_review">Debes iniciar sesión para escribir una reseña</string>
+    <string name="gcm_defaultSenderId">295203185705</string>
+    <string name="understood">ENTENDIDO</string>
+    <string name="user_blocked">Fuiste bloqueado por un administrador</string>
     <string name="gcm_defaultSenderId" translatable="false">295203185705</string>
     <string name="nav_menu_initiate_session">Iniciar sesión</string>
     <string name="logging_out">Cerrando Sesión...</string>

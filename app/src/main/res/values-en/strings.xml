@@ -67,6 +67,8 @@
     <string name="ago">%1$d %2$s ago</string>
     <string name="just_now">Just now</string>
     <string name="login_required_for_review">You must login first to write a review</string>
+    <string name="user_blocked">You\'ve been blocked by an administrator</string>
+    <string name="understood">UNDERSTOOD</string>
     <string name="nav_menu_initiate_session">Log in</string>
     <string name="could_not_log_out">Could not log out</string>
     <string name="logged_out">Logged out</string>
