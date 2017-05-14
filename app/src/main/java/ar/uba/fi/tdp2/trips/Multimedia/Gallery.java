@@ -2,7 +2,10 @@ package ar.uba.fi.tdp2.trips.Multimedia;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import ar.uba.fi.tdp2.trips.Common.Utils;
 
 public class Gallery {
     public @SerializedName("images") List<GalleryImage> images;
@@ -11,6 +14,31 @@ public class Gallery {
     public Gallery(List<GalleryImage> images, List<GalleryVideo> videos) {
         this.images = images;
         this.videos = videos;
+    }
+
+    public void setImagesAndVideosWithFilter() {
+        this.images = filterImagesWithEmptyURL(images);
+        this.videos = filterVideosWithEmptyURL(videos);
+    }
+
+    private List<Gallery.GalleryImage> filterImagesWithEmptyURL(List<Gallery.GalleryImage> images) {
+        final List<Gallery.GalleryImage> filterList = new ArrayList<>();
+        for (Gallery.GalleryImage image : images) {
+            if (Utils.isNotBlank(image.imageURL)) {
+                filterList.add(image);
+            }
+        }
+        return filterList;
+    }
+
+    private List<Gallery.GalleryVideo> filterVideosWithEmptyURL(List<Gallery.GalleryVideo> videos) {
+        final List<Gallery.GalleryVideo> filterList = new ArrayList<>();
+        for (Gallery.GalleryVideo video : videos) {
+            if (Utils.isNotBlank(video.videoURL)) {
+                filterList.add(video);
+            }
+        }
+        return filterList;
     }
 
     @Override

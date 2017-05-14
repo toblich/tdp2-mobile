@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.Utils;
@@ -17,6 +18,7 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
 
     Gallery gallery;
     Context actualContext;
+    private int placeholderId = R.mipmap.photo_placeholder;
 
     public RV_GalleryAdapter(Gallery gallery, Context context) {
         this.gallery = gallery;
@@ -42,15 +44,12 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
 
     @Override
     public void onBindViewHolder(RV_GalleryAdapter.GalleryViewHolder holder, int position) {
-        // TODO filter out images/videos with NULL uri
         int galleryImageSize = gallery.images.size();
 
         if (position < galleryImageSize) {
             final Gallery.GalleryImage image = gallery.images.get(position);
 
-            if (!loadImage(image.imageURL, holder.imageView)) {
-                return;
-            }
+            loadImage(image.imageURL, holder.imageView);
 
             holder.playImageView.setVisibility(View.GONE);
 
@@ -66,9 +65,7 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
             int actualPos = position - galleryImageSize;
             final Gallery.GalleryVideo video = gallery.videos.get(actualPos);
 
-            if (!loadImage(video.thumbnail, holder.imageView)) {
-                return;
-            }
+            loadImage(video.thumbnail, holder.imageView);
 
             holder.playImageView.setVisibility(View.VISIBLE);
 
@@ -83,22 +80,15 @@ public class RV_GalleryAdapter extends RecyclerView.Adapter<RV_GalleryAdapter.Ga
         }
     }
 
-    private boolean loadImage(String url, ImageView imageView) {
-        if (Utils.isBlank(url)) {
-            imageView.setVisibility(View.GONE);
-            return false;
-        }
-
-        int placeholderId = R.mipmap.photo_placeholder;
+    private void loadImage(String url, ImageView imageView) {
         Glide.with(actualContext)
                 .load(url)
                 .thumbnail(0.5f)
                 .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(placeholderId)
                 .error(placeholderId)
                 .into(imageView);
-
-        return true;
     }
 
     @Override
