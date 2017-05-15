@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         final Notification notification = notifications.get(position);
         holder.notificationTitle.setText(notification.title);
         holder.notificationMsg.setText(notification.message);
-        holder.notificationDate.setText(getNotificationDate(notification.dateInMilliseconds, actualContext));
+        holder.notificationDate.setText(getNotificationDate(notification.dateInSeconds, actualContext));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,15 +75,14 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         return notifications.size();
     }
 
-    private static String getNotificationDate(long dateInMilliseconds, Context actualContext) {
+    private static String getNotificationDate(long dateInSeconds, Context actualContext) {
         //Obtengo el epoch actual y la diferencia con el de la notificación
-        long myEpoch = System.currentTimeMillis();
-        long diff = Math.abs(myEpoch - dateInMilliseconds);
-
+        long myEpoch = System.currentTimeMillis()/1000;
+        long diff = Math.abs(myEpoch - dateInSeconds);
         StringBuilder builder = new StringBuilder();
         String unit;
 
-        long days = TimeUnit.MILLISECONDS.toDays(diff);
+        long days = TimeUnit.SECONDS.toDays(diff);
 
         if (days > 0) {
             long years = days / 365;
@@ -99,8 +99,8 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
                 builder.append(actualContext.getString(R.string.ago, days, unit));
             }
         } else {
-            long hours = TimeUnit.MILLISECONDS.toHours(diff);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+            long hours = TimeUnit.SECONDS.toHours(diff);
+            long minutes = TimeUnit.SECONDS.toMinutes(diff);
             //Ver si son horas o minutos
             if (hours > 0) {
                 unit = (hours != 1) ? actualContext.getString(R.string.hours_unit) : actualContext.getString(R.string.hour_unit);

@@ -7,14 +7,14 @@ public class Notification {
     String message;
     String url;
     String title;
-    @SerializedName("created_at") long dateInMilliseconds;
+    @SerializedName("created_at") long dateInSeconds;
 
-    public Notification(int notificationId, String message, String url, String title, long dateInMilliseconds) {
+    public Notification(int notificationId, String message, String url, String title, long dateInSeconds) {
         this.notificationId = notificationId;
         this.message = message;
         this.url = url;
         this.title = title;
-        this.dateInMilliseconds = dateInMilliseconds;
+        this.dateInSeconds = dateInSeconds;
     }
 
     @Override

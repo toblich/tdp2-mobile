@@ -64,7 +64,7 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
 
         //Obtengo el estado del switch
         SharedPreferences prefs = getSharedPreferences("switchCheck", MODE_PRIVATE);
-        isSwitchChecked = prefs.getBoolean("isChecked", false);
+        isSwitchChecked = prefs.getBoolean("isChecked", true);
 
         getNotificactions();
     }
