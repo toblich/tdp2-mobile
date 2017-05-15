@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-import java.lang.Math;
 import java.util.concurrent.TimeUnit;
 
+import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
 
 public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_NotificationsAdapter.NotificationViewHolder> {
@@ -56,12 +56,14 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
             @Override
             public void onClick(View v) {
                 String url = notification.url;
-                if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                    url = "http://" + url;
-                }
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
-                    actualContext.startActivity(intent);
+                if (Utils.isNotBlank(url)) {
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "http://" + url;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
+                        actualContext.startActivity(intent);
+                    }
                 }
             }
         });
