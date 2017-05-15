@@ -31,9 +31,13 @@ public class Attraction {
     public double latitude;
     public double longitude;
 
+    public boolean favorite;
+    public boolean visited;
+
     public Attraction(int id, String name, String description, String photoUri, String audioguide,
                       String address, String url, String phone, double price, int duration,
-                      List<Review> reviews, Review ownReview, List<Tour> tours, float avgRating) {
+                      List<Review> reviews, Review ownReview, List<Tour> tours, float avgRating,
+                      boolean favorite, boolean visited) {
 
         this.id          = id;
         this.name        = name;
@@ -51,6 +55,9 @@ public class Attraction {
         this.reviews = reviews;
         this.ownReview = ownReview;
         this.tours = tours;
+
+        this.favorite = favorite;
+        this.visited = visited;
     }
 
     @Override

@@ -84,9 +84,19 @@
     <string name="login_required_for_review">Debes iniciar sesión para escribir una reseña</string>
     <string name="understood">ENTENDIDO</string>
     <string name="user_blocked">Fuiste bloqueado por un administrador</string>
-    <string name="gcm_defaultSenderId" translatable="false">295203185705</string>
     <string name="nav_menu_initiate_session">Iniciar sesión</string>
     <string name="logging_out">Cerrando Sesión...</string>
     <string name="logged_out">Sesión cerrada</string>
     <string name="could_not_log_out">No se pudo cerrar sesión</string>
+    <string name="gcm_defaultSenderId" translatable="false">295203185705</string>
+    <string name="login_required_for_favorite">Debes iniciar sesión para marcar como favorita una atracción</string>
+    <string name="login_required_for_visited">Debes iniciar sesión para marcar como visitada una atracción</string>
+    <string name="error_marked_as_favorite">No se pudo marcar la atracción como favorita</string>
+    <string name="error_unmarked_as_favorite">No se pudo desmarcar la atracción como favorita</string>
+    <string name="error_marked_as_visited">No se pudo marcar la atracción como visitada</string>
+    <string name="error_unmarked_as_visited">No se pudo desmarcar la atracción como visitada</string>
+    <string name="marked_as_favorite">Marcada como favorita</string>
+    <string name="marked_as_visited">Marcada como visitada</string>
+    <string name="unmarked_as_favorite">Desmarcada como favorita</string>
+    <string name="unmarked_as_visited">Desmarcada como visitada</string>
 </resources>

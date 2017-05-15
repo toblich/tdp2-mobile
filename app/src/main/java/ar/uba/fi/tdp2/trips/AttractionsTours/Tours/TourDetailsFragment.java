@@ -29,6 +29,7 @@ import java.util.List;
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.Attraction;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
+import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.RV_AttractionAdapter;
 import ar.uba.fi.tdp2.trips.Common.Utils;
@@ -43,6 +44,7 @@ public class TourDetailsFragment extends Fragment implements OnMapReadyCallback 
     private OnFragmentInteractionListener mListener;
     private Context localContext;
     private TourDetailsActivity activity;
+    private User user;
 
     public TourDetailsFragment() {
         // Required empty public constructor
@@ -71,7 +73,14 @@ public class TourDetailsFragment extends Fragment implements OnMapReadyCallback 
 
     public void getTourDetails(final ListView lw) {
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<Tour> call = backendService.getTour(tourId);
+        Call<Tour> call;
+        user = User.getInstance(getContext().getSharedPreferences("user", 0));
+        if (user != null) {
+            String bearer = "Bearer " + user.token;
+            call = backendService.getTourWithAuth(tourId, bearer);
+        } else {
+            call = backendService.getTour(tourId);
+        }
 
         call.enqueue(new Callback<Tour>() {
             @Override
@@ -126,7 +135,7 @@ public class TourDetailsFragment extends Fragment implements OnMapReadyCallback 
         RecyclerView recyclerView = (RecyclerView) footer.findViewById(R.id.tour_attractions_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(localContext));
 
-        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.getAttractions(), localContext);
+        RV_AttractionAdapter attractionListAdapter = new RV_AttractionAdapter(tour.getAttractions(), localContext, getActivity());
         recyclerView.setAdapter(attractionListAdapter);
 
         informationList.addFooterView(footer);

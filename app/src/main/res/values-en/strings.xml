@@ -74,4 +74,14 @@
     <string name="logged_out">Logged out</string>
     <string name="logging_out">Logging out...</string>
     <string name="no_gallery">The gallery is empty</string>
+    <string name="login_required_for_favorite">You must login first to mark an attraction as favorite</string>
+    <string name="login_required_for_visited">You must login first to mark an attraction as visited</string>
+    <string name="error_marked_as_favorite">Failed to mark attraction as favorite</string>
+    <string name="error_marked_as_visited">Failed to mark attraction as visited</string>
+    <string name="error_unmarked_as_favorite">Failed to unmark attraction as favorite</string>
+    <string name="error_unmarked_as_visited">Failed to unmark attraction as visited</string>
+    <string name="marked_as_favorite">Marked as favorite</string>
+    <string name="marked_as_visited">Marked as visited</string>
+    <string name="unmarked_as_favorite">Unmarked as favorite</string>
+    <string name="unmarked_as_visited">Unmarked as visited</string>
 </resources>

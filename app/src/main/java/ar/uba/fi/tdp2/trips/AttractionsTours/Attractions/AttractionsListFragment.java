@@ -1,9 +1,10 @@
 package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import ar.uba.fi.tdp2.trips.Common.BackendService;
 import ar.uba.fi.tdp2.trips.Common.OnFragmentInteractionListener;
+import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.R;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import retrofit2.Call;
@@ -42,6 +44,8 @@ public class AttractionsListFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private RV_AttractionAdapter attractionsAdapter;
     private TextView noAttractionsTextView;
+    private User user;
+    private CardView attractionCard;
 
     public AttractionsListFragment() {
         // Required empty public constructor
@@ -83,8 +87,43 @@ public class AttractionsListFragment extends Fragment {
         noAttractionsTextView = (TextView) fragment.findViewById(R.id.noAttractionsTextView);
         linearLayoutManager = new LinearLayoutManager(localContext);
         recyclerView.setLayoutManager(linearLayoutManager);
+        attractionCard = (CardView) (inflater.inflate(R.layout.attraction_card, container, false).findViewById(R.id.attraction_card));
         getAttractionsList();
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        getAttractionsList();
+        super.onResume();
+    }
+
+    //TODO: ver como obtener el fragmento para que llame a este onActivityResult
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        user = User.getInstance(localContext.getSharedPreferences("user", 0));
+        switch (requestCode) {
+            case SessionActivity.RequestCode.FAVORITE:
+                if (user != null) {
+                    //Marco como favorito
+                    Toast.makeText(localContext, "CallbackFavorito", Toast.LENGTH_SHORT).show();
+                    attractionCard.findViewById(R.id.attraction_card_fav_icon).performClick();
+                } else {
+                    Toast.makeText(localContext, R.string.login_required_for_favorite, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case SessionActivity.RequestCode.VISITED:
+                if (user != null) {
+                    //Marco como visitado
+                    Toast.makeText(localContext, "CallbackVisitado", Toast.LENGTH_SHORT).show();
+                    attractionCard.findViewById(R.id.attraction_card_visited_icon).performClick();
+                } else {
+                    Toast.makeText(localContext, R.string.login_required_for_visited, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public void getAttractionsList() {
@@ -97,7 +136,14 @@ public class AttractionsListFragment extends Fragment {
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        Call<List<Attraction>> call  = backendService.getAttractions(latitude, longitude, 2.0);
+        Call<List<Attraction>> call;
+        user = User.getInstance(getContext().getSharedPreferences("user", 0));
+        if (user != null) {
+            String bearer = "Bearer " + user.token;
+            call = backendService.getAttractionsWithAuth(latitude, longitude, 2.0, bearer);
+        } else {
+            call = backendService.getAttractions(latitude, longitude, 2.0);
+        }
 
         call.enqueue(new Callback<List<Attraction>>() {
             @Override
@@ -109,7 +155,7 @@ public class AttractionsListFragment extends Fragment {
                 attractions = response.body();
 
                 checkAttractionsPresence();
-                attractionsAdapter = new RV_AttractionAdapter(attractions, localContext);
+                attractionsAdapter = new RV_AttractionAdapter(attractions, localContext, getActivity());
                 recyclerView.setAdapter(attractionsAdapter);
             }
 
