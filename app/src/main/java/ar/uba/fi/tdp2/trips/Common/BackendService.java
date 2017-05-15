@@ -168,6 +168,13 @@ public interface BackendService {
         @Path("tourId") int tourId
     );
 
+    //Get details for a tour with Auth
+    @GET("/tours/{tourId}")
+    Call<Tour> getTourWithAuth(
+            @Path("tourId") int tourId,
+            @Header("Authorization") String bearer
+    );
+
     // Get notifications
     @GET("/notifications")
     Call<List<Notification>> getNotifications(
