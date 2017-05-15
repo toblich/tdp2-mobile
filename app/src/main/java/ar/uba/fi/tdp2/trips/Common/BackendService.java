@@ -80,34 +80,30 @@ public interface BackendService {
     );
 
     //Marked an attraction as favorite
-    @POST("/users/{user_id}/favorite_attractions")
+    @POST("/attractions/{attractionId}/favorite")
     Call<Void> markFavoriteAttraction(
-        @Path("user_id") int userId,
-        @Body Attraction attraction,
+        @Path("attractionId") int attractionId,
         @Header("Authorization") String bearer
     );
 
     //Unmarked an attraction as favorite
-    @DELETE("/users/{user_id}/favorite_attractions")
+    @DELETE("/attractions/{attractionId}/favorite")
     Call<Void> unmarkFavoriteAttraction(
-            @Path("user_id") int userId,
-            @Query("attractionId") int attractionId,
+            @Path("attractionId") int attractionId,
             @Header("Authorization") String bearer
     );
 
     //Marked an attraction as visited
-    @POST("/users/{user_id}/visited_attractions")
+    @POST("/attractions/{attractionId}/visited")
     Call<Void> markVisitedAttraction(
-            @Path("user_id") int userId,
-            @Body Attraction attraction,
+            @Path("attractionId") int attractionId,
             @Header("Authorization") String bearer
     );
 
     //Unmarked an attraction as visited
-    @DELETE("/users/{user_id}/visited_attractions")
+    @DELETE("/attractions/{attractionId}/visited")
     Call<Void> unmarkVisitedAttraction(
-            @Path("user_id") int userId,
-            @Query("attractionId") int attractionId,
+            @Path("attractionId") int attractionId,
             @Header("Authorization") String bearer
     );
 

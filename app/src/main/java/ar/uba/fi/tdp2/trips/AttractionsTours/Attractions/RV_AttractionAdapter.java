@@ -120,13 +120,12 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Marco como favorito
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Void> call = backendService.markFavoriteAttraction(user.id, attraction, bearer);
+                    Call<Void> call = backendService.markFavoriteAttraction(attraction.id, bearer);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.code() != 201) {
                                 Toast.makeText(activityContext, R.string.error_marked_as_favorite, Toast.LENGTH_SHORT).show();
-                                System.out.println(response.code());
                                 return;
                             }
                             //Cambio el icono
@@ -158,7 +157,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Desmarco como favorito
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Void> call = backendService.unmarkFavoriteAttraction(user.id, attraction.id, bearer);
+                    Call<Void> call = backendService.unmarkFavoriteAttraction(attraction.id, bearer);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
@@ -197,7 +196,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Marco como visitado
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Void> call = backendService.markVisitedAttraction(user.id, attraction, bearer);
+                    Call<Void> call = backendService.markVisitedAttraction(attraction.id, bearer);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
@@ -234,7 +233,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                     //Desmarco como visitado
                     String bearer = "Bearer " + user.token;
                     BackendService backendService = BackendService.retrofit.create(BackendService.class);
-                    Call<Void> call = backendService.unmarkVisitedAttraction(user.id, attraction.id, bearer);
+                    Call<Void> call = backendService.unmarkVisitedAttraction(attraction.id, bearer);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
