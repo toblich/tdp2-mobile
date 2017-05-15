@@ -17,6 +17,8 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
+import ar.uba.fi.tdp2.trips.Common.Utils;
+import ar.uba.fi.tdp2.trips.Notifications.NotificationsActivity;
 
 public class GcmIntentService extends IntentService {
 
@@ -49,17 +51,18 @@ public class GcmIntentService extends IntentService {
         String message = notification.getString("message");
         String title = notification.getString("title");
         Intent intent;
-        if (url != null) {
+        if (Utils.isNotBlank(url)) {
             // Opens the browser with the URL when the notification is taped
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
 
 
         } else {
-            intent = new Intent(this, InitialActivity.class);
+            intent = new Intent(this, NotificationsActivity.class);
         }
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
 
 
         Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
