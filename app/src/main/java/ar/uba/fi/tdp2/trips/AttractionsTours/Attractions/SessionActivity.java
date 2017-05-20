@@ -3,6 +3,7 @@ package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -148,7 +149,6 @@ public class SessionActivity extends AppCompatActivity {
                         fbLoginButton);
             }
         } else {
-//            findViewById(R.id.fb_logo).setVisibility(View.VISIBLE);
             fbLoginButton.setVisibility(View.GONE);
         }
     }
@@ -183,10 +183,7 @@ public class SessionActivity extends AppCompatActivity {
             }
         });
 
-        if (user == null || user.twUserId == null) {
-//            findViewById(R.id.tw__twitter_logo).setVisibility(View.GONE);
-        } else {
-//            findViewById(R.id.tw__twitter_logo).setVisibility(View.VISIBLE);
+        if (user != null && user.twUserId != null) {
             twLoginButton.setVisibility(View.GONE);
         }
     }
