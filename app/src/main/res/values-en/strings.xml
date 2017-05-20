@@ -3,10 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="all_day_open">Open 24 hours</string>
     <string name="choose_location">Choose location</string>
-    <string name="see_more">See More ›</string>
+    <string name="see_more">SEE MORE ›</string>
     <string name="title_activity_maps">Map</string>
     <string name="search">Search</string>
-    <string name="review_input_hint">Write a review</string>
+    <string name="review_input_hint">Write an opinion</string>
     <string name="points_of_interest">POINTS OF INTEREST</string>
     <string name="dollars">dollars</string>
     <string name="gallery">GALLERY</string>
@@ -16,7 +16,7 @@
     <string name="attractions">ATTRACTIONS</string>
     <string name="tours">TOURS</string>
     <string name="interrupted_google_play_services_error">Error: Connection to Google Play Services has been interrupted</string>
-    <string name="location_found">You are at:</string>
+    <string name="location_found">You are at</string>
     <string name="location_permittion_denied">Error: Location permission denied</string>
     <string name="my_opinion">My opinion</string>
     <string name="no_address_error">Error: GPS could not set your address</string>
@@ -40,9 +40,9 @@
     <string name="confirm">CONFIRM</string>
     <string name="emvideoview_error">Error: There was a problem loading the content</string>
     <string name="not_signed_in">You are not signed in!</string>
-    <string name="review_posted">Review posted!</string>
-    <string name="review_posting_failure">Posting review failed</string>
-    <string name="write_here">Write here</string>
+    <string name="review_posted">Opinion posted!</string>
+    <string name="review_posting_failure">Posting opinion failed</string>
+    <string name="write_here">Write your opinion here</string>
     <string name="short_hours">h</string>
     <string name="short_minutes">m</string>
     <string name="tour_attractions_title">Included attractions</string>
