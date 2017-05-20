@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- our toolbar -->
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        <!-- our toolbar -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
         <ImageView
-            android:id="@+id/fb_logo"
-            android:src="@drawable/com_facebook_button_icon"
-            android:layout_width="wrap_content"
-            android:minWidth="64dp"
+            android:id="@+id/user_picture"
+            android:layout_width="64dp"
             android:layout_height="64dp"
-            android:scaleType="center"
-            android:background="#3b5998"
-            android:contentDescription="Facebook" />
-        <ImageView
-            android:id="@+id/tw__twitter_logo"
-            android:src="@drawable/tw__ic_logo_default"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:id="@+id/sessions"
             android:layout_width="wrap_content"
-            android:minWidth="64dp"
-            android:layout_height="64dp"
-            android:scaleType="center"
-            android:background="#1da1f2"
-            android:contentDescription="Twitter" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp" />
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/twitter_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="16dp" />
+
     </LinearLayout>
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebook_login_button"
+    <Button
+        android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
+        android:onClick="logout"
+        android:text="@string/nav_menu_close_session" />
 
-    <com.twitter.sdk.android.core.identity.TwitterLoginButton
-        android:id="@+id/twitter_login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerInParent="true"/>
-
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/done"-->
-        <!--android:onClick="onDoneButtonClick" />-->
-
-</LinearLayout>
+</RelativeLayout>
