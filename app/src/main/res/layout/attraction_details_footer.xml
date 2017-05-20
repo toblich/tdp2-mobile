@@ -42,7 +42,8 @@
         android:id="@+id/own_review_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:textStyle="italic"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/other_reviews_header"
