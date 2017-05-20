@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
 import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
@@ -226,7 +228,8 @@ public class SessionActivity extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 Toast.makeText(context, R.string.logged_out, Toast.LENGTH_SHORT).show();
-                finish();
+                Intent intent = new Intent(SessionActivity.this, InitialActivity.class);
+                NavUtils.navigateUpTo(SessionActivity.this, intent);
             }
 
             @Override
