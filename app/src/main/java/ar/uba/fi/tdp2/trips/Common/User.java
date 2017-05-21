@@ -324,11 +324,10 @@ public class User {
         });
     }
 
-    private void _getFbPostPermissions(CallbackManager callbackManager,
+    private static void _getFbPostPermissions(CallbackManager callbackManager,
                                        final SharedPreferences sharedPreferences,
                                        final Callback callback) {
         LoginManager loginManager = LoginManager.getInstance();
-        final User user = this;
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -349,7 +348,7 @@ public class User {
         });
     }
 
-    public void getFbPostPermissions(Activity activity,
+    public static void getFbPostPermissions(Activity activity,
                                      CallbackManager callbackManager,
                                      SharedPreferences sharedPreferences,
                                      final Callback callback) {

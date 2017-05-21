@@ -3,7 +3,6 @@ package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -110,7 +109,6 @@ public class SessionActivity extends AppCompatActivity {
         final Activity me = this;
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
         if (user == null || user.fbUserId == null || !user.fbPublicProfile || !user.fbPost) {
-//            findViewById(R.id.fb_logo).setVisibility(View.GONE);
             if (user == null || !user.fbPublicProfile) {
                 User.loginWithFacebook(
                         callbackManager,
@@ -119,7 +117,7 @@ public class SessionActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(User user) {
                                 Toast.makeText(me, R.string.wait_a_second, Toast.LENGTH_LONG).show();
-                                user.getFbPostPermissions(me, callbackManager,
+                                User.getFbPostPermissions(me, callbackManager,
                                         getSharedPreferences("user", 0),
                                         new User.Callback() {
                                             @Override
