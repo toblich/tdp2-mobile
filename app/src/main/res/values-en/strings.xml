@@ -72,7 +72,7 @@
     <string name="nav_menu_initiate_session">Log in</string>
     <string name="could_not_log_out">Could not log out</string>
     <string name="logged_out">Logged out</string>
-    <string name="logging_out">Logging out...</string>
+    <string name="logging_out">Logging out…</string>
     <string name="no_gallery">The gallery is empty</string>
     <string name="login_required_for_favorite">You must login first to mark an attraction as favorite</string>
     <string name="login_required_for_visited">You must login first to mark an attraction as visited</string>
@@ -84,4 +84,8 @@
     <string name="marked_as_visited">Marked as visited</string>
     <string name="unmarked_as_favorite">Unmarked as favorite</string>
     <string name="unmarked_as_visited">Unmarked as visited</string>
+    <string name="logged_in_fb">Logged in with facebook</string>
+    <string name="logged_in_tw">Logged in with twitter</string>
+    <string name="not_logged_in">Not yet logged in</string>
+    <string name="logged_in_fb_tw">Logged in with facebook and twitter</string>
 </resources>

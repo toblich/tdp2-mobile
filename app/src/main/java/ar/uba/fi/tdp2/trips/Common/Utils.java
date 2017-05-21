@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.SessionActivity;
+import ar.uba.fi.tdp2.trips.Cities.InitialActivity;
 import ar.uba.fi.tdp2.trips.R;
 
 public class Utils {
@@ -101,7 +102,7 @@ public class Utils {
         return builder.toString();
     }
 
-    public static void applySessionToDrawer(Context context, NavigationView navigationView, User user) {
+    public static void applySessionToDrawer(final Context context, NavigationView navigationView, User user) {
         MenuItem notificationsMenuItem = navigationView.getMenu().findItem(R.id.nav_notifications);
         MenuItem logInMenuItem = navigationView.getMenu().findItem(R.id.nav_initiate_session);
         MenuItem logOutMenuItem = navigationView.getMenu().findItem(R.id.nav_close_session);
@@ -120,22 +121,30 @@ public class Utils {
         }
 
         profilePic.setVisibility(View.VISIBLE);
+
         Glide.with(context)
                 .load(user.profilePhotoUri)
                 .dontAnimate()
                 .transform(new CircleTransform(context))
                 .into(profilePic);
+
+        profilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.login(context);
+            }
+        });
     }
 
-    public static void logout(final Activity activity, final NavigationView navigationView, final boolean finishOnLogout) {
+    public static void logout(final Activity activity, final NavigationView navigationView, final boolean returnToInitialActivity) {
         Toast.makeText(activity, R.string.logging_out, Toast.LENGTH_SHORT).show();
         User.logout(activity.getSharedPreferences("user", 0), new User.Callback() {
             @Override
             public void onSuccess(User user) {
                 Utils.applySessionToDrawer(activity, navigationView, null);
                 Toast.makeText(activity, R.string.logged_out, Toast.LENGTH_SHORT).show();
-                if (finishOnLogout) {
-                    activity.finish();
+                if (returnToInitialActivity) {
+                    activity.navigateUpTo(new Intent(activity, InitialActivity.class));
                 }
             }
 
