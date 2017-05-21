@@ -236,41 +236,6 @@ public class User {
         editor.commit();
         System.out.println(this);
     }
-//
-//    private static void _loginWithSocialNetwork(CallbackManager callbackManager,
-//                                                final SharedPreferences sharedPreferences,
-//                                                final Callback callback) {
-//        LoginManager loginManager = LoginManager.getInstance();
-//
-//    }
-
-    public static void loginWithSocialNetwork(Activity activity,
-                                               CallbackManager callbackManager,
-                                               final SharedPreferences sharedPreferences,
-                                               final Callback callback) {
-        LoginManager loginManager = LoginManager.getInstance();
-        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                System.out.println(loginResult.toString());
-                String userId = loginResult.getAccessToken().getUserId();
-                String token = loginResult.getAccessToken().getToken();
-                System.out.println(token);
-                User.createFromFbToken(userId, token, sharedPreferences, callback);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(Utils.LOGTAG, "Login canceled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(Utils.LOGTAG, "Login failed");
-            }
-        });
-        loginManager.logInWithReadPermissions(activity, Arrays.asList("email", "public_profile"));
-    }
 
     public static void loginWithFacebook(CallbackManager callbackManager,
                                          final SharedPreferences sharedPreferences,
