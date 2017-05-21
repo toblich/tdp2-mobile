@@ -138,7 +138,7 @@ public class Utils {
 
     public static void logout(final Activity activity, final NavigationView navigationView, final boolean returnToInitialActivity) {
         Toast.makeText(activity, R.string.logging_out, Toast.LENGTH_SHORT).show();
-        User.logout(activity.getSharedPreferences("user", 0), new User.Callback() {
+        User.logout(activity, new User.Callback() {
             @Override
             public void onSuccess(User user) {
                 Utils.applySessionToDrawer(activity, navigationView, null);

@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +47,15 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_session);
+        setTitle(getString(R.string.manage_sessions));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        callbackManager = CallbackManager.Factory.create();
         processSocialNetworks();
     }
 
@@ -106,32 +115,37 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     public void fbLogin() {
-        final Activity me = this;
+        final SessionActivity me = this;
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
         if (user == null || user.fbUserId == null || !user.fbPublicProfile || !user.fbPost) {
             if (user == null || !user.fbPublicProfile) {
-                User.loginWithFacebook(
-                        callbackManager,
-                        getSharedPreferences("user", 0),
-                        new User.Callback() {
-                            @Override
-                            public void onSuccess(User user) {
-                                Toast.makeText(me, R.string.wait_a_second, Toast.LENGTH_LONG).show();
-                                User.getFbPostPermissions(me, callbackManager,
-                                        getSharedPreferences("user", 0),
-                                        new User.Callback() {
-                                            @Override
-                                            public void onSuccess(User user) {
-                                                processSocialNetworks();
-                                            }
-                                            @Override
-                                            public void onError(User user) {}
-                                        });
-                            }
-                            @Override
-                            public void onError(User user) {}
-                        },
-                        fbLoginButton);
+                Log.d(Utils.LOGTAG, "inside fbLogin while processing social networks");
+                User.Callback interimCallback = new User.Callback() {
+
+                    @Override
+                    public void onSuccess(User user) {
+                        me.startSpinner();
+                    }
+
+                    @Override
+                    public void onError(User user) {}
+                };
+
+                User.setFullFbLogin(this, fbLoginButton, callbackManager, interimCallback, new User.Callback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        Log.d(Utils.LOGTAG, "in innermost callback, about to reprocess social networks");
+                        stopSpinner();
+                        processSocialNetworks();
+                    }
+
+                    @Override
+                    public void onError(User user) {
+                        Log.d(Utils.LOGTAG, "in innermost ERROR callback, about to reprocess social networks");
+                        stopSpinner();
+                        processSocialNetworks();
+                    }
+                });
             } else if (!user.fbPost) {
                 User.postWithFacebook(
                         callbackManager,
@@ -142,13 +156,31 @@ public class SessionActivity extends AppCompatActivity {
                                 processSocialNetworks();
                             }
                             @Override
-                            public void onError(User user) {}
+                            public void onError(User user) {
+                                processSocialNetworks();
+                            }
                         },
                         fbLoginButton);
             }
         } else {
             fbLoginButton.setVisibility(View.GONE);
         }
+    }
+
+    private void startSpinner() {
+        RelativeLayout spinner = (RelativeLayout) findViewById(R.id.spinner);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        spinner.setVisibility(View.VISIBLE);
+        linearLayout.setVisibility(View.GONE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    private void stopSpinner() {
+        RelativeLayout spinner = (RelativeLayout) findViewById(R.id.spinner);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        spinner.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void twLogin() {
@@ -159,6 +191,7 @@ public class SessionActivity extends AppCompatActivity {
                 // The TwitterSession is also available through:
                 // Twitter.getInstance().core.getSessionManager().getActiveSession()
                 TwitterSession session = result.data;
+                startSpinner();
                 User.createFromTwToken(
                         String.valueOf(session.getUserId()),
                         session.getAuthToken().token,
@@ -167,10 +200,14 @@ public class SessionActivity extends AppCompatActivity {
                         new User.Callback() {
                             @Override
                             public void onSuccess(User user) {
+                                stopSpinner();
                                 processSocialNetworks();
                             }
                             @Override
-                            public void onError(User user) {}
+                            public void onError(User user) {
+                                stopSpinner();
+                                processSocialNetworks();
+                            }
                         });
                 String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
@@ -184,18 +221,6 @@ public class SessionActivity extends AppCompatActivity {
         if (user != null && user.twUserId != null) {
             twLoginButton.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_session);
-        setTitle(getString(R.string.manage_sessions));
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        callbackManager = CallbackManager.Factory.create();
     }
 
     @Override
@@ -219,7 +244,7 @@ public class SessionActivity extends AppCompatActivity {
     public void logout(View view) {
         Toast.makeText(this, R.string.logging_out, Toast.LENGTH_SHORT).show();
         final Context context = this;
-        User.logout(getSharedPreferences("user", 0), new User.Callback() {
+        User.logout(this, new User.Callback() {
             @Override
             public void onSuccess(User user) {
                 Toast.makeText(context, R.string.logged_out, Toast.LENGTH_SHORT).show();

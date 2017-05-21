@@ -45,24 +45,11 @@ public class User {
     public @SerializedName("device_token") String deviceToken;
     public @SerializedName("profile_image") String profilePhotoUri;
 
-    private User(int id, String token, boolean fbPublicProfile, boolean fbPost) {
-        this.id     = id;
-        this.token  = token;
-        this.fbPublicProfile = fbPublicProfile;
-        this.fbPost = fbPost;
-    }
-
-    private User(String fbUserId, String fbToken) {
-        this.fbUserId = fbUserId;
-        this.fbToken = fbToken;
-    }
-
     private User() {
     }
 
     @Override
     public String toString() {
-        String photo = profilePhotoUri == null ? "" : "\n  profilePhotoUri: " + profilePhotoUri;
         return "User {\n  id: " + id + "\n  token: " + token + "\n fbPublicProfile: " + fbPublicProfile + "\n fbPost: " + fbPost + "\n}";
     }
 
@@ -71,7 +58,8 @@ public class User {
         void onError(User user);
     }
 
-    public static void logout(final SharedPreferences settings, final Callback callback) {
+    public static void logout(Activity activity, final Callback callback) {
+        final SharedPreferences settings = getSharedPreferences(activity);
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
         user = User.getInstance(settings);
         if (user == null) {
@@ -92,49 +80,9 @@ public class User {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
+                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show(); // TODO internationalize
                 Log.d("TRIPS", t.toString());
                 callback.onError(null);
-            }
-        });
-    }
-
-    private static void createFromFbToken(String fbUserId,
-                                          String fbToken,
-                                          final SharedPreferences settings,
-                                          final Callback callback) {
-        BackendService backendService = BackendService.retrofit.create(BackendService.class);
-        user = User.getInstance(settings);
-        if (user == null) {
-            user = new User();
-        }
-
-        user.fbUserId = fbUserId;
-        user.fbToken = fbToken;
-        user.deviceToken = DeviceToken.getInstance().getDeviceToken();
-
-        Call<User> call = backendService.createUser(user);
-
-        call.enqueue(new retrofit2.Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() == null) {
-                    return;
-                }
-                user.id = response.body().id;
-                user.token = response.body().token;
-                user.fbPublicProfile = true;
-                user.profilePhotoUri = response.body().profilePhotoUri;
-                user.persistUser(settings);
-                callback.onSuccess(user);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                user = null;
-                t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No se pudo conectar con el servidor", Toast.LENGTH_LONG).show(); // TODO internationalize
-                Log.d("TRIPS", t.toString());
             }
         });
     }
@@ -197,7 +145,7 @@ public class User {
         String fbUserId = settings.getString("fbUserId", null);
         String twUserId = settings.getString("twUserId", null);
         String profilePhotoUri = settings.getString("profilePhotoUri", null);
-        Log.d("TRIPS", userId + " " + userToken);
+        Log.d("TRIPS", "getting persisted user: " + userId + " " + userToken);
         if (userId != 0 && userToken != null) {
             User user = new User();
             user.id = userId;
@@ -237,29 +185,99 @@ public class User {
         System.out.println(this);
     }
 
-    public static void loginWithFacebook(CallbackManager callbackManager,
-                                         final SharedPreferences sharedPreferences,
-                                         final Callback callback,
-                                         LoginButton loginButton) {
-        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+    private static void createFromFbToken(String fbUserId,
+                                          String fbToken,
+                                          boolean fbPost,
+                                          final SharedPreferences settings,
+                                          final Callback callback) {
+        Log.d(Utils.LOGTAG, "creating user from fb token");
+        BackendService backendService = BackendService.retrofit.create(BackendService.class);
+        user = User.getInstance(settings);
+        if (user == null) {
+            user = new User();
+        }
+
+        user.fbUserId = fbUserId;
+        user.fbToken = fbToken;
+        user.fbPost = fbPost;
+        user.deviceToken = DeviceToken.getInstance().getDeviceToken();
+
+        Call<User> call = backendService.createUser(user);
+
+        call.enqueue(new retrofit2.Callback<User>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                System.out.println(loginResult.toString());
-                String userId = loginResult.getAccessToken().getUserId();
-                String token = loginResult.getAccessToken().getToken();
-                System.out.println(token);
-                User.createFromFbToken(userId, token, sharedPreferences, callback);
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(Utils.LOGTAG, "onResponse from backend after creating user from fb token");
+                if (response.body() == null) {
+                    return;
+                }
+                user.id = response.body().id;
+                user.token = response.body().token;
+                user.fbPublicProfile = true;
+                user.profilePhotoUri = response.body().profilePhotoUri;
+                user.persistUser(settings);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                user = null;
+                t.printStackTrace();
+                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show(); // TODO internationalize
+                Log.d("TRIPS", t.toString());
+            }
+        });
+    }
+
+    public static void setFullFbLogin(final Activity activity,
+                                      final LoginButton button,
+                                      final CallbackManager callbackManager,
+                                      final Callback interimCallback,
+                                      final Callback callback) {
+        Log.d(Utils.LOGTAG, "setting up login in setFullFbLogin");
+        button.setReadPermissions(Arrays.asList("email", "public_profile"));
+        button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult firstLoginResult) {
+                Log.d(Utils.LOGTAG, "onSuccess of first login request");
+                System.out.println("firstLoginResult: " + firstLoginResult.toString());
+                final String userId = firstLoginResult.getAccessToken().getUserId();
+                final String token = firstLoginResult.getAccessToken().getToken();
+                System.out.println("token: " + token);
+
+                final LoginManager loginManager = LoginManager.getInstance();
+                loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult secondLoginResult) {
+                        Log.d(Utils.LOGTAG, "onSuccess of second request");
+                        interimCallback.onSuccess(user);
+                        User.createFromFbToken(userId, token, true, User.getSharedPreferences(activity), callback);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(Utils.LOGTAG, "onCancel of second login request");
+                        loginManager.logOut();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(Utils.LOGTAG, "2nd login failed with facebook error: " + error.getMessage());
+                        interimCallback.onError(null);
+                        loginManager.logOut();
+                    }
+                });
+                loginManager.logInWithPublishPermissions(activity, Arrays.asList("publish_actions"));
             }
 
             @Override
             public void onCancel() {
-                Log.d(Utils.LOGTAG, "Login canceled");
+                Log.d(Utils.LOGTAG, "1st login canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(Utils.LOGTAG, "Login failed");
+                Log.d(Utils.LOGTAG, "1st login failed with facebook error: " + error.getMessage());
             }
         });
     }
@@ -287,40 +305,6 @@ public class User {
                 Log.d(Utils.LOGTAG, "Login failed");
             }
         });
-    }
-
-    private static void _getFbPostPermissions(CallbackManager callbackManager,
-                                       final SharedPreferences sharedPreferences,
-                                       final Callback callback) {
-        LoginManager loginManager = LoginManager.getInstance();
-        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                user.fbPost = true;
-                user.persistUser(sharedPreferences);
-                callback.onSuccess(user);
-            }
-
-            @Override
-            public void onCancel() {
-                // TODO
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                // TODO
-            }
-        });
-    }
-
-    public static void getFbPostPermissions(Activity activity,
-                                     CallbackManager callbackManager,
-                                     SharedPreferences sharedPreferences,
-                                     final Callback callback) {
-        LoginManager loginManager = LoginManager.getInstance();
-        _getFbPostPermissions(callbackManager, sharedPreferences, callback);
-        loginManager.logInWithPublishPermissions(activity,
-                Arrays.asList("publish_actions"));
     }
 
     public void postInSocialNetwork(final String message, final Callback callback) {
@@ -360,5 +344,9 @@ public class User {
         };
         okhttp3.Call call = okHttpClient.newCall(request);
         call.enqueue(httpCallback);
+    }
+
+    private static SharedPreferences getSharedPreferences(Activity activity) {
+        return activity.getSharedPreferences("user", 0);
     }
 }
