@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,13 +34,15 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         TextView notificationTitle;
         TextView notificationMsg;
         TextView notificationDate;
+        ImageView urlHyperlink;
 
         NotificationViewHolder(View itemView) {
             super(itemView);
-            cardView          = (CardView) itemView.findViewById(R.id.notification_card);
-            notificationTitle = (TextView) itemView.findViewById(R.id.notification_title);
-            notificationMsg   = (TextView) itemView.findViewById(R.id.notification_msg);
-            notificationDate  = (TextView) itemView.findViewById(R.id.notification_date);
+            cardView          = (CardView)  itemView.findViewById(R.id.notification_card);
+            notificationTitle = (TextView)  itemView.findViewById(R.id.notification_title);
+            notificationMsg   = (TextView)  itemView.findViewById(R.id.notification_msg);
+            notificationDate  = (TextView)  itemView.findViewById(R.id.notification_date);
+            urlHyperlink      = (ImageView) itemView.findViewById(R.id.url_hyperlink);
         }
     }
     @Override
@@ -53,11 +57,14 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
         holder.notificationTitle.setText(notification.title);
         holder.notificationMsg.setText(notification.message);
         holder.notificationDate.setText(getNotificationDate(notification.dateInSeconds, actualContext));
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+
+        final boolean urlIsNotBlank = Utils.isNotBlank(notification.url);
+        holder.urlHyperlink.setVisibility((urlIsNotBlank) ? View.VISIBLE : View.GONE);
+        holder.urlHyperlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String url = notification.url;
-                if (Utils.isNotBlank(url)) {
+                if (urlIsNotBlank) {
                     if (!url.startsWith("http://") && !url.startsWith("https://")) {
                         url = "http://" + url;
                     }
@@ -65,6 +72,15 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
                     if (intent.resolveActivity(actualContext.getPackageManager()) != null) {
                         actualContext.startActivity(intent);
                     }
+                }
+            }
+        });
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!urlIsNotBlank) {
+                    Toast.makeText(actualContext, actualContext.getString(R.string.no_url_in_notification), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -77,7 +93,7 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
 
     private static String getNotificationDate(long dateInSeconds, Context actualContext) {
         //Obtengo el epoch actual y la diferencia con el de la notificación
-        long myEpoch = System.currentTimeMillis()/1000;
+        long myEpoch = System.currentTimeMillis() / 1000;
         long diff = Math.abs(myEpoch - dateInSeconds);
         StringBuilder builder = new StringBuilder();
         String unit;
