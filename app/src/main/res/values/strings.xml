@@ -85,7 +85,7 @@
     <string name="understood">ENTENDIDO</string>
     <string name="user_blocked">Fuiste bloqueado por un administrador</string>
     <string name="nav_menu_initiate_session">Iniciar sesión</string>
-    <string name="logging_out">Cerrando Sesión...</string>
+    <string name="logging_out">Cerrando Sesión…</string>
     <string name="logged_out">Sesión cerrada</string>
     <string name="could_not_log_out">No se pudo cerrar sesión</string>
     <string name="gcm_defaultSenderId" translatable="false">295203185705</string>
@@ -99,5 +99,10 @@
     <string name="marked_as_visited">Marcada como visitada</string>
     <string name="unmarked_as_favorite">Desmarcada como favorita</string>
     <string name="unmarked_as_visited">Desmarcada como visitada</string>
+    <string name="logged_in_fb">Has iniciado sesión con facebook</string>
+    <string name="logged_in_tw">Has iniciado sesión con twitter</string>
+    <string name="logged_in_fb_tw">Has iniciado sesión con facebook y twitter</string>
+    <string name="not_logged_in">No has iniciado sesión aún</string>
+    <string name="logging_in">Iniciando sesión…</string>
     <string name="no_url_in_notification">La notificación no tiene enlace a una página web</string>
 </resources>
