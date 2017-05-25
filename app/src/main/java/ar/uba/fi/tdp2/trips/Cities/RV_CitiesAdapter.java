@@ -36,6 +36,7 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
             cityCountry = (TextView) itemView.findViewById(R.id.city_country);
         }
     }
+
     @Override
     public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_card, parent, false);
@@ -69,5 +70,4 @@ public class RV_CitiesAdapter extends RecyclerView.Adapter<RV_CitiesAdapter.City
         this.cities = citiesList;
         notifyDataSetChanged();
     }
-
 }

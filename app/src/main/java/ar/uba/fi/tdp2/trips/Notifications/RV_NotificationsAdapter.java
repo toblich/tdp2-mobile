@@ -45,6 +45,7 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
             urlHyperlink      = (ImageView) itemView.findViewById(R.id.url_hyperlink);
         }
     }
+
     @Override
     public RV_NotificationsAdapter.NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_card, parent, false);
@@ -128,8 +129,6 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
                 builder.append(actualContext.getString(R.string.just_now));
             }
         }
-
         return builder.toString();
     }
-
 }

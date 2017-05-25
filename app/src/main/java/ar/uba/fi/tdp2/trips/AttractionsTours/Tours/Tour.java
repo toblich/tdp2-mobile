@@ -27,7 +27,6 @@ public class Tour {
         this.attractions = (attractions != null) ? attractions : new ArrayList<Attraction>();
     }
 
-
     @Override
     public String toString() {
         return String.format(Locale.getDefault(),

@@ -1,6 +1,5 @@
 package ar.uba.fi.tdp2.trips.AttractionsTours.Tours;
 
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +38,7 @@ public class TourInformationListAdapter extends BaseAdapter {
     }
 
     private void loadInfoItems() {
-        if (tour.getDuration() > 0) { // TODO make check here more robust
+        if (tour.getDuration() > 0) {
             items.add(new InfoItem(R.drawable.ic_timer_black_24dp, Utils.prettyTimeStr(tour.getDuration())));
         }
 

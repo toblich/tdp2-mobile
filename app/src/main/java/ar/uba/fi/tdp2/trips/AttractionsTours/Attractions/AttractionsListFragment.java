@@ -51,13 +51,6 @@ public class AttractionsListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param cityId The id of the attraction whose details will be shown.
-     * @return A new instance of fragment AttractionDetailsFragment.
-     */
     public static AttractionsListFragment newInstance(Double latitude, Double longitude, int cityId) {
         AttractionsListFragment fragment = new AttractionsListFragment();
         Bundle args = new Bundle();
@@ -158,7 +151,6 @@ public class AttractionsListFragment extends Fragment {
                 attractionsAdapter = new RV_AttractionAdapter(attractions, localContext, getActivity());
                 recyclerView.setAdapter(attractionsAdapter);
             }
-
             @Override
             public void onFailure(Call<List<Attraction>> call, Throwable t) {
                 t.printStackTrace();

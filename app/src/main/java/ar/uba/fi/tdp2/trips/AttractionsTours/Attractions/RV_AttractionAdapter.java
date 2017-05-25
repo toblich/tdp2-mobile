@@ -51,7 +51,6 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         ImageView attractionCardVisitedIconGreen;
         ImageView attractionCardDirectionsIcon;
 
-
         AttractionViewHolder(View itemView) {
             super(itemView);
             cardView              = (CardView)itemView.findViewById(R.id.attraction_card);
@@ -283,5 +282,5 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
     public int getItemCount() {
         return attractions.size();
     }
-
+    
 }

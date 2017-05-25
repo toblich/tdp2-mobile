@@ -45,20 +45,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AttractionDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AttractionDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
     private int attractionId;
-    public Attraction attraction; // Accessed by review modal
+    public Attraction attraction;
     private OnFragmentInteractionListener mListener;
     private Context localContext;
     private View header;
@@ -68,13 +59,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param attractionId The id of the attraction whose details will be shown.
-     * @return A new instance of fragment AttractionDetailsFragment.
-     */
     public static AttractionDetailsFragment newInstance(int attractionId) {
         AttractionDetailsFragment fragment = new AttractionDetailsFragment();
         Bundle args = new Bundle();
@@ -111,7 +95,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         }
 
         BackendService backendService = BackendService.retrofit.create(BackendService.class);
-
         Call<Attraction> call;
         User user = User.getInstance(getContext().getSharedPreferences("user", 0));
         if (user != null) {
@@ -121,7 +104,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
             call = backendService.getAttraction(attractionId);
         }
 
-
         call.enqueue(new Callback<Attraction>() {
             @Override
             public void onResponse(Call<Attraction> call, Response<Attraction> response) {
@@ -129,9 +111,7 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                     return;
                 }
                 attraction = response.body();
-
                 setViewContent(lw);
-
                 /* Enable audioguide floating button if the attraction has one */
                 FrameLayout rl = (FrameLayout) getActivity().findViewById(R.id.floating_action_button_relative_layout);
                 FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.attraction_details_audioguide_button);
@@ -147,7 +127,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                     });
                 }
             }
-
             @Override
             public void onFailure(Call<Attraction> call, Throwable t) {
                 t.printStackTrace();
@@ -320,7 +299,7 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
                 .override(displayMetrics.widthPixels, displayMetrics.heightPixels)
                 .fitCenter()
                 .placeholder(placeholderId)
-                .error(placeholderId) // TODO see if it possible to log the error
+                .error(placeholderId)
                 .into(coverPhoto);
 
         coverPhoto.setOnClickListener(new View.OnClickListener() {
@@ -333,12 +312,6 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
         });
 
         informationList.addHeaderView(header);
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -379,9 +352,7 @@ public class AttractionDetailsFragment extends Fragment implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap map) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(attraction.latitude, attraction.longitude),
-                14
-        ));
+                new LatLng(attraction.latitude, attraction.longitude), 14));
 
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(attraction.latitude, attraction.longitude))

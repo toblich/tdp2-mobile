@@ -93,7 +93,6 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
                 RV_NotificationsAdapter adapter = new RV_NotificationsAdapter(notifications, localContext);
                 recyclerView.setAdapter(adapter);
             }
-
             @Override
             public void onFailure(Call<List<Notification>> call, Throwable t) {
                 t.printStackTrace();
@@ -169,7 +168,6 @@ public class NotificationsActivity extends AppCompatActivity implements Navigati
             default:
                 Log.d(Utils.LOGTAG, "Unknown navigation item selected. Id: " + id);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

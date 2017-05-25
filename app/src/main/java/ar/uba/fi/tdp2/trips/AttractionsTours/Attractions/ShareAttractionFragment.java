@@ -1,15 +1,11 @@
 package ar.uba.fi.tdp2.trips.AttractionsTours.Attractions;
 
-
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +16,6 @@ import android.widget.Toast;
 import ar.uba.fi.tdp2.trips.Common.User;
 import ar.uba.fi.tdp2.trips.Common.Utils;
 import ar.uba.fi.tdp2.trips.R;
-
 
 public class ShareAttractionFragment extends DialogFragment {
 
@@ -88,4 +83,3 @@ public class ShareAttractionFragment extends DialogFragment {
         return builder.create();
     }
 }
-

@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class TourDetailsFragment extends Fragment implements OnMapReadyCallback {
     private int tourId;
     private Tour tour;
@@ -146,12 +145,6 @@ public class TourDetailsFragment extends Fragment implements OnMapReadyCallback 
         View header = inflater.inflate(R.layout.tour_details_header, informationList, false);
         // The next line enables the map to be loaded
         informationList.addHeaderView(header);
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

@@ -43,7 +43,6 @@ public class GcmIntentService extends IntentService {
         if (!prefs.getBoolean("isChecked", true)) {
             return;
         }
-
         NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -55,15 +54,11 @@ public class GcmIntentService extends IntentService {
             // Opens the browser with the URL when the notification is taped
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
-
-
         } else {
             intent = new Intent(this, NotificationsActivity.class);
         }
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
-
 
         Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification_sound);

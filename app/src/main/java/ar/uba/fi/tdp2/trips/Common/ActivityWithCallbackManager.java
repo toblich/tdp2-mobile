@@ -1,6 +1,5 @@
 package ar.uba.fi.tdp2.trips.Common;
 
-
 import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.CallbackManager;

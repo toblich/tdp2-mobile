@@ -24,14 +24,6 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PointOfInterestFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PointOfInterestFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
 
@@ -48,13 +40,6 @@ public class PointOfInterestFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param attractionId The id of the attraction whose details will be shown.
-     * @return A new instance of fragment PointOfInterestFragment.
-     */
     public static PointOfInterestFragment newInstance(int attractionId) {
         PointOfInterestFragment fragment = new PointOfInterestFragment();
         Bundle args = new Bundle();
@@ -107,17 +92,9 @@ public class PointOfInterestFragment extends Fragment {
                 if (response.body() == null) {
                     return;
                 }
-
                 pointsOfInterest = response.body();
 
-                if (pointsOfInterest.size() == 0) {
-                    recyclerView.setVisibility(View.GONE);
-                    rl.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    rl.setVisibility(View.GONE);
-                }
-
+                checkPoIPresence();
                 RV_PointOfInterestAdapter adapter = new RV_PointOfInterestAdapter(pointsOfInterest, localContext);
                 recyclerView.setAdapter(adapter);
             }
@@ -131,10 +108,13 @@ public class PointOfInterestFragment extends Fragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void checkPoIPresence() {
+        if (pointsOfInterest.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            rl.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            rl.setVisibility(View.GONE);
         }
     }
 

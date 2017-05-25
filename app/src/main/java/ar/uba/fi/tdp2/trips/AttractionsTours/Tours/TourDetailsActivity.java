@@ -44,6 +44,6 @@ public class TourDetailsActivity extends ActivityWithCallbackManager implements 
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        // TODO
+
     }
 }

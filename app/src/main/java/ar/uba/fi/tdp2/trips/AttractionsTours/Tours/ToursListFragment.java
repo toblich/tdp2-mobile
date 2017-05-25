@@ -25,11 +25,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ToursListFragment extends Fragment {
-
     private static final String ARG_CITY_ID = "cityId";
 
     private List<Tour> tours;
-
     private int cityId;
     private OnFragmentInteractionListener mListener;
     private Context localContext;
@@ -41,14 +39,6 @@ public class ToursListFragment extends Fragment {
     public ToursListFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param cityId The id of the attraction whose details will be shown.
-     * @return A new instance of fragment AttractionDetailsFragment.
-     */
 
     public static ToursListFragment newInstance(int cityId) {
         ToursListFragment fragment = new ToursListFragment();

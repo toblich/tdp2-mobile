@@ -36,7 +36,6 @@ public class RV_TourAdapter extends RecyclerView.Adapter<RV_TourAdapter.TourView
             tourName    = (TextView) itemView.findViewById(R.id.tour_name);
             tourDescription    = (TextView) itemView.findViewById(R.id.tour_description);
             tourEstimatedTime    = (TextView) itemView.findViewById(R.id.tour_estimated_time);
-
         }
     }
 

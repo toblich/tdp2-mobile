@@ -45,4 +45,3 @@ public class AttractionsToursPager extends FragmentStatePagerAdapter {
         this.toursListFragment.setFilter(filter);
     }
 }
-

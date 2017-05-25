@@ -21,14 +21,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GalleryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class GalleryFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
     private static final String ARG_POI_ID = "poiId";
@@ -48,13 +40,6 @@ public class GalleryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param attractionId The id of the attraction whose details will be shown.
-     * @return A new instance of fragment PointOfInterestFragment.
-     */
     public static GalleryFragment newInstance(int attractionId, int poiId) {
         GalleryFragment fragment = new GalleryFragment();
         Bundle args = new Bundle();
@@ -108,7 +93,6 @@ public class GalleryFragment extends Fragment {
                 RV_GalleryAdapter adapter = new RV_GalleryAdapter(gallery, localContext);
                 recyclerView.setAdapter(adapter);
             }
-
             @Override
             public void onFailure(Call<Gallery> call, Throwable t) {
                 t.printStackTrace();
@@ -127,12 +111,6 @@ public class GalleryFragment extends Fragment {
         } else {
             noGalleryTextView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
         }
     }
 

@@ -64,7 +64,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private static final String TWITTER_KEY = "ibKtBJe8a3Tjgm6Z9vwsdHbL5";
     private static final String TWITTER_SECRET = "3m7WkvMIvrlEMuFnfJLhNfbkqR633iyRhcsf6G2TI6pdD0t9kF";
 
-
     private static final int LOCATION_PERMISSION_PETITION = 101;
     private GoogleApiClient apiClient;
     private LocationManager locManager;
@@ -236,7 +235,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         if (requestCode != LOCATION_PERMISSION_PETITION) {
             return;
         }
-
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission granted
             return;
@@ -253,13 +251,11 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             Log.e(Utils.LOGTAG,getString(R.string.no_gps_error));
             return;
         }
-
         if (!Utils.isNetworkAvailable()) {
             Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;
         }
-
         @SuppressWarnings("MissingPermission")
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
         setLocation(lastLocation);
@@ -273,7 +269,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         }
 
         List<Address> addresses = null;
-
         // Get locality name from geocoder
         try {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
@@ -281,7 +276,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             Toast.makeText(localContext, getString(R.string.geocoder_error) + e.toString(), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.geocoder_error) + e.toString());
         }
-
         // Check if successfully got the address
         if(addresses == null || addresses.size() == 0 ) {
             Toast.makeText(localContext, getString(R.string.no_address_error), Toast.LENGTH_SHORT).show();

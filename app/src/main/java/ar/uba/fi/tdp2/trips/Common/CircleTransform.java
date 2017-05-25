@@ -1,6 +1,5 @@
 package ar.uba.fi.tdp2.trips.Common;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -15,7 +14,8 @@ public class CircleTransform extends BitmapTransformation {
         super(context);
     }
 
-    @Override protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+    @Override
+    protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
         return circleCrop(pool, toTransform);
     }
 
@@ -26,7 +26,6 @@ public class CircleTransform extends BitmapTransformation {
         int x = (source.getWidth() - size) / 2;
         int y = (source.getHeight() - size) / 2;
 
-        // TODO this could be acquired from the pool too
         Bitmap squared = Bitmap.createBitmap(source, x, y, size, size);
 
         Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_8888);

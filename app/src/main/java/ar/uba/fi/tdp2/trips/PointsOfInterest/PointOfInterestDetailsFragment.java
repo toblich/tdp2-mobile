@@ -29,14 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PointOfInterestDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PointOfInterestDetailsFragment extends Fragment {
     private static final String ARG_ATTRACTION_ID = "attractionId";
     private static final String ARG_POI_ID = "poiId";
@@ -45,7 +37,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
     private int poiId;
     private Context localContext;
     private PointOfInterest pointOfInterest;
-
     private OnFragmentInteractionListener mListener;
 
     public PointOfInterestDetailsFragment() {
@@ -138,13 +129,6 @@ public class PointOfInterestDetailsFragment extends Fragment {
             }
         });
 
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

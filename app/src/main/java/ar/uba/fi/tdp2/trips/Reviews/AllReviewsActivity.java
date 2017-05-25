@@ -62,7 +62,6 @@ public class AllReviewsActivity extends AppCompatActivity {
                 adapter = new RV_ReviewsAdapter(reviews);
                 recyclerView.setAdapter(adapter);
             }
-
             @Override
             public void onFailure(Call<List<Review>> call, Throwable t) {
                 t.printStackTrace();

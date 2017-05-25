@@ -76,7 +76,6 @@ public class User {
                 callback.onSuccess(response.body());
                 user = null;
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 t.printStackTrace();
@@ -117,7 +116,6 @@ public class User {
                 user.persistUser(settings);
                 callback.onSuccess(user);
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 user = null;
@@ -253,13 +251,11 @@ public class User {
                         interimCallback.onSuccess(user);
                         User.createFromFbToken(userId, token, true, User.getSharedPreferences(activity), callback);
                     }
-
                     @Override
                     public void onCancel() {
                         Log.d(Utils.LOGTAG, "onCancel of second login request");
                         loginManager.logOut();
                     }
-
                     @Override
                     public void onError(FacebookException error) {
                         Log.d(Utils.LOGTAG, "2nd login failed with facebook error: " + error.getMessage());
@@ -294,12 +290,10 @@ public class User {
                 user.persistUser(sharedPreferences);
                 callback.onSuccess(user);
             }
-
             @Override
             public void onCancel() {
                 Log.d(Utils.LOGTAG, "Login canceled");
             }
-
             @Override
             public void onError(FacebookException error) {
                 Log.d(Utils.LOGTAG, "Login failed");
@@ -330,7 +324,6 @@ public class User {
                     }
                 });
             }
-
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) {
                 handler.post(new Runnable() {
@@ -340,7 +333,6 @@ public class User {
                     }
                 });
             }
-
         };
         okhttp3.Call call = okHttpClient.newCall(request);
         call.enqueue(httpCallback);
