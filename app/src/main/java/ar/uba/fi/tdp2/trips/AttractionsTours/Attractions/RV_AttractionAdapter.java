@@ -46,9 +46,9 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         TextView attractionDescription;
         ImageView attractionPhoto;
         ImageView attractionCardFavIcon;
-        ImageView attractionCardFavIconRed;
+        ImageView attractionCardFavIconAccent;
         ImageView attractionCardVisitedIcon;
-        ImageView attractionCardVisitedIconBlack;
+        ImageView attractionCardVisitedIconGreen;
         ImageView attractionCardDirectionsIcon;
 
 
@@ -58,11 +58,11 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             attractionName        = (TextView) itemView.findViewById(R.id.attraction_name);
             attractionDescription = (TextView) itemView.findViewById(R.id.attraction_description);
             attractionPhoto       = (ImageView) itemView.findViewById(R.id.attraction_photo);
-            attractionCardFavIcon = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon);
-            attractionCardFavIconRed = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon_red);
-            attractionCardVisitedIcon = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon);
-            attractionCardVisitedIconBlack = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon_black);
-            attractionCardDirectionsIcon = (ImageView) itemView.findViewById(R.id.attraction_card_directions_icon);
+            attractionCardFavIcon          = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon);
+            attractionCardFavIconAccent    = (ImageView) itemView.findViewById(R.id.attraction_card_fav_icon_accent);
+            attractionCardVisitedIcon      = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon);
+            attractionCardVisitedIconGreen = (ImageView) itemView.findViewById(R.id.attraction_card_visited_icon_green);
+            attractionCardDirectionsIcon   = (ImageView) itemView.findViewById(R.id.attraction_card_directions_icon);
         }
     }
 
@@ -109,7 +109,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         //Si el user hizo LogIn y tiene marcada como favorita la atraccion es otro icono.
         if (user != null && attraction.favorite) {
             holder.attractionCardFavIcon.setVisibility(View.INVISIBLE);
-            holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
+            holder.attractionCardFavIconAccent.setVisibility(View.VISIBLE);
         }
 
         holder.attractionCardFavIcon.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +130,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                             }
                             //Cambio el icono
                             holder.attractionCardFavIcon.setVisibility(View.INVISIBLE);
-                            holder.attractionCardFavIconRed.setVisibility(View.VISIBLE);
+                            holder.attractionCardFavIconAccent.setVisibility(View.VISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.marked_as_favorite, Toast.LENGTH_SHORT).show();
                         }
@@ -149,7 +149,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             }
         });
 
-        holder.attractionCardFavIconRed.setOnClickListener(new View.OnClickListener() {
+        holder.attractionCardFavIconAccent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 user = User.getInstance(activityContext.getSharedPreferences("user", 0));
@@ -167,7 +167,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                             }
                             //Cambio el icono
                             holder.attractionCardFavIcon.setVisibility(View.VISIBLE);
-                            holder.attractionCardFavIconRed.setVisibility(View.INVISIBLE);
+                            holder.attractionCardFavIconAccent.setVisibility(View.INVISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.unmarked_as_favorite, Toast.LENGTH_SHORT).show();
                         }
@@ -185,7 +185,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
         //Si el user hizo LogIn y tiene marcada como visitada la atraccion es otro icono.
         if (user != null && attraction.visited) {
             holder.attractionCardVisitedIcon.setVisibility(View.INVISIBLE);
-            holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
+            holder.attractionCardVisitedIconGreen.setVisibility(View.VISIBLE);
         }
 
         holder.attractionCardVisitedIcon.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +206,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                             }
                             //Cambio el icono
                             holder.attractionCardVisitedIcon.setVisibility(View.INVISIBLE);
-                            holder.attractionCardVisitedIconBlack.setVisibility(View.VISIBLE);
+                            holder.attractionCardVisitedIconGreen.setVisibility(View.VISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.marked_as_visited, Toast.LENGTH_SHORT).show();
                         }
@@ -225,7 +225,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
             }
         });
 
-        holder.attractionCardVisitedIconBlack.setOnClickListener(new View.OnClickListener() {
+        holder.attractionCardVisitedIconGreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 user = User.getInstance(activityContext.getSharedPreferences("user", 0));
@@ -243,7 +243,7 @@ public class RV_AttractionAdapter extends RecyclerView.Adapter<RV_AttractionAdap
                             }
                             //Cambio el icono
                             holder.attractionCardVisitedIcon.setVisibility(View.VISIBLE);
-                            holder.attractionCardVisitedIconBlack.setVisibility(View.INVISIBLE);
+                            holder.attractionCardVisitedIconGreen.setVisibility(View.INVISIBLE);
                             //Aviso al User
                             Toast.makeText(activityContext, R.string.unmarked_as_visited, Toast.LENGTH_SHORT).show();
                         }

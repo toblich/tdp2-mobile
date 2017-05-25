@@ -7,4 +7,5 @@
     <color name="toolbarContent">#FFFFFF</color>
     <color name="colorRatingStar">#fbc02d</color>
     <color name="transparent">#00000000</color>
+    <color name="visitedGreen">#4CAF50</color>
 </resources>

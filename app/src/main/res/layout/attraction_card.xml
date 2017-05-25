@@ -75,7 +75,7 @@
                 />
 
             <ImageView
-                android:id="@+id/attraction_card_fav_icon_red"
+                android:id="@+id/attraction_card_fav_icon_accent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_favorite_black_24dp"
@@ -99,14 +99,14 @@
                 />
 
             <ImageView
-                android:id="@+id/attraction_card_visited_icon_black"
+                android:id="@+id/attraction_card_visited_icon_green"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/attraction_photo"
                 android:layout_alignParentBottom="true"
                 android:layout_alignStart="@+id/attraction_photo"
                 android:layout_toLeftOf="@+id/attraction_card_directions_icon"
-                app:srcCompat="@drawable/ic_check_box_black_24dp"
+                app:srcCompat="@drawable/ic_check_accent_24dp"
                 android:layout_below="@+id/attraction_description"
                 android:visibility="invisible"
                 />

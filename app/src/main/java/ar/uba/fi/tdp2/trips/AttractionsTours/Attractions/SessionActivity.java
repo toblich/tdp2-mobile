@@ -188,8 +188,6 @@ public class SessionActivity extends AppCompatActivity {
         twLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                // The TwitterSession is also available through:
-                // Twitter.getInstance().core.getSessionManager().getActiveSession()
                 TwitterSession session = result.data;
                 startSpinner();
                 User.createFromTwToken(
@@ -209,8 +207,6 @@ public class SessionActivity extends AppCompatActivity {
                                 processSocialNetworks();
                             }
                         });
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
             @Override
             public void failure(TwitterException exception) {

@@ -232,7 +232,7 @@ public interface BackendService {
 
     public static final Retrofit retrofit = new Retrofit.Builder()
 //            .baseUrl("https://private-0e956b-trips5.apiary-mock.com")
-            .baseUrl("http://192.168.0.29")
+            .baseUrl("http://192.168.1.107")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
