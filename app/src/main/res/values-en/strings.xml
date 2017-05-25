@@ -89,4 +89,5 @@
     <string name="not_logged_in">Not yet logged in</string>
     <string name="logged_in_fb_tw">Logged in with facebook and twitter</string>
     <string name="logging_in">Logging in…</string>
+    <string name="no_url_in_notification">The notification has not link to a webpage</string>
 </resources>

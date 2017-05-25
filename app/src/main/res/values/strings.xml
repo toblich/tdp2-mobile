@@ -104,4 +104,5 @@
     <string name="logged_in_fb_tw">Has iniciado sesión con facebook y twitter</string>
     <string name="not_logged_in">No has iniciado sesión aún</string>
     <string name="logging_in">Iniciando sesión…</string>
+    <string name="no_url_in_notification">La notificación no tiene enlace a una página web</string>
 </resources>

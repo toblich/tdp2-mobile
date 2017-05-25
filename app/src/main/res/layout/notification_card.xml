@@ -54,8 +54,20 @@
                 android:layout_below="@+id/notification_title"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_toLeftOf="@+id/url_hyperlink"
+                android:layout_toStartOf="@+id/url_hyperlink" />
+
+            <ImageView
+                android:id="@+id/url_hyperlink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_open_in_new_black_24dp"
+                android:layout_alignTop="@+id/notification_msg"
+                android:layout_marginTop="2dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
