@@ -62,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_open_in_new_black_24dp"
+                android:tint="@color/colorPrimaryLight"
                 android:layout_alignTop="@+id/notification_msg"
                 android:layout_marginTop="2dp"
                 android:layout_alignParentRight="true"

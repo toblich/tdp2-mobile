@@ -76,6 +76,13 @@ public class RV_NotificationsAdapter extends RecyclerView.Adapter<RV_Notificatio
                 }
             }
         });
+        holder.urlHyperlink.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(actualContext, notification.url, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
