@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import ar.uba.fi.tdp2.trips.Common.AppOpenedManager;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class DeviceToken {
@@ -28,7 +30,7 @@ public class DeviceToken {
         return deviceToken;
     }
 
-    public static void initializeDeviceToken() {
+    public static void initializeDeviceToken(final AppOpenedManager appOpenedManager) {
         new Thread(new Runnable() {
             public void run() {
                 final Context context = getApplicationContext();
@@ -38,6 +40,7 @@ public class DeviceToken {
                             context.getString(R.string.gcm_defaultSenderId),
                             GoogleCloudMessaging.INSTANCE_ID_SCOPE,
                             null);
+                    appOpenedManager.onDeviceTokenFound(deviceToken);
                     Log.d("device token: ", deviceToken);
                 } catch (Exception e) {
                     Log.e("device token: ", "Couldn't get the device token");

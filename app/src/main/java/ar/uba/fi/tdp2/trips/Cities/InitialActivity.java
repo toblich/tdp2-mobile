@@ -26,6 +26,7 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import ar.uba.fi.tdp2.trips.AttractionsTours.Attractions.SessionActivity;
+import ar.uba.fi.tdp2.trips.Common.AppOpenedManager;
 import ar.uba.fi.tdp2.trips.Common.BackendService;
 import ar.uba.fi.tdp2.trips.Common.CircleTransform;
 import ar.uba.fi.tdp2.trips.Common.User;
@@ -76,6 +77,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private List<City> cities;
     RV_CitiesAdapter adapter;
     NavigationView navigationView;
+    private AppOpenedManager appOpenedManager = new AppOpenedManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             public void onClick(View v) {
                 updateLocation(true, new SetLocationCallback() {
                     public void run(Activity activity, Location loc, Address address) {
+                        appOpenedManager.onLocationFound(address.getCountryCode());
                         Intent intent = new Intent(activity, AttractionsToursTabsActivity.class);
                         intent.putExtra("locality", address.getLocality());
                         intent.putExtra("latitude", loc.getLatitude());
@@ -132,6 +135,8 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
+
+
 
         initializeData();
     }
@@ -183,7 +188,7 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     }
 
     private void initializeData() {
-        DeviceToken.getInstance().initializeDeviceToken();
+        DeviceToken.getInstance().initializeDeviceToken(appOpenedManager);
         cities = new ArrayList<>();
 
         if (!Utils.isNetworkAvailable()) {
@@ -230,6 +235,13 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_PETITION);
         }
+
+        // SEND LOCATION TO BACKEND
+        updateLocation(false, new SetLocationCallback() {
+            public void run(Activity activity, Location loc, Address address) {
+                appOpenedManager.onLocationFound(address.getCountryCode());
+            }
+        });
     }
 
     @Override
@@ -262,26 +274,29 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             if (alerts) {
                 Toast.makeText(localContext, getString(R.string.no_gps_error), Toast.LENGTH_SHORT).show();
-                Log.e(Utils.LOGTAG, getString(R.string.no_gps_error));
             }
+            Log.e(Utils.LOGTAG, getString(R.string.no_gps_error));
             return;
         }
         if (!Utils.isNetworkAvailable()) {
             if (alerts) {
                 Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
-                Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             }
+            Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
             return;
         }
         @SuppressWarnings("MissingPermission")
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        setLocation(lastLocation, callback);
+        setLocation(alerts, lastLocation, callback);
     }
 
-    private void setLocation(Location loc, SetLocationCallback callback) {
+    private void setLocation(boolean alerts, Location loc, SetLocationCallback callback) {
         if (loc == null) {
-            Toast.makeText(localContext, getString(R.string.no_location_error), Toast.LENGTH_SHORT).show();
+            if (alerts) {
+                Toast.makeText(localContext, getString(R.string.no_location_error), Toast.LENGTH_SHORT).show();
+            }
             Log.e(Utils.LOGTAG, getString(R.string.no_location_error));
+
             return;
         }
 
@@ -290,12 +305,16 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         try {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(),1);
         } catch (Exception e) {
-            Toast.makeText(localContext, getString(R.string.geocoder_error) + e.toString(), Toast.LENGTH_SHORT).show();
+            if (alerts) {
+                Toast.makeText(localContext, getString(R.string.geocoder_error) + e.toString(), Toast.LENGTH_SHORT).show();
+            }
             Log.e(Utils.LOGTAG, getString(R.string.geocoder_error) + e.toString());
         }
         // Check if successfully got the address
         if(addresses == null || addresses.size() == 0 ) {
-            Toast.makeText(localContext, getString(R.string.no_address_error), Toast.LENGTH_SHORT).show();
+            if (alerts) {
+                Toast.makeText(localContext, getString(R.string.no_address_error), Toast.LENGTH_SHORT).show();
+            }
             Log.e(Utils.LOGTAG, getString(R.string.no_address_error));
             return;
         }
@@ -303,7 +322,9 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         Address address = addresses.get(0);
         String addressText = address.getLocality() + ", " + address.getCountryName();
         address.getCountryCode();
-        Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
+        if (alerts) {
+            Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
+        }
 
         callback.run(this, loc, address);
     }
