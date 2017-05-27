@@ -1,6 +1,7 @@
 package ar.uba.fi.tdp2.trips.Cities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -109,7 +110,15 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         geolocalizationCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateLocation();
+                updateLocation(true, new SetLocationCallback() {
+                    public void run(Activity activity, Location loc, Address address) {
+                        Intent intent = new Intent(activity, AttractionsToursTabsActivity.class);
+                        intent.putExtra("locality", address.getLocality());
+                        intent.putExtra("latitude", loc.getLatitude());
+                        intent.putExtra("longitude", loc.getLongitude());
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
@@ -245,23 +254,31 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    private void updateLocation() {
+    private interface SetLocationCallback {
+        void run(Activity activity, Location loc, Address address);
+    }
+
+    private void updateLocation(boolean alerts, SetLocationCallback callback) {
         if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(localContext, getString(R.string.no_gps_error), Toast.LENGTH_SHORT).show();
-            Log.e(Utils.LOGTAG,getString(R.string.no_gps_error));
+            if (alerts) {
+                Toast.makeText(localContext, getString(R.string.no_gps_error), Toast.LENGTH_SHORT).show();
+                Log.e(Utils.LOGTAG, getString(R.string.no_gps_error));
+            }
             return;
         }
         if (!Utils.isNetworkAvailable()) {
-            Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
-            Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
+            if (alerts) {
+                Toast.makeText(localContext, getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
+                Log.e(Utils.LOGTAG, getString(R.string.no_internet_error));
+            }
             return;
         }
         @SuppressWarnings("MissingPermission")
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        setLocation(lastLocation);
+        setLocation(lastLocation, callback);
     }
 
-    private void setLocation(Location loc) {
+    private void setLocation(Location loc, SetLocationCallback callback) {
         if (loc == null) {
             Toast.makeText(localContext, getString(R.string.no_location_error), Toast.LENGTH_SHORT).show();
             Log.e(Utils.LOGTAG, getString(R.string.no_location_error));
@@ -285,13 +302,10 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
 
         Address address = addresses.get(0);
         String addressText = address.getLocality() + ", " + address.getCountryName();
+        address.getCountryCode();
         Toast.makeText(localContext, getString(R.string.location_found) + " " + addressText, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, AttractionsToursTabsActivity.class);
-        intent.putExtra("locality", address.getLocality());
-        intent.putExtra("latitude", loc.getLatitude());
-        intent.putExtra("longitude", loc.getLongitude());
-        startActivity(intent);
+        callback.run(this, loc, address);
     }
 
     @Override
