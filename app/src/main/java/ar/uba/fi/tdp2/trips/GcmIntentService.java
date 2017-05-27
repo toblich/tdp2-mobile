@@ -43,22 +43,26 @@ public class GcmIntentService extends IntentService {
         if (!prefs.getBoolean("isChecked", true)) {
             return;
         }
+
         NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         String url = notification.getString("url", null);
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
+        }
         String message = notification.getString("message");
         String title = notification.getString("title");
+
         Intent intent;
         if (Utils.isNotBlank(url)) {
             // Opens the browser with the URL when the notification is taped
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         } else {
+            // Opens the application in the NotificationsActivity
             intent = new Intent(this, NotificationsActivity.class);
         }
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri notification_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification_sound);
@@ -73,9 +77,9 @@ public class GcmIntentService extends IntentService {
                         .setContentTitle(title)
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                         .setContentText(message)
-                        .setAutoCancel(true);
+                        .setAutoCancel(true)
+                        .setContentIntent(contentIntent);
 
-        mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(0, mBuilder.build());
     }
 }
