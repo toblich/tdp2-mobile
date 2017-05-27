@@ -77,11 +77,12 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
     private List<City> cities;
     RV_CitiesAdapter adapter;
     NavigationView navigationView;
-    private AppOpenedManager appOpenedManager = new AppOpenedManager();
+    private AppOpenedManager appOpenedManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appOpenedManager = new AppOpenedManager(getSharedPreferences("user", 0));
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_initial);
@@ -135,8 +136,6 @@ public class InitialActivity extends AppCompatActivity implements GoogleApiClien
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-
-
 
         initializeData();
     }

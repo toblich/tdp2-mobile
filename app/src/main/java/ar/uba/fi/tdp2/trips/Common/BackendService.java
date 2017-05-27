@@ -39,6 +39,14 @@ import retrofit2.http.Query;
 import static com.facebook.FacebookSdk.getCacheDir;
 
 public interface BackendService {
+    //Get the list of the nearest attractions with auth
+    @POST("/login")
+    Call<Void> postAppOpened(
+            @Query("device_token") String device_token,
+            @Query("country") String country,
+            @Header("Authorization") String bearer
+    );
+
     //Get the list of all the cities
     @GET("/cities")
     Call<List<City>> getCities();
@@ -231,7 +239,7 @@ public interface BackendService {
             .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.107")
+            .baseUrl("http://192.168.0.120")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
