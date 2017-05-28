@@ -133,9 +133,9 @@ public class AttractionsListFragment extends Fragment {
         user = User.getInstance(getContext().getSharedPreferences("user", 0));
         if (user != null) {
             String bearer = "Bearer " + user.token;
-            call = backendService.getAttractionsWithAuth(latitude, longitude, 2.0, bearer);
+            call = backendService.getAttractionsWithAuth(latitude, longitude, 0.5, bearer);
         } else {
-            call = backendService.getAttractions(latitude, longitude, 2.0);
+            call = backendService.getAttractions(latitude, longitude, 0.5);
         }
 
         call.enqueue(new Callback<List<Attraction>>() {
