@@ -39,14 +39,6 @@ import retrofit2.http.Query;
 import static com.facebook.FacebookSdk.getCacheDir;
 
 public interface BackendService {
-    //Get the list of the nearest attractions with auth
-    @POST("/login")
-    Call<Void> postAppOpened(
-            @Query("device_token") String device_token,
-            @Query("country") String country,
-            @Header("Authorization") String bearer
-    );
-
     //Get the list of all the cities
     @GET("/cities")
     Call<List<City>> getCities();
@@ -115,7 +107,6 @@ public interface BackendService {
             @Header("Authorization") String bearer
     );
 
-
     //Get the gallery of a specific attraction
     @GET("/attractions/{attractionId}/gallery")
     Call<Gallery> getAttractionGallery(
@@ -158,13 +149,24 @@ public interface BackendService {
 
     //Create a new user
     @POST("/users")
-    Call<User> createUser(@Body User user);
+    Call<User> createUser(
+            @Body User user
+    );
+
+    //LogIn
+    @POST("/login")
+    Call<Void> postAppOpened(
+            @Query("device_token") String device_token,
+            @Query("country") String country,
+            @Header("Authorization") String bearer
+    );
 
     //Logout
     @POST("/logout")
     Call<User> logoutUser(
             @Header("Authorization") String bearer,
-            @Body User user);
+            @Body User user
+    );
 
     // Get details for a tour
     @GET("/tours/{tourId}")
@@ -239,7 +241,7 @@ public interface BackendService {
             .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.120")
+            .baseUrl("http://192.168.1.114")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();

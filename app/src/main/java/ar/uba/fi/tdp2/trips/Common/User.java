@@ -79,7 +79,7 @@ public class User {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show(); // TODO internationalize
+                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show();
                 Log.d("TRIPS", t.toString());
                 callback.onError(null);
             }
@@ -221,7 +221,7 @@ public class User {
             public void onFailure(Call<User> call, Throwable t) {
                 user = null;
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show(); // TODO internationalize
+                Toast.makeText(getApplicationContext(), R.string.no_server_error, Toast.LENGTH_LONG).show();
                 Log.d("TRIPS", t.toString());
             }
         });
