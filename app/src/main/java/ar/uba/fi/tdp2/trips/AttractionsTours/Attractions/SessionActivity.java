@@ -83,8 +83,8 @@ public class SessionActivity extends AppCompatActivity {
             return;
         }
 
-        boolean withFb = Utils.isNotBlank(user.fbToken);
-        boolean withTw = Utils.isNotBlank(user.twToken);
+        boolean withFb = Utils.isNotBlank(user.fbUserId);
+        boolean withTw = Utils.isNotBlank(user.twUserId);
 
         int sessionsStringCode;
         if (withFb && withTw) {

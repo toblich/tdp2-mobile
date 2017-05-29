@@ -241,7 +241,7 @@ public interface BackendService {
             .build();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.114")
+            .baseUrl("http://172.20.10.11")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build();
